@@ -751,15 +751,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.2604139
+      value: 3.3665302
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000104904175
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.068714
+      value: -15.955704
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -789,6 +789,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4831047351740234937, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Name
+      value: BladeFR
+      objectReference: {fileID: 0}
+    - target: {fileID: -4177260983421585299, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Name
+      value: BladeRR
+      objectReference: {fileID: 0}
     - target: {fileID: -1424360768090577565, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -816,6 +824,14 @@ PrefabInstance:
     - target: {fileID: 1990374306592455618, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6136893308250225595, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Name
+      value: BladeFL
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306986065276198615, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Name
+      value: BladeRL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -975,11 +991,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42912c3d656f322429ae38a63ab1dd84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DroneDebugUI
-  visible: 0
-  refreshRate: 0.1
-  panelColor: {r: 0, g: 0, b: 0, a: 0.5}
-  textColor: {r: 0, g: 1, b: 0, a: 1}
-  fontSize: 14
 --- !u!4 &5251325477497432010 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -9068287948891474846, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
