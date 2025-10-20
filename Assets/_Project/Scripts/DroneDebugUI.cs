@@ -6,7 +6,7 @@ public class DroneDebugUI : MonoBehaviour
     private DroneController droneController;
 
     private bool visible = true;
-    private Rect windowRectangle = new Rect(20, 20, 250, 220);
+    private Rect windowRectangle = new Rect(20, 20, 250, 240);
 
     private void Awake()
     {
@@ -38,17 +38,26 @@ public class DroneDebugUI : MonoBehaviour
         GUILayout.Label($"Yaw: {droneController.YawInput:F2}");
         GUILayout.Label($"Pitch: {droneController.PitchInput:F2}");
         GUILayout.Label($"Roll: {droneController.RollInput:F2}");
+        GUILayout.Space(5);
 
-        if (droneController.blades != null)
+        GUILayout.Label("<b>Blade RPMs</b>");
+
+        if (droneController != null)
         {
-            for (int i = 0; i < droneController.blades.Length; i++)
+            foreach (var (pos, blade) in droneController.Blades)
             {
-                GUILayout.Label($"Blade {i + 1}: {droneController.blades[i].CurrentRPM:F1} RPM");
+                if (blade != null)
+                {
+                    GUILayout.Label($"{pos}: {blade.CurrentRPM:F0} RPM");
+                }
+                else
+                {
+                    GUILayout.Label($"{pos}: (missing)");
+                }
             }
         }
 
         GUILayout.EndVertical();
-
         GUI.DragWindow();
     }
 

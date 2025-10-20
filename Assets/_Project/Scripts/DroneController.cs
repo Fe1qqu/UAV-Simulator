@@ -1,9 +1,18 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 public class DroneController : MonoBehaviour, IControllable
 {
     private Rigidbody rigidBody;
+
+    public enum BladePosition
+    {
+        FrontLeft,
+        FrontRight,
+        RearLeft,
+        RearRight
+    }
 
     [System.Serializable]
     public class Blade
@@ -15,7 +24,13 @@ public class DroneController : MonoBehaviour, IControllable
     }
 
     [Header("Blades")]
-    public Blade[] blades = new Blade[4];
+    public Blade frontLeft;
+    public Blade frontRight;
+    public Blade rearLeft;
+    public Blade rearRight;
+
+    private Dictionary<BladePosition, Blade> blades = new();
+    public IReadOnlyDictionary<BladePosition, Blade> Blades => blades;
 
     [Header("Physics Settings")]
     public float liftCoefficient = 1e-6f;
@@ -44,36 +59,29 @@ public class DroneController : MonoBehaviour, IControllable
             return;
         }
 
-        if (blades == null || blades.Length == 0)
-        {
-            Debug.LogError($"[DroneController] No blades assigned on '{gameObject.name}'.");
-            enabled = false;
-            return;
-        }
+        blades[BladePosition.FrontLeft] = frontLeft;
+        blades[BladePosition.FrontRight] = frontRight;
+        blades[BladePosition.RearLeft] = rearLeft;
+        blades[BladePosition.RearRight] = rearRight;
 
-        foreach (var blade in blades)
+        foreach (var kvp in blades)
         {
+            var blade = kvp.Value;
             if (blade == null || blade.bone == null)
             {
-                Debug.LogError($"[DroneController] One of the blades on '{gameObject.name}' is not configured correctly.");
+                Debug.LogError($"[DroneController] Blade {kvp.Key} not configured correctly.");
                 enabled = false;
                 return;
             }
-
             blade.relativePos = transform.InverseTransformPoint(blade.bone.position);
         }
     }
 
-    void Start()
-    {
-    }
-
     void Update()
     {
-        //Debug.Log($"{throttleInput}, {yawInput}, {pitchInput}, {rollInput}");
-        //Debug.Log(blades[0].rpm);
-        foreach (var blade in blades)
+        foreach (var kvp in blades)
         {
+            var blade = kvp.Value;
             float direction = blade.clockwise ? 1f : -1f;
             blade.bone.Rotate(360f * blade.CurrentRPM * direction * Vector3.up / 60f * Time.deltaTime, Space.Self);
         }
@@ -85,29 +93,14 @@ public class DroneController : MonoBehaviour, IControllable
         ApplyBladeForces();
     }
 
-    public void ApplyThrottle(float value)
-    {
-        throttleInput = value;
-    }
-
-    public void ApplyYaw(float value)
-    {
-        yawInput = value;
-    }
-
-    public void ApplyPitch(float value)
-    {
-        pitchInput = value;
-    }
-
-    public void ApplyRoll(float value)
-    {
-        rollInput = value;
-    }
+    public void ApplyThrottle(float value) => throttleInput = value;
+    public void ApplyYaw(float value) => yawInput = value;
+    public void ApplyPitch(float value) => pitchInput = value;
+    public void ApplyRoll(float value) => rollInput = value;
 
     private void UpdateMotorSpeeds()
     {
-        foreach (var blade in blades)
+        foreach (var blade in blades.Values)
         {
             blade.CurrentRPM = Mathf.Lerp(blade.CurrentRPM, throttleInput * maxBladeRPM, BladeRPMChangeRate * Time.fixedDeltaTime);
         }
@@ -137,7 +130,7 @@ public class DroneController : MonoBehaviour, IControllable
         //}
 
         // RPM limit
-        foreach (var blade in blades)
+        foreach (var blade in blades.Values)
         {
             blade.CurrentRPM = Mathf.Clamp(blade.CurrentRPM, 0, maxBladeRPM);
         }
@@ -149,7 +142,7 @@ public class DroneController : MonoBehaviour, IControllable
         //Vector3 liftForce = transform.up * lift;
         //rigidbody.AddForceAtPosition(liftForce, blades[3].bone.position, ForceMode.Force);
 
-        foreach (Blade blade in blades)
+        foreach (Blade blade in blades.Values)
         {
             float lift = liftCoefficient * blade.CurrentRPM * blade.CurrentRPM;
             Vector3 liftForce = transform.up * lift;

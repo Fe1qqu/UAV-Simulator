@@ -946,20 +946,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e594a9262c29543b6c22e2a43fdfdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DroneController
-  blades:
-  - bone: {fileID: 5337047104538754746}
+  frontLeft:
+    bone: {fileID: 5251325477497432010}
     clockwise: 0
     CurrentRPM: 0
     relativePos: {x: 0, y: 0, z: 0}
-  - bone: {fileID: 2678261919762221434}
+  frontRight:
+    bone: {fileID: 7862163276500666276}
     clockwise: 1
     CurrentRPM: 0
     relativePos: {x: 0, y: 0, z: 0}
-  - bone: {fileID: 5930560581552654781}
+  rearLeft:
+    bone: {fileID: 4075337891315550777}
     clockwise: 1
     CurrentRPM: 0
     relativePos: {x: 0, y: 0, z: 0}
-  - bone: {fileID: 5384620140331746922}
+  rearRight:
+    bone: {fileID: 399196909728017430}
     clockwise: 0
     CurrentRPM: 0
     relativePos: {x: 0, y: 0, z: 0}
