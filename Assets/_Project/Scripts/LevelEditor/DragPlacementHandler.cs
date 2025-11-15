@@ -2,18 +2,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles placement drag workflow:
+/// - Creates preview model
+/// - Moves preview under mouse cursor via raycast
+/// - Places object or cancels drag
+/// - Notifies TooltipManager and UIDragContext
+/// </summary>
 public class DragPlacementHandler : MonoBehaviour
 {
     public static DragPlacementHandler Instance { get; private set; }
 
+    /// <summary>
+    /// Fired when drag is cancelled.
+    /// </summary>
     public event System.Action OnDragCancelled;
 
     [Header("Placement settings")]
+    [Tooltip("Raycast mask used to find a valid placement surface.")]
     public LayerMask placementLayerMask;
+
+    [Tooltip("Parent under which placed objects will be instantiated.")]
     public Transform levelRoot;
 
     [Header("Preview settings")]
+    [Tooltip("Material applied to the preview instance during drag.")]
     public Material previewMaterial;
+
+    [Tooltip("Maximum ray distance used for placement checks.")]
     public float rayLength = 100000f;
 
     private GameObject prefabToPlace;
@@ -21,8 +37,9 @@ public class DragPlacementHandler : MonoBehaviour
     private Renderer[] previewRenderers;
     private bool isVisible;
 
-    //private Material[] originalMaterials;
-
+    /// <summary>
+    /// True while a drag is in progress.
+    /// </summary>
     public bool IsDragging => previewInstance != null;
 
     private void Awake()
@@ -37,6 +54,9 @@ public class DragPlacementHandler : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Starts placement drag by creating a hidden preview instance.
+    /// </summary>
     public void BeginDrag(GameObject prefab)
     {
         if (prefab == null)
@@ -57,17 +77,23 @@ public class DragPlacementHandler : MonoBehaviour
             renderer.enabled = false;
         }
 
-        // So that the preview doesn't interfere with the beam
+        // Disable colliders to avoid self-intersection
         foreach (var сollider in previewInstance.GetComponentsInChildren<Collider>())
         {
             сollider.enabled = false;
         }
+
+        //Debug.Log($"[DragPlacementHandler] Drag started for '{prefabToPlace.name}'.");
     }
 
+    /// <summary>
+    /// Confirms placement, performs raycast and spawns final object.
+    /// </summary>
     public void EndDrag(PointerEventData eventData)
     {
         if (prefabToPlace == null)
         {
+            Debug.LogWarning("[DragPlacementHandler] EndDrag called but prefabToPlace is null.");
             Cleanup();
             return;
         }
@@ -78,25 +104,32 @@ public class DragPlacementHandler : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, rayLength, placementLayerMask))
         {
             Instantiate(prefabToPlace, hit.point, Quaternion.identity, levelRoot);
-            Debug.Log($"[DragPlacementHandler] Placed '{prefabToPlace.name}' at {hit.point}");
+            Debug.Log($"[DragPlacementHandler] Placed '{prefabToPlace.name}' at world pos {hit.point}");
         }
         else
         {
-            Debug.Log($"[DragPlacementHandler] Cannot place '{prefabToPlace.name}' at pointer position (no valid hit).");
+            Debug.Log($"[DragPlacementHandler] Failed to place '{prefabToPlace.name}' — no valid surface at pointer.");
         }
 
         UIDragContext.Instance.ResetContext();
         Cleanup();
     }
 
+    /// <summary>
+    /// Cancels drag, hides preview, resets states, notifies listeners.
+    /// </summary>
     public void CancelDrag()
     {
         Debug.Log("[DragPlacementHandler] Drag cancelled.");
+
         OnDragCancelled?.Invoke();
         UIDragContext.Instance.ResetContext();
         Cleanup();
     }
 
+    /// <summary>
+    /// Destroys preview, clears drag state.
+    /// </summary>
     private void Cleanup()
     {
         if (previewInstance != null)
@@ -107,13 +140,14 @@ public class DragPlacementHandler : MonoBehaviour
         prefabToPlace = null;
         previewInstance = null;
         previewRenderers = null;
-        //originalMaterials = null;
     }
 
+
+    /// <summary>
+    /// Controls renderer visibility to avoid redundant enabling/disabling.
+    /// </summary>
     private void SetObjectPreviewVisible(bool visible)
     {
-        //Debug.Log($"Пробуем менять видимость на {visible}");
-
         if (previewRenderers == null)
         {
             return;
@@ -124,7 +158,7 @@ public class DragPlacementHandler : MonoBehaviour
             return;
         }
 
-        //Debug.Log($"Поменяли видимость");
+        isVisible = visible;
 
         foreach (var renderer in previewRenderers)
         {
@@ -133,8 +167,6 @@ public class DragPlacementHandler : MonoBehaviour
                 renderer.enabled = visible;
             }
         }
-
-        isVisible = visible;
     }
 
     private void Update()

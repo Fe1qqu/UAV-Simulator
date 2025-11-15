@@ -1,14 +1,28 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
+/// <summary>
+/// Manages the context of UI drag operations, tracking which UI zones the pointer is over.
+/// Handles cancel zones and shows tooltips for relevant UI areas.
+/// </summary>
 public class UIDragContext : MonoBehaviour
 {
     public static UIDragContext Instance { get; private set; }
 
-    [Tooltip("Tag bar that cancels dragging when hovered over")]
-    public string cancelPanelTag = "PanelRight";
+    [Header("Drag Zones")]
+    [Tooltip("List of UI zones that interact with dragging.")]
+    public List<DragContextZone> dragZones = new List<DragContextZone>();
 
+    /// <summary>
+    /// True if the pointer is currently over a drag cancel zone.
+    /// </summary>
     public bool IsPointerOverCancelZone { get; private set; }
+
+    /// <summary>
+    /// Current drag context zone the pointer is over.
+    /// </summary>
+    public DragContextZone CurrentZone { get; private set; }
 
     private void Awake()
     {
@@ -22,24 +36,52 @@ public class UIDragContext : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Updates the current drag context based on pointer event data.
+    /// Tracks the current UI zone and shows/hides tooltips accordingly.
+    /// </summary>
+    /// <param name="eventData">Pointer event data from the UI system.</param>
     public void UpdateContext(PointerEventData eventData)
     {
         var target = eventData.pointerEnter;
-        bool overCancel = target != null && IsPointerOverTaggedParent(target, cancelPanelTag);
+        DragContextZone dragContextZone = null;
 
-        if (overCancel && !IsPointerOverCancelZone)
+        if (target != null)
         {
-            /* Возможно не самый оптимизированный вариант */
-            TooltipManager.Instance.Show("Cancel drag");
-        }
-        else if (!overCancel && IsPointerOverCancelZone)
-        {
-            TooltipManager.Instance.Hide();
+            foreach (var zone in dragZones)
+            {
+                if (IsPointerOverTaggedParent(target, zone.tag))
+                {
+                    dragContextZone = zone;
+                    break;
+                }
+            }
         }
 
-        IsPointerOverCancelZone = overCancel;
+        if (dragContextZone != CurrentZone)
+        {
+            if (CurrentZone != null)
+            {
+                TooltipManager.Instance.Hide();
+            }
+
+            CurrentZone = dragContextZone;
+
+            if (CurrentZone != null && !string.IsNullOrEmpty(CurrentZone.tooltipText))
+            {
+                TooltipManager.Instance.Show(CurrentZone.tooltipText, force: true);
+            }
+        }
+
+        IsPointerOverCancelZone = CurrentZone != null && CurrentZone.cancelsDrag;
     }
 
+    /// <summary>
+    /// Checks if the pointer is over a GameObject (or any of its parents) with the specified tag.
+    /// </summary>
+    /// <param name="obj">The GameObject to check.</param>
+    /// <param name="tag">The tag to match.</param>
+    /// <returns>True if the object or any parent has the tag.</returns>
     private bool IsPointerOverTaggedParent(GameObject obj, string tag)
     {
         while (obj != null)
@@ -59,9 +101,15 @@ public class UIDragContext : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Resets the drag context and hides any active tooltip.
+    /// Should be called when drag ends or is cancelled.
+    /// </summary>
     public void ResetContext()
     {
-        IsPointerOverCancelZone = false;
         TooltipManager.Instance.Hide();
+
+        IsPointerOverCancelZone = false;
+        CurrentZone = null;
     }
 }

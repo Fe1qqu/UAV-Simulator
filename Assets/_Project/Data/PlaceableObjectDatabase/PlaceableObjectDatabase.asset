@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfac1db3fe4114b42958abdcc22afd66, type: 3}
+  m_Name: PlaceableObjectDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDatabase
+  objects:
+  - name: Hangar
+    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
+    type: 0
+  - name: Plane
+    icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    prefab: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
+    type: 1

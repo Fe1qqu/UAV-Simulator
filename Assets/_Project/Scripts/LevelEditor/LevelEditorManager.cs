@@ -1,148 +1,203 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
-[System.Serializable]
-public class ItemOption
-{
-    public string name;
-    public Sprite icon;
-    public GameObject prefab;
-}
-
+/// <summary>
+/// Manages level editor UI: category list, placeable object list, and scene loading.
+/// </summary>
 public class LevelEditorManager : MonoBehaviour
 {
     [Header("UI References")]
-    public TMP_Dropdown locationDropdown;
+    [Tooltip("Parent transform where category buttons will be instantiated.")]
+    public Transform categoryListContainer;
+
+    [Tooltip("Parent transform where placeable object buttons will be instantiated.")]
     public Transform objectListContainer;
-    public GameObject objectListItemTemplate;
+
+    [Tooltip("UI label displaying the name of the currently selected category.")]
+    public TextMeshProUGUI currentCategoryLabel;
+
+    [Header("Prefabs")]
+    [Tooltip("Prefab used for constructing a category button in the category list.")]
+    public GameObject categoryButtonPrefab;
+
+    [Tooltip("Prefab used for constructing a placeable object button in the object list.")]
+    public GameObject placeableObjectButtonPrefab;
+
+    [Header("Databases")]
+    [Tooltip("Database containing all available locations.")]
+    public LocationDatabase locationDatabase;
+
+    [Tooltip("Database that stores all placeable objects available to the editor.")]
+    public PlaceableObjectDatabase placeableObjectDatabase;
+
+    [Tooltip("Database that stores object categories and their icons.")]
+    public CategoryDatabase categoryDatabase;
+
+    [Header("Scene Root")]
+    [Tooltip("Parent under which the level and placed objects will be instantiated.")]
     public Transform levelRoot;
 
-    [Header("Locations")]
-    public List<ItemOption> locations;
+    // Currently selected category button
+    private UICategoryButton currentSelectedButton;
 
-    [Header("Placeable Objects")]
-    public List<ItemOption> placeableObjects;
+    // Active category enum value
+    private PlaceableObjectType currentCategory;
 
-    private GameObject currentLocation;
+    //private GameObject currentLocation;
 
     void Start()
     {
-        if (locationDropdown == null)
-        {
-            Debug.LogError($"[LevelEditorManager] TMP_Dropdown is missing on '{gameObject.name}'.");
-            return;
-        }
-
         if (levelRoot == null)
         {
-            Debug.LogError($"[LevelEditorManager] LevelRoot Transform is not assigned on '{gameObject.name}'.");
+            Debug.LogError($"[LevelEditorManager] LevelRoot is not assigned.");
             return;
         }
 
-        if (locations == null)
+        if (locationDatabase == null || locationDatabase.locations.Count == 0)
         {
-            Debug.LogError($"[LevelEditorManager] Locations list is null on '{gameObject.name}'.");
+            Debug.LogError($"[LevelEditorManager] LocationDatabase is missing or empty.");
             return;
         }
 
-        if (locations.Count == 0)
+        if (placeableObjectDatabase == null || placeableObjectDatabase.objects.Count == 0)
         {
-            Debug.LogError($"[LevelEditorManager] Locations list is empty on '{gameObject.name}'. Please assign at least one location in the inspector.");
+            Debug.LogError($"[LevelEditorManager] PlaceableObjectDatabase is missing or empty.");
             return;
         }
 
-        SetupLocationDropdown();
-        SetupObjectList();
+        if (categoryDatabase == null || categoryDatabase.categories.Count == 0)
+        {
+            Debug.LogError($"[LevelEditorManager] CategoryDatabase is missing or empty.");
+            return;
+        }
 
-        locationDropdown.onValueChanged.AddListener(OnLocationChanged);
+        if (categoryButtonPrefab == null)
+        {
+            Debug.LogError("[LevelEditorManager] CategoryButtonPrefab is not assigned.");
+        }
 
-        OnLocationChanged(0);
+        if (placeableObjectButtonPrefab == null)
+        {
+            Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab is not assigned.");
+        }
+
+        LoadSelectedLocation();
+        SetupCategories();
     }
 
-    void SetupLocationDropdown()
+    /// <summary>
+    /// Creates UI buttons for each category from the database.
+    /// </summary>
+    private void SetupCategories()
     {
-        locationDropdown.ClearOptions();
-
-        var options = new List<TMP_Dropdown.OptionData>();
-        for (int i = 0; i < locations.Count; i++)
+        foreach (Transform child in categoryListContainer)
         {
-            var location = locations[i];
+            Destroy(child.gameObject);
+        }
 
-            if (location == null)
+        foreach (var category in categoryDatabase.categories)
+        {
+            var buttonObj = Instantiate(categoryButtonPrefab, categoryListContainer);
+            
+            if (!buttonObj.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
-                Debug.LogError($"[LevelEditorManager] Location element at index {i} is null on '{gameObject.name}'.");
+                Debug.LogError("[LevelEditorManager] CategoryButtonPrefab missing UICategoryButton");
                 continue;
             }
 
-            if (location.prefab == null)
-            {
-                Debug.LogError($"[LevelEditorManager] Location '{location.name}' has no prefab assigned on '{gameObject.name}'.");
-                continue;
-            }
-
-            options.Add(new TMP_Dropdown.OptionData(location.name, location.icon, Color.black));
+            categoryButton.Setup(category, OnCategorySelected);
         }
 
-        locationDropdown.AddOptions(options);
+        // Auto–select first category
+        if (categoryDatabase.categories.Count > 0)
+        {
+            var firstCategory = categoryDatabase.categories[0];
+            var firstButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
+            OnCategorySelected(firstCategory, firstButton);
+        }
     }
 
-    void SetupObjectList()
+    /// <summary>
+    /// Called when a category button is clicked.
+    /// Updates UI and object list.
+    /// </summary>
+    private void OnCategorySelected(CategoryData category, UICategoryButton button)
     {
-        if (objectListItemTemplate == null)
+        if (currentSelectedButton != null)
         {
-            Debug.LogError($"[LevelEditorManager] Object List Item Template not assigned on '{gameObject.name}'.");
-            return;
+            currentSelectedButton.SetSelected(false);
         }
 
+        currentSelectedButton = button;
+        currentSelectedButton.SetSelected(true);
+
+        currentCategory = category.type;
+        currentCategoryLabel.text = category.displayName;
+
+        RefreshObjectList();
+    }
+
+    /// <summary>
+    /// Rebuilds the list of buttons for objects of the selected category.
+    /// </summary>
+    void RefreshObjectList()
+    {
         foreach (Transform child in objectListContainer)
         {
             Destroy(child.gameObject);
         }
 
-        foreach (var obj in placeableObjects)
+        var filteredObjects = placeableObjectDatabase.GetByType(currentCategory);
+
+        if (filteredObjects.Count == 0)
         {
-            if (obj.prefab == null)
-            {
-                Debug.LogError($"[LevelEditorManager] Placeable object '{obj.name}' missing prefab.");
-                continue;
-            }
-
-            var item = Instantiate(objectListItemTemplate, objectListContainer);
-            item.SetActive(true);
-
-            var icon = item.transform.Find("Icon")?.GetComponent<Image>();
-            var label = item.transform.Find("Label")?.GetComponent<TextMeshProUGUI>();
-
-            if (icon != null) icon.sprite = obj.icon;
-            if (label != null) label.text = obj.name;
-
-            var dragItem = item.GetComponent<UIObjectDraggableItem>();
-            if (dragItem != null)
-            {
-                dragItem.linkedObject = obj;
-            }
-            else
-            {
-                Debug.LogError($"[LevelEditorManager] ObjectListItem '{item.name}' missing UIObjectDraggableItem component.");
-            }
-        }
-    }
-
-    public void OnLocationChanged(int index)
-    {
-        if (currentLocation != null)
-        {
-            Destroy(currentLocation);
-        }
-
-        if (index < 0 || index >= locations.Count)
-        {
-            Debug.LogError($"[LevelEditorManager] Invalid location index ({index}) on '{gameObject.name}'. Valid range: 0–{locations.Count - 1}");
+            Debug.LogWarning($"[LevelEditorManager] No objects found for category '{currentCategory}'.");
             return;
         }
 
-        currentLocation = Instantiate(locations[index].prefab, Vector3.zero, Quaternion.identity, levelRoot);
+        foreach (var objData in filteredObjects)
+        {
+            var buttonObj = Instantiate(placeableObjectButtonPrefab, objectListContainer);
+            var button = buttonObj.GetComponent<UIPlaceableObjectButton>();
+            if (button == null)
+            {
+                Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
+                continue;
+            }
+
+            button.Setup(objData);
+        }
+    }
+
+    /// <summary>
+    /// Loads the location chosen earlier in GameSettings.
+    /// </summary>
+    private void LoadSelectedLocation()
+    {
+        string selectedLocationName = GameSettings.Instance.SelectedLocation;
+        
+        if (string.IsNullOrEmpty(selectedLocationName))
+        {
+            Debug.LogWarning("[LevelEditorManager] No selected location found. Loading first available location.");
+            selectedLocationName = locationDatabase.locations[0].name;
+        }
+
+        var data = locationDatabase.locations.Find(l => l.name == selectedLocationName);
+        if (data == null)
+        {
+            Debug.LogWarning($"[LevelEditorManager] Location '{selectedLocationName}' not found in database. Loading default.");
+            data = locationDatabase.locations.Count > 0 ? locationDatabase.locations[0] : null;
+        }
+
+        if (data?.prefab == null)
+        {
+            Debug.LogError($"[LevelEditorManager] Prefab missing for location '{data?.name}'.");
+            return;
+        }
+
+        Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
+        //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
+
+        //Debug.Log($"[LevelEditorManager] Loaded location: {location.name}");
     }
 }
