@@ -68,7 +68,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        Debug.Log($"[UIPlaceableObjectButton] Begin drag {linkedObjectData.name}");
+        Debug.Log($"[UIPlaceableObjectButton] Begin drag {linkedObjectData.localizationKey}");
 
         TooltipManager.Instance.EnterDragMode();
         DragPlacementHandler.Instance.BeginDrag(linkedObjectData.prefab);
@@ -142,7 +142,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        TooltipManager.Instance.Show(linkedObjectData.name);
+        TooltipManager.Instance.Show(linkedObjectData.localizationKey);
     }
 
     /// <summary>

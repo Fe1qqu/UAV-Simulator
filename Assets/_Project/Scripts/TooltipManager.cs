@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using System.Collections;
-using TMPro;
 
 /// <summary>
 /// Manages the display of tooltips in the UI.
@@ -14,24 +15,23 @@ public class TooltipManager : MonoBehaviour
     [Tooltip("Canvas containing the tooltip UI.")]
     public Canvas tooltipCanvas;
 
-    [Tooltip("CanvasGroup controlling tooltip visibility and fade.")]
-    public CanvasGroup tooltipCanvasGroup;
-
     [Tooltip("RectTransform of the tooltip panel.")]
     public RectTransform tooltipRect;
 
-    [Tooltip("Text component displaying the tooltip message.")]
-    public TextMeshProUGUI tooltipText;
+    [Tooltip("Localize event that updates tooltip text.")]
+    public LocalizeStringEvent tooltipLocalizeEvent;
 
     [Header("Settings")]
     [Tooltip("Offset from mouse position for tooltip.")]
     public Vector2 tooltipOffset = new Vector2(12f, -8f);
 
     [Tooltip("Speed of tooltip fade-in.")]
-    public float tooltipFadeSpeed = 3.0f;
+    public float tooltipFadeSpeed = 0.1f;
 
     [Tooltip("Delay before showing the tooltip.")]
     public float tooltipDelay = 0.1f;
+
+    private FadeManager fadeManager;
 
     private bool isVisible;
     private bool dragMode = false;
@@ -58,19 +58,20 @@ public class TooltipManager : MonoBehaviour
             Debug.LogError("[TooltipManager] Missing reference to tooltipCanvas.");
         }
 
-        if (tooltipCanvasGroup == null)
-        {
-            Debug.LogError("[TooltipManager] Missing reference to tooltipCanvasGroup.");
-        }
-
         if (tooltipRect == null)
         {
             Debug.LogError("[TooltipManager] Missing references to tooltipRect.");
         }
 
-        if (tooltipText == null)
+        if (tooltipLocalizeEvent == null)
         {
-            Debug.LogError("[TooltipManager] Missing references to tooltipText.");
+            Debug.LogError("[TooltipManager] Missing tooltipLocalizeEvent.");
+        }
+
+        fadeManager = tooltipRect.GetComponent<FadeManager>();
+        if (fadeManager == null)
+        {
+            Debug.LogWarning("[TooltipManager] Missing fadeManager on tooltipRect.");
         }
 
         Hide();
@@ -86,12 +87,6 @@ public class TooltipManager : MonoBehaviour
         if (Mouse.current == null)
         {
             return;
-        }
-
-        // Fade in the tooltip smoothly
-        if (tooltipCanvasGroup.alpha < 1)
-        {
-            tooltipCanvasGroup.alpha += Time.deltaTime * tooltipFadeSpeed;
         }
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
@@ -113,18 +108,18 @@ public class TooltipManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Shows the tooltip with the given message.
-    /// <param name="message">Text to display in the tooltip.</param>
+    /// Shows the tooltip with the message.
+    /// <param name="localizedKey">Localized key used to display text in the tooltip.</param>
     /// <param name="force">If true, ignores dragMode suppression (used by UIDragContext).</param>
     /// </summary>
-    public void Show(string message, bool force = false)
+    public void Show(LocalizedString localizedKey, bool force = false)
     {
         if (dragMode && !force)
         {
             return;
         }    
 
-        //Debug.Log($"tooltipShow message: {message}");
+        //Debug.Log($"tooltipShow message: {localizedKey}");
 
         if (showCoroutine != null)
         {
@@ -132,10 +127,10 @@ public class TooltipManager : MonoBehaviour
         }
 
         isVisible = true;
-        showCoroutine = StartCoroutine(ShowWithDelay(message));
+        showCoroutine = StartCoroutine(ShowWithDelay(localizedKey));
     }
 
-    private IEnumerator ShowWithDelay(string message)
+    private IEnumerator ShowWithDelay(LocalizedString localizedKey)
     {
         yield return new WaitForSeconds(tooltipDelay);
 
@@ -145,13 +140,13 @@ public class TooltipManager : MonoBehaviour
             yield break;
         }
 
-        if (tooltipCanvasGroup != null)
-        {
-            tooltipCanvasGroup.alpha = 0;
-        }
+        tooltipLocalizeEvent.StringReference = localizedKey;
+        tooltipLocalizeEvent.RefreshString();
 
-        tooltipText.text = message;
+        fadeManager.SetAlpha(0);
         tooltipRect.gameObject.SetActive(true);
+        fadeManager.FadeIn(tooltipFadeSpeed);
+
         showCoroutine = null;
     }
 

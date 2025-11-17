@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 /// <summary>
 /// Step 2 of the level creation wizard. Handles selecting a location for the level.
@@ -21,14 +22,14 @@ public class Step2_LocationSelect : LevelCreationStep
     /// <returns>True if a location is selected, false otherwise.</returns>
     public override bool ValidateStep()
     {
-        string location = locationSelection.GetSelectedLocation();
-        if (string.IsNullOrEmpty(location))
+        LocalizedString selectedLocationKey = locationSelection.GetSelectedLocationKey();
+        if (selectedLocationKey == null)
         {
             Debug.LogWarning("[Step2_LocationSelect] No location selected.");
             return false;
         }
 
-        GameSettings.Instance.SelectedLocation = location;
+        GameSettings.Instance.SelectedLocationId = selectedLocationKey.TableEntryReference.KeyId;
         return true;
     }
 }

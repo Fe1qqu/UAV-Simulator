@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
+using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Manages the level creation wizard UI, navigation between steps, and starting the level editor.
@@ -15,6 +15,10 @@ public class LevelCreationWizard : MonoBehaviour
     [Tooltip("Panel for the main menu.")]
     public GameObject mainMenuPanel;
 
+    [Header("Localization Preloader")]
+    [Tooltip("Preloads the Locations StringTable while the wizard is active.")]
+    public LocationLocalizationPreloader locationPreloader;
+
     [Header("Steps")]
     [Tooltip("Array of LevelCreationStep components representing each step of the wizard.")]
     public LevelCreationStep[] steps;
@@ -25,15 +29,27 @@ public class LevelCreationWizard : MonoBehaviour
     [Tooltip("Button used to navigate to the next step.")]
     public Button nextButton;
 
+    private LocalizeStringEvent nextButtonLocalization;
+
     [Tooltip("Button used to navigate to the previous step.")]
     public Button backButton;
 
     [Tooltip("Button to return to the main menu.")]
     public Button mainMenuButton;
 
+    private void Awake()
+    {
+        if (locationPreloader == null)
+        {
+            Debug.LogError("[LevelCreationWizard] LocationLocalizationPreloader is not assigned.");
+        }
+    }
+
     private void Start()
     {
         wizardPanel.SetActive(false);
+
+        nextButtonLocalization = nextButton.GetComponentInChildren<LocalizeStringEvent>();
 
         nextButton.onClick.AddListener(OnNextClicked);
         backButton.onClick.AddListener(OnBackClicked);
@@ -50,8 +66,13 @@ public class LevelCreationWizard : MonoBehaviour
     /// <summary>
     /// Starts the wizard and shows the first step.
     /// </summary>
-    public void StartWizard()
+    public async void StartWizard()
     {
+        if (locationPreloader != null)
+        {
+            await locationPreloader.Load();
+        }
+
         wizardPanel.SetActive(true);
         ShowStep(0);
     }
@@ -72,7 +93,8 @@ public class LevelCreationWizard : MonoBehaviour
 
         steps[currentStep].OnStepShown();
 
-        nextButton.GetComponentInChildren<TMP_Text>().text = currentStep < steps.Length - 1 ? "Далее" : "Начать";
+        string key = (currentStep < steps.Length - 1) ? "next" : "start";
+        nextButtonLocalization.StringReference.TableEntryReference = key;
     }
 
     /// <summary>
@@ -115,6 +137,8 @@ public class LevelCreationWizard : MonoBehaviour
     /// </summary>
     private void OnMainMenuClicked()
     {
+        locationPreloader.Unload();
+
         wizardPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
@@ -124,7 +148,8 @@ public class LevelCreationWizard : MonoBehaviour
     /// </summary>
     private void CreateLevel()
     {
-        //Debug.Log("[LevelCreationWizard] Creating level and loading LevelEditor scene");
+        locationPreloader.Unload();
+
         SceneManager.LoadScene("LevelEditor");
     }
 }

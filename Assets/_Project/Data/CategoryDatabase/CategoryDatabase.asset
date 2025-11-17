@@ -14,11 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CategoryDatabase
   categories:
   - type: 0
-    displayName: Generic
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 130448252928
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
   - type: 1
-    displayName: Trees
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 287118090240
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   - type: 2
-    displayName: Buildings
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 368491782144
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  references:
+    version: 2
+    RefIds: []

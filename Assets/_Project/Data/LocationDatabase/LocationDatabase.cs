@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using System.Collections.Generic;
 
 /// <summary>
@@ -7,8 +8,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class LocationData
 {
-    [Tooltip("Human-readable name of the location.")]
-    public string name;
+    public LocalizedString localizationKey;
 
     [Tooltip("Preview thumbnail shown in the UI.")]
     public Sprite preview;

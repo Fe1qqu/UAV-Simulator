@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using TMPro;
 
 /// <summary>
 /// Handles displaying a list of locations and selecting one from the UI.
@@ -20,8 +21,8 @@ public class LocationSelection : MonoBehaviour
     [Tooltip("Database containing all available locations.")]
     public LocationDatabase locationDatabase;
 
-    // Currently selected location name
-    private string selectedLocation = null;
+    // Currently selected location localization key
+    private LocalizedString selectedLocationKey = null;
 
     // List of created buttons and their checkmarks
     private List<(Button button, GameObject checkmark)> createdButtons = new List<(Button, GameObject)>();
@@ -32,7 +33,7 @@ public class LocationSelection : MonoBehaviour
 
         if (locationDatabase.locations.Count > 0)
         {
-            OnLocationSelected(locationDatabase.locations[0].name, createdButtons[0].button);
+            OnLocationSelected(locationDatabase.locations[0].localizationKey, createdButtons[0].button);
         }
     }
 
@@ -57,37 +58,39 @@ public class LocationSelection : MonoBehaviour
                 continue;
             }
 
-            Button btn = btnObj.GetComponent<Button>();
-            if (btn == null)
+            // Button
+            if (!btnObj.TryGetComponent<Button>(out var btn))
             {
-                Debug.LogError($"[LocationSelection] Button component not found on prefab for location '{location.name}'.");
+                Debug.LogError($"[LocationSelection] Button component not found on prefab for location '{location.localizationKey}'.");
                 continue;
             }
 
-            TMP_Text label = btnObj.GetComponentInChildren<TMP_Text>();
-            if (label == null)
+            LocalizeStringEvent localizeEvent = btnObj.GetComponentInChildren<LocalizeStringEvent>();
+            if (localizeEvent != null)
             {
-                Debug.LogWarning($"[LocationSelection] TMP_Text not found for location '{location.name}'.");
+                localizeEvent.StringReference = location.localizationKey;
+                localizeEvent.RefreshString();
             }
             else
             {
-                label.text = location.name;
+                Debug.LogWarning($"[LocationSelection] LocalizeStringEvent not found for location button '{location.localizationKey.TableReference}:{location.localizationKey.TableEntryReference}'.");
             }
 
+            // Icon
             Transform iconTransform = btnObj.transform.Find("Icon");
             if (iconTransform == null)
             {
-                Debug.LogWarning($"[LocationSelection] Icon transform not found for location '{location.name}'.");
+                Debug.LogWarning($"[LocationSelection] Icon transform not found for location '{location.localizationKey}'.");
             }
             else
             {
                 if (!iconTransform.TryGetComponent<Image>(out var icon))
                 {
-                    Debug.LogWarning($"[LocationSelection] Image component missing on Icon for location '{location.name}'.");
+                    Debug.LogWarning($"[LocationSelection] Image component missing on Icon for location '{location.localizationKey}'.");
                 }
                 else if (location.preview == null)
                 {
-                    Debug.LogWarning($"[LocationSelection] Location '{location.name}' has no preview sprite assigned.");
+                    Debug.LogWarning($"[LocationSelection] Location '{location.localizationKey}' has no preview sprite assigned.");
                 }
                 else
                 {
@@ -97,10 +100,9 @@ public class LocationSelection : MonoBehaviour
 
             Transform checkmarkTransform = btnObj.transform.Find("Checkmark");
             GameObject checkmarkObj = null;
-
             if (checkmarkTransform == null)
             {
-                Debug.LogWarning($"[LocationSelection] Checkmark object not found for location '{location.name}'.");
+                Debug.LogWarning($"[LocationSelection] Checkmark object not found for location '{location.localizationKey}'.");
             }
             else
             {
@@ -108,7 +110,7 @@ public class LocationSelection : MonoBehaviour
                 checkmarkObj.SetActive(false);
             }
 
-            btn.onClick.AddListener(() => OnLocationSelected(location.name, btn));
+            btn.onClick.AddListener(() => OnLocationSelected(location.localizationKey, btn));
             createdButtons.Add((btn, checkmarkObj));
         }
     }
@@ -116,12 +118,12 @@ public class LocationSelection : MonoBehaviour
     /// <summary>
     /// Called when a location button is clicked. Updates the selected location and visual checkmarks.
     /// </summary>
-    /// <param name="locationName">Name of the selected location.</param>
+    /// <param name="localizationKey">Localization key of the selected location.</param>
     /// <param name="clickedButton">Button that was clicked.</param>
-    private void OnLocationSelected(string locationName, Button clickedButton)
+    private void OnLocationSelected(LocalizedString localizationKey, Button clickedButton)
     {
-        selectedLocation = locationName;
-
+        selectedLocationKey = localizationKey;
+        
         foreach (var (button, checkmark) in createdButtons)
         {
             bool isSelected = button == clickedButton;
@@ -136,11 +138,10 @@ public class LocationSelection : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the currently selected location name.
+    /// Returns the currently selected location key.
     /// </summary>
-    /// <returns>Selected location name.</returns>
-    public string GetSelectedLocation()
+    public LocalizedString GetSelectedLocationKey()
     {
-        return selectedLocation;
+        return selectedLocationKey;
     }
 }

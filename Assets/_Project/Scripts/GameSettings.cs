@@ -47,13 +47,14 @@ public class GameSettings : MonoBehaviour
 
     /// <summary>
     /// Selected location for level creation.
+    /// Stored as the TableEntryReference Id of the localized string.
     /// </summary>
-    public string SelectedLocation
+    public long SelectedLocationId
     {
-        get => PlayerPrefs.GetString("SelectedLocation");
+        get => long.TryParse(PlayerPrefs.GetString("SelectedLocationId"), out long id) ? id : 0;
         set
         {
-            PlayerPrefs.SetString("SelectedLocation", value);
+            PlayerPrefs.SetString("SelectedLocationId", value.ToString());
             Save();
         }
     }
@@ -110,6 +111,6 @@ public class GameSettings : MonoBehaviour
 
         // Clear temporary level creation settings at startup
         PlayerPrefs.DeleteKey("LevelName");
-        PlayerPrefs.DeleteKey("SelectedLocation");
+        PlayerPrefs.DeleteKey("SelectedLocationId");
     }
 }

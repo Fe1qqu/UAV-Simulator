@@ -13,9 +13,28 @@ MonoBehaviour:
   m_Name: LocationDatabase
   m_EditorClassIdentifier: Assembly-CSharp::LocationDatabase
   locations:
-  - name: Desert
+  - localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:101a2b14708cfba4ebb8f79eb4c0511b
+      m_TableEntryReference:
+        m_KeyId: 8087822336
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     preview: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 9167181976809878369, guid: b91f9709eba64744d82fce113e8f2687, type: 3}
-  - name: SnowyMountain
+  - localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:101a2b14708cfba4ebb8f79eb4c0511b
+      m_TableEntryReference:
+        m_KeyId: 335767822336
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     preview: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 2364327996464665135, guid: 51a5ca0f285041b4cb1545cf7fbacb66, type: 3}
+  references:
+    version: 2
+    RefIds: []

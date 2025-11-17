@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using System.Collections.Generic;
 
 /// <summary>
@@ -9,9 +10,7 @@ public enum PlaceableObjectType
     Generic,
     Tree,
     Building,
-    Light,
-    Prop,
-    Decoration
+    Light
 }
 
 /// <summary>
@@ -20,8 +19,7 @@ public enum PlaceableObjectType
 [System.Serializable]
 public class PlaceableObjectData
 {
-    [Tooltip("Unique display name used in UI lists.")]
-    public string name;
+    public LocalizedString localizationKey;
 
     [Tooltip("Icon shown on the placeable object's button.")]
     public Sprite icon;

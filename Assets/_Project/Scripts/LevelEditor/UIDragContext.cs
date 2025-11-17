@@ -67,9 +67,9 @@ public class UIDragContext : MonoBehaviour
 
             CurrentZone = dragContextZone;
 
-            if (CurrentZone != null && !string.IsNullOrEmpty(CurrentZone.tooltipText))
+            if (CurrentZone?.tooltipLocalizedKey != null)
             {
-                TooltipManager.Instance.Show(CurrentZone.tooltipText, force: true);
+                TooltipManager.Instance.Show(CurrentZone.tooltipLocalizedKey, force: true);
             }
         }
 

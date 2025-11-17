@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Localization;
 
 /// <summary>
 /// UI button representing a single category inside the level editor.
@@ -84,7 +85,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
             return; 
         }
 
-        TooltipManager.Instance.Show(categoryData.displayName);
+        TooltipManager.Instance.Show(categoryData.localizationKey);
     }
 
     /// <summary>

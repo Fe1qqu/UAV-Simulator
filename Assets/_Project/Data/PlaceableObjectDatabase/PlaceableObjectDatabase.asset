@@ -13,11 +13,30 @@ MonoBehaviour:
   m_Name: PlaceableObjectDatabase
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDatabase
   objects:
-  - name: Hangar
+  - localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+      m_TableEntryReference:
+        m_KeyId: 36164493312
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
     type: 0
-  - name: Plane
+  - localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+      m_TableEntryReference:
+        m_KeyId: 72772378624
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
     type: 1
+  references:
+    version: 2
+    RefIds: []

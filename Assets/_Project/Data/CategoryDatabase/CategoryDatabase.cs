@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using System.Collections.Generic;
 
 /// <summary>
@@ -10,8 +11,7 @@ public class CategoryData
     [Tooltip("Enum value that groups placeable objects.")]
     public PlaceableObjectType type;
 
-    [Tooltip("User-facing name shown in the UI.")]
-    public string displayName;
+    public LocalizedString localizationKey;
 
     [Tooltip("Icon used for category buttons.")]
     public Sprite icon;
