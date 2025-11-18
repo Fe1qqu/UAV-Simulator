@@ -21,7 +21,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private CanvasGroup canvasGroup;
 
     // Category data assigned during initialization
-    [HideInInspector] public CategoryData categoryData;
+    private CategoryData categoryData;
 
     // Callback invoked when this button is clicked
     private System.Action<CategoryData, UICategoryButton> onClick;
@@ -34,7 +34,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         icon = transform.Find("Icon")?.GetComponent<Image>();
         if (icon == null)
         {
-            Debug.LogWarning($"[UICategoryButton] Missing Icon on {name}");
+            Debug.LogWarning($"[UICategoryButton] Missing icon on {name}");
         }
     }
 
@@ -43,24 +43,24 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     /// </summary>
     /// <param name="data">Category data containing icon and display name.</param>
     /// <param name="onClick">Callback invoked when the button is pressed.</param>
-    public void Setup(CategoryData data, System.Action<CategoryData, UICategoryButton> onClick)
+    public void Setup(CategoryData categoryData, System.Action<CategoryData, UICategoryButton> onClick)
     {
-        if (data == null)
+        if (categoryData == null)
         {
-            Debug.LogError("[UICategoryButton] Tried to setup with null CategoryData.");
+            Debug.LogError("[UICategoryButton] Tried to setup with null categoryData.");
             return;
         }
 
-        categoryData = data;
+        this.categoryData = categoryData;
         this.onClick = onClick;
 
         if (icon != null)
         {
-            icon.sprite = data.icon;
+            icon.sprite = categoryData.icon;
         }
 
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick?.Invoke(data, this));
+        button.onClick.AddListener(() => onClick?.Invoke(categoryData, this));
 
         SetSelected(false);
     }
@@ -82,6 +82,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         if (categoryData == null)
         {
+            Debug.LogWarning("[UICategoryButton] Tried to show tooltip with null categoryData.");
             return; 
         }
 

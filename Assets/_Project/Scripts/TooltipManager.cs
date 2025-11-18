@@ -13,23 +13,23 @@ public class TooltipManager : MonoBehaviour
 
     [Header("References")]
     [Tooltip("Canvas containing the tooltip UI.")]
-    public Canvas tooltipCanvas;
+    [SerializeField] private Canvas tooltipCanvas;
 
     [Tooltip("RectTransform of the tooltip panel.")]
-    public RectTransform tooltipRect;
+    [SerializeField] private RectTransform tooltipRect;
 
     [Tooltip("Localize event that updates tooltip text.")]
-    public LocalizeStringEvent tooltipLocalizeEvent;
+    [SerializeField] private LocalizeStringEvent tooltipLocalizeEvent;
 
     [Header("Settings")]
     [Tooltip("Offset from mouse position for tooltip.")]
-    public Vector2 tooltipOffset = new Vector2(12f, -8f);
+    [SerializeField] private Vector2 tooltipOffset = new Vector2(12f, -8f);
 
     [Tooltip("Speed of tooltip fade-in.")]
-    public float tooltipFadeSpeed = 0.1f;
+    [SerializeField] private float tooltipFadeSpeed = 0.1f;
 
     [Tooltip("Delay before showing the tooltip.")]
-    public float tooltipDelay = 0.1f;
+    [SerializeField] private float tooltipDelay = 0.1f;
 
     private FadeManager fadeManager;
 
@@ -55,23 +55,23 @@ public class TooltipManager : MonoBehaviour
 
         if (tooltipCanvas == null)
         {
-            Debug.LogError("[TooltipManager] Missing reference to tooltipCanvas.");
+            Debug.LogError("[TooltipManager] TooltipCanvas is not assigned.");
         }
 
         if (tooltipRect == null)
         {
-            Debug.LogError("[TooltipManager] Missing references to tooltipRect.");
+            Debug.LogError("[TooltipManager] TooltipRect is not assigned.");
         }
 
         if (tooltipLocalizeEvent == null)
         {
-            Debug.LogError("[TooltipManager] Missing tooltipLocalizeEvent.");
+            Debug.LogError("[TooltipManager] TooltipLocalizeEvent is not assigned.");
         }
 
         fadeManager = tooltipRect.GetComponent<FadeManager>();
         if (fadeManager == null)
         {
-            Debug.LogWarning("[TooltipManager] Missing fadeManager on tooltipRect.");
+            Debug.LogWarning("[TooltipManager] FadeManager not found on tooltipRect.");
         }
 
         Hide();

@@ -26,7 +26,6 @@ public class LocationLocalizationPreloader : MonoBehaviour
     /// </summary>
     public async Task Load()
     {
-        // Avoid double-loading
         if (IsLoaded)
         {
             return;

@@ -12,14 +12,14 @@ public class LocationSelection : MonoBehaviour
 {
     [Header("UI References")]
     [Tooltip("Parent transform of the ScrollView content where location buttons will be instantiated.")]
-    public Transform contentParent;
+    [SerializeField] private Transform contentParent;
 
     [Tooltip("Prefab used for each location button.")]
-    public GameObject locationButtonPrefab;
+    [SerializeField] private GameObject locationButtonPrefab;
 
     [Header("Data")]
     [Tooltip("Database containing all available locations.")]
-    public LocationDatabase locationDatabase;
+    [SerializeField] private LocationDatabase locationDatabase;
 
     // Currently selected location localization key
     private LocalizedString selectedLocationKey = null;
@@ -27,14 +27,28 @@ public class LocationSelection : MonoBehaviour
     // List of created buttons and their checkmarks
     private List<(Button button, GameObject checkmark)> createdButtons = new List<(Button, GameObject)>();
 
+    private void Awake()
+    {
+        if (contentParent == null)
+        {
+            Debug.LogError("[LocationSelection] ContentParent is not assigned.");
+        }
+
+        if (locationButtonPrefab == null)
+        {
+            Debug.LogError("[LocationSelection] LocationButtonPrefab is not assigned.");
+        }
+
+        if (locationDatabase == null || locationDatabase.locations.Count == 0)
+        {
+            Debug.LogError("[LocationSelection] LocationDatabase is missing or empty.");
+        }
+    }
+
     private void Start()
     {
         PopulateList();
-
-        if (locationDatabase.locations.Count > 0)
-        {
-            OnLocationSelected(locationDatabase.locations[0].localizationKey, createdButtons[0].button);
-        }
+        OnLocationSelected(locationDatabase.locations[0].localizationKey, createdButtons[0].button);
     }
 
     /// <summary>

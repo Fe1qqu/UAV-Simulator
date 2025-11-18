@@ -8,40 +8,37 @@ using System.Threading.Tasks;
 public class LevelEditorManager : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject loadingScreen;
+    [SerializeField] private GameObject loadingScreen;
 
     [Tooltip("Parent transform where category buttons will be instantiated.")]
-    public Transform categoryListContainer;
+    [SerializeField] private Transform categoryListContainer;
 
     [Tooltip("Parent transform where placeable object buttons will be instantiated.")]
-    public Transform objectListContainer;
+    [SerializeField] private Transform objectListContainer;
 
     [Tooltip("LocalizeStringEvent attached to currentCategoryLabel.")]
-    public LocalizeStringEvent currentCategoryLocalizeEvent;
+    [SerializeField] private LocalizeStringEvent currentCategoryLocalizeEvent;
 
     [Header("Prefabs")]
     [Tooltip("Prefab used for constructing a category button in the category list.")]
-    public GameObject categoryButtonPrefab;
+    [SerializeField] private GameObject categoryButtonPrefab;
 
     [Tooltip("Prefab used for constructing a placeable object button in the object list.")]
-    public GameObject placeableObjectButtonPrefab;
+    [SerializeField] private GameObject placeableObjectButtonPrefab;
 
     [Header("Databases")]
     [Tooltip("Database containing all available locations.")]
-    public LocationDatabase locationDatabase;
+    [SerializeField] private LocationDatabase locationDatabase;
 
     [Tooltip("Database that stores all placeable objects available to the editor.")]
-    public PlaceableObjectDatabase placeableObjectDatabase;
+    [SerializeField] private PlaceableObjectDatabase placeableObjectDatabase;
 
     [Tooltip("Database that stores object categories and their icons.")]
-    public CategoryDatabase categoryDatabase;
+    [SerializeField] private CategoryDatabase categoryDatabase;
 
     [Header("Scene Root")]
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
-    public Transform levelRoot;
-
-    [Header("Localization Preloader")]
-    public EditorLocalizationPreloader localizationPreloader;
+    [SerializeField] private Transform levelRoot;
 
     // Currently selected category button
     private UICategoryButton currentSelectedButton;
@@ -51,71 +48,23 @@ public class LevelEditorManager : MonoBehaviour
 
     private FadeManager loadingFader;
 
-    public async void Start()
+    private EditorLocalizationPreloader localizationPreloader;
+
+    private void Awake()
     {
-        if (!ValidateReferences())
+        if (loadingScreen == null)
         {
-            return;
+            Debug.LogError("[LevelEditorManager] loadingScreen is not assigned.");
         }
 
-        loadingFader = loadingScreen.GetComponent<FadeManager>();
-        loadingScreen.SetActive(true);
-
-        Task loadTask = localizationPreloader.Load() ?? Task.CompletedTask;
-
-        InitializeEditor();
-
-        await loadTask;
-
-        await loadingFader.FadeOutAsync(0.35f);
-        loadingScreen.SetActive(false);
-    }
-
-    private void InitializeEditor()
-    {
-        LoadSelectedLocation();
-        SetupCategories();
-    }
-
-    /// <summary>
-    /// Verifies that all needed references are assigned.
-    /// </summary>
-    private bool ValidateReferences()
-    {
-        if (levelRoot == null)
+        if (categoryListContainer == null)
         {
-            Debug.LogError("[LevelEditorManager] LevelRoot is not assigned.");
-            return false;
+            Debug.LogError("[LevelEditorManager] CategoryListContainer is not assigned.");
         }
 
-        if (locationDatabase == null || locationDatabase.locations.Count == 0)
+        if (objectListContainer == null)
         {
-            Debug.LogError("[LevelEditorManager] LocationDatabase is missing or empty.");
-            return false;
-        }
-
-        if (placeableObjectDatabase == null || placeableObjectDatabase.objects.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] PlaceableObjectDatabase is missing or empty.");
-            return false;
-        }
-
-        if (categoryDatabase == null || categoryDatabase.categories.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] CategoryDatabase is missing or empty.");
-            return false;
-        }
-
-        if (categoryButtonPrefab == null)
-        {
-            Debug.LogError("[LevelEditorManager] CategoryButtonPrefab is not assigned.");
-            return false;
-        }
-
-        if (placeableObjectButtonPrefab == null)
-        {
-            Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab is not assigned.");
-            return false;
+            Debug.LogError("[LevelEditorManager] ObjectListContainer is not assigned.");
         }
 
         if (currentCategoryLocalizeEvent == null)
@@ -123,13 +72,67 @@ public class LevelEditorManager : MonoBehaviour
             Debug.LogWarning("[LevelEditorManager] currentCategoryLocalizeEvent is not assigned.");
         }
 
-        if (localizationPreloader == null)
+        if (categoryButtonPrefab == null)
         {
-            Debug.LogError("[LevelEditorManager] localizationPreloader is not assigned.");
-            return false;
+            Debug.LogError("[LevelEditorManager] CategoryButtonPrefab is not assigned.");
         }
 
-        return true;
+        if (placeableObjectButtonPrefab == null)
+        {
+            Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab is not assigned.");
+        }
+
+        if (locationDatabase == null || locationDatabase.locations.Count == 0)
+        {
+            Debug.LogError("[LevelEditorManager] LocationDatabase is missing or empty.");
+        }
+
+        if (placeableObjectDatabase == null || placeableObjectDatabase.objects.Count == 0)
+        {
+            Debug.LogError("[LevelEditorManager] PlaceableObjectDatabase is missing or empty.");
+        }
+
+        if (categoryDatabase == null || categoryDatabase.categories.Count == 0)
+        {
+            Debug.LogError("[LevelEditorManager] CategoryDatabase is missing or empty.");
+        }
+
+        if (levelRoot == null)
+        {
+            Debug.LogError("[LevelEditorManager] LevelRoot is not assigned.");
+        }
+
+        loadingFader = loadingScreen.GetComponent<FadeManager>();
+        if (loadingFader == null)
+        {
+            Debug.LogError("[LevelEditorManager] FadeManager not found on loadingScreen.");
+        }
+
+        localizationPreloader = GetComponent<EditorLocalizationPreloader>();
+        if (localizationPreloader == null)
+        {
+            Debug.LogError("[LevelEditorManager] EditorLocalizationPreloader not found on this GameObject.");
+        }
+    }
+
+    private async void Start()
+    {
+        loadingScreen.SetActive(true);
+
+        await InitializeEditorAsync();
+
+        await loadingFader.FadeOutAsync(0.35f);
+        loadingScreen.SetActive(false);
+    }
+
+    private async Task InitializeEditorAsync()
+    {
+        Task loadTask = localizationPreloader.Load();
+
+        LoadSelectedLocation();
+        SetupCategories();
+
+        await loadTask;
     }
 
     /// <summary>
@@ -200,7 +203,7 @@ public class LevelEditorManager : MonoBehaviour
 
         var filteredObjects = placeableObjectDatabase.GetByType(currentCategory);
 
-        if (filteredObjects.Count == 0)
+        if (filteredObjects == null || filteredObjects.Count == 0)
         {
             Debug.LogWarning($"[LevelEditorManager] No objects found for category '{currentCategory}'.");
             return;

@@ -20,17 +20,17 @@ public class DragPlacementHandler : MonoBehaviour
 
     [Header("Placement settings")]
     [Tooltip("Raycast mask used to find a valid placement surface.")]
-    public LayerMask placementLayerMask;
+    [SerializeField] private LayerMask placementLayerMask;
 
     [Tooltip("Parent under which placed objects will be instantiated.")]
-    public Transform levelRoot;
+    [SerializeField] private Transform levelRoot;
 
     [Header("Preview settings")]
     [Tooltip("Material applied to the preview instance during drag.")]
-    public Material previewMaterial;
+    [SerializeField] private Material previewMaterial;
 
     [Tooltip("Maximum ray distance used for placement checks.")]
-    public float rayLength = 100000f;
+    [SerializeField] private float rayLength = 100000f;
 
     private GameObject prefabToPlace;
     private GameObject previewInstance;
@@ -52,6 +52,16 @@ public class DragPlacementHandler : MonoBehaviour
         }
 
         Instance = this;
+
+        if (levelRoot == null)
+        {
+            Debug.LogError("[DragPlacementHandler] LevelRoot is not assigned.");
+        }
+        
+        if (previewMaterial == null)
+        {
+            Debug.LogError("[DragPlacementHandler] PreviewMaterial is not assigned.");
+        }
     }
 
     /// <summary>
@@ -141,7 +151,6 @@ public class DragPlacementHandler : MonoBehaviour
         previewInstance = null;
         previewRenderers = null;
     }
-
 
     /// <summary>
     /// Controls renderer visibility to avoid redundant enabling/disabling.

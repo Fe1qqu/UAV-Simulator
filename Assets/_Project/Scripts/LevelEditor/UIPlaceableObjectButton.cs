@@ -139,6 +139,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
     {
         if (linkedObjectData == null)
         {
+            Debug.LogWarning("[UICategoryButton] Tried to show tooltip with null linkedObjectData.");
             return;
         }
 

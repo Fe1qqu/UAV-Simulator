@@ -9,35 +9,33 @@ public class Step1_NameInput : LevelCreationStep
 {
     [Header("UI References")]
     [Tooltip("Input field where the user enters the level name.")]
-    public TMP_InputField nameInput;
+    [SerializeField] private TMP_InputField nameInputField;
 
     [Header("Visual Settings")]
     [Tooltip("Input field color when the value is valid.")]
-    public Color normalColor = Color.white;
+    [SerializeField] private Color normalColor = Color.white;
 
     [Tooltip("Input field color when the value is invalid.")]
-    public Color errorColor = new Color(1.0f, 0.0f, 0.0f, 0.6f);
+    [SerializeField] private Color errorColor = new Color(1.0f, 0.0f, 0.0f, 0.6f);
 
     private void Awake()
     {
-        if (nameInput == null)
+        if (nameInputField == null)
         {
-            Debug.LogError("[Step1_NameInput] nameInput is not assigned.");
+            Debug.LogError("[Step1_NameInput] nameInputField is not assigned.");
             return;
         }
-
-        nameInput.onValueChanged.AddListener(OnNameChanged);
     }
 
-    private void OnDestroy()
+    private void Start()
     {
-        if (nameInput == null)
-        {
-            return;
-        }
-
-        nameInput.onValueChanged.RemoveListener(OnNameChanged);
+        nameInputField.onValueChanged.AddListener(OnNameChanged);
     }
+
+    //private void OnDestroy()
+    //{
+    //    nameInput.onValueChanged.RemoveListener(OnNameChanged);
+    //}
 
     /// <summary>
     /// Called whenever the input field value changes. Updates the color if valid.
@@ -49,7 +47,7 @@ public class Step1_NameInput : LevelCreationStep
 
         if (valid)
         {
-            nameInput.image.color = normalColor;
+            nameInputField.image.color = normalColor;
         }
     }
 
@@ -60,10 +58,10 @@ public class Step1_NameInput : LevelCreationStep
     /// <returns>True if valid, false otherwise.</returns>
     public override bool ValidateStep()
     {
-        string name = nameInput.text.Trim();
+        string name = nameInputField.text.Trim();
         bool valid = !string.IsNullOrEmpty(name);
 
-        nameInput.image.color = valid ? normalColor : errorColor;
+        nameInputField.image.color = valid ? normalColor : errorColor;
 
         if (valid)
         {

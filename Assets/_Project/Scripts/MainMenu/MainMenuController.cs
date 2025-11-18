@@ -6,18 +6,42 @@ using UnityEngine.UI;
 /// </summary>
 public class MainMenuController : MonoBehaviour
 {
+    [Header("UI References")]
     [Tooltip("Main menu panel GameObject that contains all main menu UI elements.")]
-    public GameObject mainMenuPanel;
+    [SerializeField] private GameObject mainMenuPanel;
 
     [Tooltip("Level creation wizard component.")]
-    public LevelCreationWizard levelCreationWizard;
+    [SerializeField] private LevelCreationWizard levelCreationWizard;
 
     [Header("Buttons")]
     [Tooltip("Button to start creating a new level.")]
-    public Button createLevelButton;
+    [SerializeField] private Button createLevelButton;
 
     [Tooltip("Button to exit the game.")]
-    public Button exitButton;
+    [SerializeField] private Button exitButton;
+
+    private void Awake()
+    {
+        if (mainMenuPanel == null)
+        {
+            Debug.LogError("[MainMenuController] MainMenuPanel is not assigned.");
+        }
+
+        if (levelCreationWizard == null)
+        {
+            Debug.LogError("[MainMenuController] LevelCreationWizard is not assigned.");
+        }
+
+        if (createLevelButton == null)
+        {
+            Debug.LogError("[MainMenuController] CreateLevelButton is not assigned.");
+        }
+
+        if (exitButton == null)
+        {
+            Debug.LogError("[MainMenuController] ExitButton is not assigned.");
+        }
+    }
 
     private void Start()
     {
@@ -40,7 +64,6 @@ public class MainMenuController : MonoBehaviour
     private void OnCreateLevelClicked()
     {
         mainMenuPanel.SetActive(false);
-        levelCreationWizard.gameObject.SetActive(true);
         levelCreationWizard.StartWizard();
     }
 

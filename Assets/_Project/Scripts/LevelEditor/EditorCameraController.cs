@@ -59,15 +59,16 @@ public class EditorCameraController : MonoBehaviour
     private void Awake()
     {
         cam = GetComponent<Camera>();
+    }
 
+    private void Start()
+    {
         Vector3 euler = transform.eulerAngles;
         yaw = targetYaw = euler.y;
         pitch = targetPitch = euler.x;
         targetPosition = transform.position;
 
         UnlockCursor();
-
-        //Debug.Log("[EditorCameraController] Initialized. Cursor unlocked.");
     }
 
     private void Update()

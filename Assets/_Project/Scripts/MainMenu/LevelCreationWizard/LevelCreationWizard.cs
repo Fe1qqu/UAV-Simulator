@@ -10,46 +10,79 @@ public class LevelCreationWizard : MonoBehaviour
 {
     [Header("Panels")]
     [Tooltip("Panel containing the wizard UI.")]
-    public GameObject wizardPanel;
+    [SerializeField] private GameObject wizardPanel;
 
     [Tooltip("Panel for the main menu.")]
-    public GameObject mainMenuPanel;
-
-    [Header("Localization Preloader")]
-    [Tooltip("Preloads the Locations StringTable while the wizard is active.")]
-    public LocationLocalizationPreloader locationPreloader;
+    [SerializeField] private GameObject mainMenuPanel;
 
     [Header("Steps")]
     [Tooltip("Array of LevelCreationStep components representing each step of the wizard.")]
-    public LevelCreationStep[] steps;
-
-    private int currentStep = 0;
+    [SerializeField] private LevelCreationStep[] steps;
 
     [Header("Buttons")]
     [Tooltip("Button used to navigate to the next step.")]
-    public Button nextButton;
+    [SerializeField] private Button nextButton;
+
+    [Tooltip("Button used to navigate to the previous step.")]
+    [SerializeField] private Button backButton;
+
+    [Tooltip("Button to return to the main menu.")]
+    [SerializeField] private Button mainMenuButton;
+
+    private int currentStep = 0;
 
     private LocalizeStringEvent nextButtonLocalization;
 
-    [Tooltip("Button used to navigate to the previous step.")]
-    public Button backButton;
-
-    [Tooltip("Button to return to the main menu.")]
-    public Button mainMenuButton;
+    private LocationLocalizationPreloader localizationPreloader;
 
     private void Awake()
     {
-        if (locationPreloader == null)
+        if (wizardPanel == null)
         {
-            Debug.LogError("[LevelCreationWizard] LocationLocalizationPreloader is not assigned.");
+            Debug.LogError("[LevelCreationWizard] WizardPanel is not assigned.");
+        }
+
+        if (mainMenuPanel == null)
+        {
+            Debug.LogError("[LevelCreationWizard] MainMenuPanel is not assigned.");
+        }
+
+        if (steps == null || steps.Length == 0)
+        {
+            Debug.LogError("[LevelCreationWizard] Steps array is missing or empty.");
+        }
+
+        if (nextButton == null)
+        {
+            Debug.LogError("[LevelCreationWizard] NextButton is not assigned.");
+        }
+
+        if (backButton == null)
+        {
+            Debug.LogError("[LevelCreationWizard] BackButton is not assigned.");
+        }
+
+        if (mainMenuButton == null)
+        {
+            Debug.LogError("[LevelCreationWizard] MainMenuButton is not assigned.");
+        }
+
+        nextButtonLocalization = nextButton.GetComponentInChildren<LocalizeStringEvent>();
+        if (nextButtonLocalization == null)
+        {
+            Debug.LogError("[LevelCreationWizard] LocalizeStringEvent not found on nextButton.");
+        }
+
+        localizationPreloader = GetComponent<LocationLocalizationPreloader>();
+        if (localizationPreloader == null)
+        {
+            Debug.LogError("[LevelCreationWizard] LocationLocalizationPreloader not found on this GameObject.");
         }
     }
 
     private void Start()
     {
         wizardPanel.SetActive(false);
-
-        nextButtonLocalization = nextButton.GetComponentInChildren<LocalizeStringEvent>();
 
         nextButton.onClick.AddListener(OnNextClicked);
         backButton.onClick.AddListener(OnBackClicked);
@@ -60,7 +93,7 @@ public class LevelCreationWizard : MonoBehaviour
     //{
     //    nextButton.onClick.RemoveListener(OnNextClicked);
     //    backButton.onClick.RemoveListener(OnBackClicked);
-    //    mainMenuButton.onClick.AddListener(OnMainMenuClicked);
+    //    mainMenuButton.onClick.RemoveListener(OnMainMenuClicked);
     //}
 
     /// <summary>
@@ -68,13 +101,10 @@ public class LevelCreationWizard : MonoBehaviour
     /// </summary>
     public async void StartWizard()
     {
-        if (locationPreloader != null)
-        {
-            await locationPreloader.Load();
-        }
-
         wizardPanel.SetActive(true);
         ShowStep(0);
+
+        await localizationPreloader.Load();
     }
 
     /// <summary>
@@ -91,10 +121,11 @@ public class LevelCreationWizard : MonoBehaviour
 
         currentStep = index;
 
-        steps[currentStep].OnStepShown();
-
         string key = (currentStep < steps.Length - 1) ? "next" : "start";
         nextButtonLocalization.StringReference.TableEntryReference = key;
+        nextButtonLocalization.RefreshString();
+
+        steps[currentStep].OnStepShown();
     }
 
     /// <summary>
@@ -137,7 +168,7 @@ public class LevelCreationWizard : MonoBehaviour
     /// </summary>
     private void OnMainMenuClicked()
     {
-        locationPreloader.Unload();
+        localizationPreloader.Unload();
 
         wizardPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
@@ -148,7 +179,7 @@ public class LevelCreationWizard : MonoBehaviour
     /// </summary>
     private void CreateLevel()
     {
-        locationPreloader.Unload();
+        localizationPreloader.Unload();
 
         SceneManager.LoadScene("LevelEditor");
     }
