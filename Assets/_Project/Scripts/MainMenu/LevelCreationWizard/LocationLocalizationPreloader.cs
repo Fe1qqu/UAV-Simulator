@@ -15,6 +15,7 @@ public class LocationLocalizationPreloader : MonoBehaviour
 
     private AsyncOperationHandle<StringTable> handle;
     private bool loadedSuccessfully = false;
+    private bool isCancelled = false;
 
     /// <summary>
     /// True when the table has been loaded successfully.
@@ -31,8 +32,23 @@ public class LocationLocalizationPreloader : MonoBehaviour
             return;
         }
 
+        isCancelled = false;
+
         handle = LocalizationSettings.StringDatabase.GetTableAsync(tableName);
         await handle.Task;
+
+        if (isCancelled)
+        {
+            // The user closed the wizard before the load was complete
+            if (handle.IsValid())
+            {
+                Addressables.Release(handle);
+            }
+
+            handle = default;
+            loadedSuccessfully = false;
+            return;
+        }
 
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
@@ -48,6 +64,8 @@ public class LocationLocalizationPreloader : MonoBehaviour
 
     public void Unload()
     {
+        isCancelled = true;
+
         if (!handle.IsValid())
         {
             return;

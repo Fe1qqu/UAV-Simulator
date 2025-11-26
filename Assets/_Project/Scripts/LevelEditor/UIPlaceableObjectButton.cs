@@ -94,7 +94,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
     /// </summary>
     public void OnEndDrag(PointerEventData eventData)
     {
-        //Debug.Log($"[UIPlaceableObjectButton] End drag {linkedObject.name}");
+        Debug.Log($"[UIPlaceableObjectButton] End drag");
 
         TooltipManager.Instance.ExitDragMode();
 
@@ -139,7 +139,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
     {
         if (linkedObjectData == null)
         {
-            Debug.LogWarning("[UICategoryButton] Tried to show tooltip with null linkedObjectData.");
+            Debug.LogWarning("[UIPlaceableObjectButton] Tried to show tooltip with null linkedObjectData.");
             return;
         }
 

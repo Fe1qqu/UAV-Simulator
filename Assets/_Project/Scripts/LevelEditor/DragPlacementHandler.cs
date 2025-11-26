@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -9,7 +10,7 @@ using UnityEngine.InputSystem;
 /// - Places object or cancels drag
 /// - Notifies TooltipManager and UIDragContext
 /// </summary>
-public class DragPlacementHandler : MonoBehaviour
+public class DragPlacementHandler : MonoBehaviour, IBackHandler
 {
     public static DragPlacementHandler Instance { get; private set; }
 
@@ -50,7 +51,6 @@ public class DragPlacementHandler : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
 
         if (levelRoot == null)
@@ -103,17 +103,32 @@ public class DragPlacementHandler : MonoBehaviour
     {
         if (prefabToPlace == null)
         {
-            Debug.LogWarning("[DragPlacementHandler] EndDrag called but prefabToPlace is null.");
+            //Debug.LogWarning("[DragPlacementHandler] EndDrag called but prefabToPlace is null.");
             Cleanup();
             return;
         }
-
+        
         Vector2 screenPos = eventData.position;
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
 
         if (Physics.Raycast(ray, out RaycastHit hit, rayLength, placementLayerMask))
         {
-            Instantiate(prefabToPlace, hit.point, Quaternion.identity, levelRoot);
+            GameObject instance = Instantiate(prefabToPlace, hit.point, Quaternion.identity, levelRoot);
+
+            // Create an undo/redo action
+            RTG.PostObjectSpawnAction spawnAction = new RTG.PostObjectSpawnAction(new List<GameObject> { instance });
+            spawnAction.Execute();
+
+            // Automatically select the installed object
+            if (instance.TryGetComponent<SelectableObject>(out var selectable))
+            {
+                SelectionManager.Instance.Select(selectable);
+            }
+            else
+            {
+                Debug.Log("[DragPlacementHandler] Failed to automatically select the installed object.");
+            }
+
             Debug.Log($"[DragPlacementHandler] Placed '{prefabToPlace.name}' at world pos {hit.point}");
         }
         else
@@ -150,6 +165,8 @@ public class DragPlacementHandler : MonoBehaviour
         prefabToPlace = null;
         previewInstance = null;
         previewRenderers = null;
+
+        TooltipManager.Instance.Hide();
     }
 
     /// <summary>
@@ -194,7 +211,6 @@ public class DragPlacementHandler : MonoBehaviour
         {
             Debug.Log("[DragPlacementHandler] Drag cancelled by user (RMB).");
             CancelDrag();
-            TooltipManager.Instance.Hide();
             return;
         }
 
@@ -216,5 +232,20 @@ public class DragPlacementHandler : MonoBehaviour
         {
             SetObjectPreviewVisible(false);
         }
+    }
+
+    public bool OnBack()
+    {
+        return false;
+        // TO DO: Cancel drag
+
+        //if (!IsDragging)
+        //{
+        //    return false;
+        //}
+
+        //CancelDrag();
+
+        //return true;
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-
 /// <summary>
 /// Step 1 of the level creation wizard. Handles user input for naming the level.
 /// </summary>
@@ -32,10 +31,10 @@ public class Step1_NameInput : LevelCreationStep
         nameInputField.onValueChanged.AddListener(OnNameChanged);
     }
 
-    //private void OnDestroy()
-    //{
-    //    nameInput.onValueChanged.RemoveListener(OnNameChanged);
-    //}
+    private void OnDestroy()
+    {
+        nameInputField.onValueChanged.RemoveListener(OnNameChanged);
+    }
 
     /// <summary>
     /// Called whenever the input field value changes. Updates the color if valid.

@@ -35,7 +35,7 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-    prefab: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
+    prefab: {fileID: 1325102438002783170, guid: 1c13df92af5bdb64b9fba7b9e9e12ab5, type: 3}
     type: 1
   references:
     version: 2
