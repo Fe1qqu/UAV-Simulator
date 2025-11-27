@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-Assets-Shared
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Localization-Assets-Shared
+  m_GUID: 143f31ee4294ec54ca6f18de1b6751b0
+  m_SerializeEntries:
+  - m_GUID: 101a2b14708cfba4ebb8f79eb4c0511b
+    m_Address: Assets/_Project/Localization/TableCollections/Locations/Locations
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 279f89454a8844f4a8d2b8dbdd79510a
+    m_Address: Assets/_Project/Localization/TableCollections/Categories/Categories
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2ec303a8f3a42c9479b870808142144e
+    m_Address: Assets/_Project/Localization/TableCollections/Tooltips/Tooltips Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7821e5eea5fd8741a742285a5215172
+    m_Address: Assets/_Project/Localization/TableCollections/UI/UI Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e3e3f17f094c3a74b8a04e24e1bcee9e
+    m_Address: Assets/_Project/Localization/TableCollections/PlaceableObjects/PlaceableObjects
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: add1328266f83584882eec03bead4519, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 22606353f95cb9640875e12751216da3, type: 2}
+    - {fileID: 11400000, guid: df51cf3c1c926c84f92376aab4b448b6, type: 2}
