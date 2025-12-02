@@ -38,7 +38,7 @@ public class EditorCameraInput : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("[EditorCameraInput] Duplicate instance detected. Only one instance is allowed in the scene");
+            Debug.LogError("[EditorCameraInput] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }

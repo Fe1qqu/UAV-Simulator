@@ -61,7 +61,7 @@ public class EditorCameraController : MonoBehaviour
         cameraInput = GetComponent<EditorCameraInput>();
         if (cameraInput == null)
         {
-            Debug.LogWarning("[EditorCameraController] EditorCameraInput component not found on the same GameObject.");
+            Debug.LogError("[EditorCameraController] EditorCameraInput component not found on the same GameObject.");
         }
     }
 

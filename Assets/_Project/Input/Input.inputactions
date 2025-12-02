@@ -502,6 +502,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "DroneCamera",
+            "id": "ea8ee5f9-60dc-4cb6-9b9f-174f09baee4f",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "3ca679fb-dbd7-4557-98df-014c3d6bb7aa",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "EnableMovement",
+                    "type": "Button",
+                    "id": "b162665d-2ffe-43b2-9f74-0e10fc565b7d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "322fbea8-2e70-4ff5-9613-521c3b6047bd",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f3572042-35f0-4bf9-b508-be06a45c4da7",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EnableMovement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

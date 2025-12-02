@@ -127,8 +127,8 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4125313380903380282, guid: 7f1073f2a522afc418fdeb004be4cf24, type: 3}
-      propertyPath: Lookahead.Enabled
+    - target: {fileID: 1455265789394801500, guid: 7f1073f2a522afc418fdeb004be4cf24, type: 3}
+      propertyPath: HorizontalAxis.Center
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5046254018169564921, guid: 7f1073f2a522afc418fdeb004be4cf24, type: 3}
