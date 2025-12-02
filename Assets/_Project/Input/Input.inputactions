@@ -64,6 +64,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "SwitchCamera",
+                    "type": "Button",
+                    "id": "b55b9091-dddd-4c3f-80b3-da9c6222a28d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "DebugUI",
                     "type": "Button",
                     "id": "e85255b9-e4bf-4427-9ec1-d39e3f4b18e9",
@@ -313,6 +322,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "DebugUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7ddce210-b956-4490-ae3b-92e75cda846a",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b928f96-7b82-4029-8b22-a0a9a2976151",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

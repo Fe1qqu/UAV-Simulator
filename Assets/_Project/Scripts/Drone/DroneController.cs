@@ -1,42 +1,42 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum BladePosition
+{
+    FrontLeft,
+    FrontRight,
+    RearLeft,
+    RearRight
+}
+
+[System.Serializable]
+public class Blade
+{
+    public Transform bone;
+    public bool clockwise;
+    [HideInInspector] public float CurrentRPM;
+    [HideInInspector] public Vector3 relativePos;
+}
+
 [RequireComponent(typeof(Rigidbody))]
 public class DroneController : MonoBehaviour, IControllable
 {
     private Rigidbody rigidBody;
 
-    public enum BladePosition
-    {
-        FrontLeft,
-        FrontRight,
-        RearLeft,
-        RearRight
-    }
-
-    [System.Serializable]
-    public class Blade
-    {
-        public Transform bone;
-        public bool clockwise;
-        [HideInInspector] public float CurrentRPM;
-        [HideInInspector] public Vector3 relativePos;
-    }
-
     [Header("Blades")]
-    public Blade frontLeft;
-    public Blade frontRight;
-    public Blade rearLeft;
-    public Blade rearRight;
+    [SerializeField] private Blade frontLeft;
+    [SerializeField] private Blade frontRight;
+    [SerializeField] private Blade rearLeft;
+    [SerializeField] private Blade rearRight;
 
     private Dictionary<BladePosition, Blade> blades = new();
     public IReadOnlyDictionary<BladePosition, Blade> Blades => blades;
 
     [Header("Physics Settings")]
-    public float liftCoefficient = 1e-6f;
-    public float dragCoefficient = 1e-6f;
-    public float maxBladeRPM = 8000f;
-    public float BladeRPMChangeRate = 0.5f;
+    [SerializeField] private float liftCoefficient = 1e-6f;
+    [SerializeField] private float dragCoefficient = 1e-6f;
+    [SerializeField] private float maxBladeRPM = 8000f;
+    [SerializeField] private float BladeRPMChangeRate = 0.5f;
 
     private float throttleInput;
     private float yawInput;
@@ -92,11 +92,6 @@ public class DroneController : MonoBehaviour, IControllable
         UpdateMotorSpeeds();
         ApplyBladeForces();
     }
-
-    public void ApplyThrottle(float value) => throttleInput = value;
-    public void ApplyYaw(float value) => yawInput = value;
-    public void ApplyPitch(float value) => pitchInput = value;
-    public void ApplyRoll(float value) => rollInput = value;
 
     private void UpdateMotorSpeeds()
     {
@@ -154,4 +149,9 @@ public class DroneController : MonoBehaviour, IControllable
             //rigidbody.AddTorque(transform.up * torque, ForceMode.Force);
         }
     }
+
+    public void ApplyThrottle(float value) => throttleInput = value;
+    public void ApplyYaw(float value) => yawInput = value;
+    public void ApplyPitch(float value) => pitchInput = value;
+    public void ApplyRoll(float value) => rollInput = value;
 }

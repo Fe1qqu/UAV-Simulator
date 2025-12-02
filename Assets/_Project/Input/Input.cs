@@ -150,6 +150,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""SwitchCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""b55b9091-dddd-4c3f-80b3-da9c6222a28d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""DebugUI"",
                     ""type"": ""Button"",
                     ""id"": ""e85255b9-e4bf-4427-9ec1-d39e3f4b18e9"",
@@ -399,6 +408,28 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""DebugUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ddce210-b956-4490-ae3b-92e75cda846a"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b928f96-7b82-4029-8b22-a0a9a2976151"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -691,6 +722,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_DroneControl = asset.FindActionMap("DroneControl", throwIfNotFound: true);
         m_DroneControl_ThrottleAndYaw = m_DroneControl.FindAction("Throttle And Yaw", throwIfNotFound: true);
         m_DroneControl_PitchAndRoll = m_DroneControl.FindAction("Pitch And Roll", throwIfNotFound: true);
+        m_DroneControl_SwitchCamera = m_DroneControl.FindAction("SwitchCamera", throwIfNotFound: true);
         m_DroneControl_DebugUI = m_DroneControl.FindAction("DebugUI", throwIfNotFound: true);
         // EditorCamera
         m_EditorCamera = asset.FindActionMap("EditorCamera", throwIfNotFound: true);
@@ -877,6 +909,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private List<IDroneControlActions> m_DroneControlActionsCallbackInterfaces = new List<IDroneControlActions>();
     private readonly InputAction m_DroneControl_ThrottleAndYaw;
     private readonly InputAction m_DroneControl_PitchAndRoll;
+    private readonly InputAction m_DroneControl_SwitchCamera;
     private readonly InputAction m_DroneControl_DebugUI;
     /// <summary>
     /// Provides access to input actions defined in input action map "DroneControl".
@@ -897,6 +930,10 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "DroneControl/PitchAndRoll".
         /// </summary>
         public InputAction @PitchAndRoll => m_Wrapper.m_DroneControl_PitchAndRoll;
+        /// <summary>
+        /// Provides access to the underlying input action "DroneControl/SwitchCamera".
+        /// </summary>
+        public InputAction @SwitchCamera => m_Wrapper.m_DroneControl_SwitchCamera;
         /// <summary>
         /// Provides access to the underlying input action "DroneControl/DebugUI".
         /// </summary>
@@ -933,6 +970,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @PitchAndRoll.started += instance.OnPitchAndRoll;
             @PitchAndRoll.performed += instance.OnPitchAndRoll;
             @PitchAndRoll.canceled += instance.OnPitchAndRoll;
+            @SwitchCamera.started += instance.OnSwitchCamera;
+            @SwitchCamera.performed += instance.OnSwitchCamera;
+            @SwitchCamera.canceled += instance.OnSwitchCamera;
             @DebugUI.started += instance.OnDebugUI;
             @DebugUI.performed += instance.OnDebugUI;
             @DebugUI.canceled += instance.OnDebugUI;
@@ -953,6 +993,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @PitchAndRoll.started -= instance.OnPitchAndRoll;
             @PitchAndRoll.performed -= instance.OnPitchAndRoll;
             @PitchAndRoll.canceled -= instance.OnPitchAndRoll;
+            @SwitchCamera.started -= instance.OnSwitchCamera;
+            @SwitchCamera.performed -= instance.OnSwitchCamera;
+            @SwitchCamera.canceled -= instance.OnSwitchCamera;
             @DebugUI.started -= instance.OnDebugUI;
             @DebugUI.performed -= instance.OnDebugUI;
             @DebugUI.canceled -= instance.OnDebugUI;
@@ -1143,6 +1186,13 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPitchAndRoll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SwitchCamera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchCamera(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "DebugUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
