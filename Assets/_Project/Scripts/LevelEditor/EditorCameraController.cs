@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Camera))]
 public class EditorCameraController : MonoBehaviour
@@ -53,12 +52,17 @@ public class EditorCameraController : MonoBehaviour
     // Velocity reference for pitch smoothing
     private float pitchVelocity;
 
-    // True when camera can move
-    private bool isControlling = false;
+    private EditorCameraInput cameraInput;
 
     private void Awake()
     {
         cam = GetComponent<Camera>();
+
+        cameraInput = GetComponent<EditorCameraInput>();
+        if (cameraInput == null)
+        {
+            Debug.LogWarning("[EditorCameraController] EditorCameraInput component not found on the same GameObject.");
+        }
     }
 
     private void Start()
@@ -71,20 +75,40 @@ public class EditorCameraController : MonoBehaviour
         UnlockCursor();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        // Handle enabling/disabling free look with RMB.
-        HandleMouseControl();
-
-        if (!isControlling)
+        if (cameraInput != null)
         {
-            return;
+            cameraInput.MovementEnabledChanged += OnMovementEnabledChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (cameraInput != null)
+        {
+            cameraInput.MovementEnabledChanged -= OnMovementEnabledChanged;
         }
 
-        var input = EditorCameraInput.Instance;
-        if (input == null)
+        UnlockCursor();
+    }
+
+    private void OnMovementEnabledChanged(bool enabled)
+    {
+        if (enabled)
         {
-            Debug.LogWarning("[EditorCameraController] EditorCameraInput.Instance is null.");
+            LockCursor();
+        }
+        else
+        {
+            UnlockCursor();
+        }
+    }
+
+    private void Update()
+    {
+        if (!cameraInput.IsMovementEnabled)
+        {
             return;
         }
 
@@ -93,38 +117,13 @@ public class EditorCameraController : MonoBehaviour
         {
             //Debug.Log("[EditorCameraController] Camera movement blocked — drag in progress.");
             return;
-        }    
+        }
 
-        Vector3 moveInput = new Vector3(input.Move.x, input.UpDown, input.Move.y);
-        Vector2 lookInput = input.Look;
+        Vector2 lookInput = cameraInput.Look;
+        Vector3 moveInput = new Vector3(cameraInput.Move.x, cameraInput.UpDown, cameraInput.Move.y);
 
         HandleRotation(lookInput);
         HandleMovement(moveInput);
-    }
-
-    /// <summary>
-    /// Handles mouse right button press/release for camera control.
-    /// </summary>
-    private void HandleMouseControl()
-    {
-        if (Mouse.current == null)
-        {
-            return;
-        }
-
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            //Debug.Log("[EditorCameraController] RMB pressed — camera control enabled.");
-            LockCursor();
-            isControlling = true;
-        }
-
-        if (Mouse.current.rightButton.wasReleasedThisFrame)
-        {
-            //Debug.Log("[EditorCameraController] RMB released — camera control disabled.");
-            UnlockCursor();
-            isControlling = false;
-        }
     }
 
     /// <summary>
@@ -134,8 +133,6 @@ public class EditorCameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        //Debug.Log("[EditorCameraController] Cursor locked.");
     }
 
     /// <summary>
@@ -145,8 +142,6 @@ public class EditorCameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        //Debug.Log("[EditorCameraController] Cursor unlocked.");
     }
 
     /// <summary>

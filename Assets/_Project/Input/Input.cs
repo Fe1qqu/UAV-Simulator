@@ -465,6 +465,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""EnableMovement"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1c51fb7-db0c-4c1a-81e0-dfbfd22f9504"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -478,61 +487,6 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""81b32e47-9694-4659-b841-ff4c512aca2e"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""62186531-611c-4db7-a0e4-211b1a66a61b"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""30513e05-1523-4476-89fe-f3893c746ecc"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""721adc0e-9c1b-4df3-879f-ac34152b0cc6"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""bc7d0de8-8b62-42cb-83cb-185b9b119076"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Keyboard"",
@@ -590,61 +544,6 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""89618a87-d3d1-4d71-86ad-a9e363f45393"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""ad851aab-cfa1-4c16-8862-19fa2ab20274"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""3b72b7fe-5e2a-4b7f-87ba-2f260dffb173"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""0b37ae7a-016d-4b84-bc15-18274a3cefef"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""3ace339a-8c7e-4e80-938a-ac24ab91f062"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""Keyboard"",
                     ""id"": ""78cbfe99-6624-48f5-9cd6-a5c8748e865b"",
                     ""path"": ""1DAxis"",
@@ -678,37 +577,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""e17cf1de-4502-43dc-9c93-ed2efb8ee459"",
-                    ""path"": ""1DAxis"",
+                    ""name"": """",
+                    ""id"": ""515651fc-0216-490f-a6a2-e0c8fe17c0cd"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UpDown"",
-                    ""isComposite"": true,
+                    ""action"": ""EnableMovement"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""b3fea5f0-d88e-40ca-974f-7bb407c2a294"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""UpDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""464727c0-4ce6-4ce6-b11a-41b359b78734"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""UpDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -729,6 +606,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_EditorCamera_Look = m_EditorCamera.FindAction("Look", throwIfNotFound: true);
         m_EditorCamera_Move = m_EditorCamera.FindAction("Move", throwIfNotFound: true);
         m_EditorCamera_UpDown = m_EditorCamera.FindAction("UpDown", throwIfNotFound: true);
+        m_EditorCamera_EnableMovement = m_EditorCamera.FindAction("EnableMovement", throwIfNotFound: true);
     }
 
     ~@Input()
@@ -1039,6 +917,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_EditorCamera_Look;
     private readonly InputAction m_EditorCamera_Move;
     private readonly InputAction m_EditorCamera_UpDown;
+    private readonly InputAction m_EditorCamera_EnableMovement;
     /// <summary>
     /// Provides access to input actions defined in input action map "EditorCamera".
     /// </summary>
@@ -1062,6 +941,10 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "EditorCamera/UpDown".
         /// </summary>
         public InputAction @UpDown => m_Wrapper.m_EditorCamera_UpDown;
+        /// <summary>
+        /// Provides access to the underlying input action "EditorCamera/EnableMovement".
+        /// </summary>
+        public InputAction @EnableMovement => m_Wrapper.m_EditorCamera_EnableMovement;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1097,6 +980,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @UpDown.started += instance.OnUpDown;
             @UpDown.performed += instance.OnUpDown;
             @UpDown.canceled += instance.OnUpDown;
+            @EnableMovement.started += instance.OnEnableMovement;
+            @EnableMovement.performed += instance.OnEnableMovement;
+            @EnableMovement.canceled += instance.OnEnableMovement;
         }
 
         /// <summary>
@@ -1117,6 +1003,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @UpDown.started -= instance.OnUpDown;
             @UpDown.performed -= instance.OnUpDown;
             @UpDown.canceled -= instance.OnUpDown;
+            @EnableMovement.started -= instance.OnEnableMovement;
+            @EnableMovement.performed -= instance.OnEnableMovement;
+            @EnableMovement.canceled -= instance.OnEnableMovement;
         }
 
         /// <summary>
@@ -1229,5 +1118,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUpDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "EnableMovement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEnableMovement(InputAction.CallbackContext context);
     }
 }
