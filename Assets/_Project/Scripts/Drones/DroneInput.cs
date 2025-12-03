@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(DroneController))]
 public class DroneInput : MonoBehaviour
 {
     private Input input;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 
-public class ThirdPersonCameraInputHandler : MonoBehaviour
+public class DroneThirdPersonCameraInputHandler : MonoBehaviour
 {
     private CinemachineInputAxisController cinemachineInputAxisController;
     private DroneCameraInput cameraInput;

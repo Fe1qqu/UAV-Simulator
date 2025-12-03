@@ -1,20 +1,17 @@
 using UnityEngine;
 
-[RequireComponent(typeof(DroneController))]
 public class DroneDebugUI : MonoBehaviour
 {
-    private DroneController droneController;
-
+    private DroneControllerBase droneController;
     private bool visible = true;
-    private Rect windowRectangle = new Rect(20, 20, 250, 240);
+    private Rect windowRectangle = new Rect(20, 20, 250, 270);
 
     private void Awake()
     {
-        droneController = GetComponent<DroneController>();
-
+        droneController = GetComponent<DroneControllerBase>();
         if (droneController == null)
         {
-            Debug.LogError($"[DroneDebugUI] No DroneController found on {gameObject.name}");
+            Debug.LogError($"[DroneDebugUI] No DroneControllerBase found on {gameObject.name}");
             enabled = false;
             return;
         }
@@ -34,26 +31,20 @@ public class DroneDebugUI : MonoBehaviour
     {
         GUILayout.BeginVertical();
 
+        GUILayout.Label("<b>Input</b>");
         GUILayout.Label($"Throttle: {droneController.ThrottleInput:F2}");
         GUILayout.Label($"Yaw: {droneController.YawInput:F2}");
         GUILayout.Label($"Pitch: {droneController.PitchInput:F2}");
         GUILayout.Label($"Roll: {droneController.RollInput:F2}");
         GUILayout.Space(5);
 
-        GUILayout.Label("<b>Blade RPMs</b>");
-
-        if (droneController != null)
+        var rotors = droneController.DebugRotorRPMs;
+        if (rotors != null)
         {
-            foreach (var (pos, blade) in droneController.Blades)
+            GUILayout.Label("<b>Rotors</b>");
+            foreach (var kvp in rotors)
             {
-                if (blade != null)
-                {
-                    GUILayout.Label($"{pos}: {blade.CurrentRPM:F0} RPM");
-                }
-                else
-                {
-                    GUILayout.Label($"{pos}: (missing)");
-                }
+                GUILayout.Label($"{kvp.Key}: {kvp.Value:F0} RPM");
             }
         }
 

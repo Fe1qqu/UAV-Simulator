@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6261024844600467066}
   m_Layer: 0
-  m_Name: Cameras
+  m_Name: CinemachineCameras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -354,8 +354,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8395993971992040114}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212335, y: 0.000000016730226, z: -0.0000000025750266, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 0.30070582, z: -0.95371723}
+  m_LocalRotation: {x: 0.25881916, y: -0.000000011923898, z: 0.0000000031950005, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.866025}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -448,8 +448,8 @@ MonoBehaviour:
       Time: 0.5
     Restrictions: 0
   VerticalAxis:
-    Value: 17.5
-    Center: 17.5
+    Value: 30
+    Center: 30
     Range: {x: -10, y: 45}
     Wrap: 0
     Recentering:
@@ -1327,7 +1327,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_Name
-      value: P_Drone
+      value: P_Quadcopter
       objectReference: {fileID: 0}
     - target: {fileID: 1990374306592455618, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1483,26 +1483,22 @@ MonoBehaviour:
     bone: {fileID: 5251325477497432010}
     clockwise: 0
     CurrentRPM: 0
-    relativePos: {x: 0, y: 0, z: 0}
   frontRight:
     bone: {fileID: 7862163276500666276}
     clockwise: 1
     CurrentRPM: 0
-    relativePos: {x: 0, y: 0, z: 0}
   rearLeft:
     bone: {fileID: 4075337891315550777}
     clockwise: 1
     CurrentRPM: 0
-    relativePos: {x: 0, y: 0, z: 0}
   rearRight:
     bone: {fileID: 399196909728017430}
     clockwise: 0
     CurrentRPM: 0
-    relativePos: {x: 0, y: 0, z: 0}
   liftCoefficient: 0.000001
   dragCoefficient: 0.000001
-  maxBladeRPM: 8000
-  BladeRPMChangeRate: 0.5
+  maxRotorRPM: 8000
+  rotorRPMChangeRate: 0.5
 --- !u!114 &6672731654940039107
 MonoBehaviour:
   m_ObjectHideFlags: 0
