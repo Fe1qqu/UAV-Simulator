@@ -53,10 +53,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         this.categoryData = categoryData;
         this.onClick = onClick;
 
-        if (icon != null)
-        {
-            icon.sprite = categoryData.icon;
-        }
+        icon.sprite = categoryData.icon;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => onClick?.Invoke(categoryData, this));

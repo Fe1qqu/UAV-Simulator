@@ -13,6 +13,7 @@ public class BackDispatcher : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogError("[BackDispatcher] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }

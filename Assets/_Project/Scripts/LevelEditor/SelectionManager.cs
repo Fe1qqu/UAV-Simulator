@@ -20,6 +20,7 @@ public class SelectionManager : MonoBehaviour
     {
         if (Instance != null)
         {
+            Debug.LogError("[SelectionManager] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }

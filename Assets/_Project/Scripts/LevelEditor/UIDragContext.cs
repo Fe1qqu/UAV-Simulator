@@ -28,7 +28,7 @@ public class UIDragContext : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("[UIDragContext] Duplicate instance detected. There should only be one in the scene.");
+            Debug.LogError("[UIDragContext] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }
@@ -43,7 +43,7 @@ public class UIDragContext : MonoBehaviour
     /// <param name="eventData">Pointer event data from the UI system.</param>
     public void UpdateContext(PointerEventData eventData)
     {
-        var target = eventData.pointerEnter;
+        GameObject target = eventData.pointerEnter;
         DragContextZone dragContextZone = null;
 
         if (target != null)

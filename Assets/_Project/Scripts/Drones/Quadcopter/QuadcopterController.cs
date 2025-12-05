@@ -51,7 +51,6 @@ public class QuadcopterController : DroneControllerBase, IControllable
     void Awake()
     {
         rigidBody = GetComponent<Rigidbody>();
-
         if (rigidBody == null)
         {
             Debug.LogError($"[QuadcopterController] Rigidbody is missing on '{gameObject.name}'.");
@@ -66,7 +65,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
         foreach (var kvp in rotors)
         {
-            var rotor = kvp.Value;
+            Rotor rotor = kvp.Value;
             if (rotor == null || rotor.bone == null)
             {
                 Debug.LogError($"[QuadcopterController] Rotor {kvp.Key} not configured correctly.");
@@ -80,7 +79,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
     {
         foreach (var kvp in rotors)
         {
-            var rotor = kvp.Value;
+            Rotor rotor = kvp.Value;
             float direction = rotor.clockwise ? 1f : -1f;
             rotor.bone.Rotate(360f * rotor.CurrentRPM * direction * Vector3.up / 60f * Time.deltaTime, Space.Self);
         }

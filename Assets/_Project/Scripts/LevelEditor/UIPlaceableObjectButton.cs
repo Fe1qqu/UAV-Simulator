@@ -44,11 +44,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
         }
 
         linkedObjectData = data;
-
-        if (icon != null)
-        {
-            icon.sprite = data.icon;
-        }
+        icon.sprite = data.icon;
     }
 
     /// <summary>

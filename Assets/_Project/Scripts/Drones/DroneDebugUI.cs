@@ -19,7 +19,7 @@ public class DroneDebugUI : MonoBehaviour
 
     private void OnGUI()
     {
-        if (!visible || droneController == null)
+        if (!visible)
         {
             return;
         }

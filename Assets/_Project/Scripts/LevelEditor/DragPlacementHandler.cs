@@ -51,6 +51,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
 
         if (levelRoot == null)

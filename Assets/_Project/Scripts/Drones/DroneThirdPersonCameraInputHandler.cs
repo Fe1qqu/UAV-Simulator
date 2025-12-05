@@ -29,18 +29,12 @@ public class DroneThirdPersonCameraInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        if (cameraInput != null)
-        {
-            cameraInput.MovementEnabledChanged += OnMovementEnabledChanged;
-        }
+        cameraInput.MovementEnabledChanged += OnMovementEnabledChanged;
     }
 
     private void OnDisable()
     {
-        if (cameraInput != null)
-        {
-            cameraInput.MovementEnabledChanged -= OnMovementEnabledChanged;
-        }
+        cameraInput.MovementEnabledChanged -= OnMovementEnabledChanged;
     }
 
     private void OnMovementEnabledChanged(bool enabled)

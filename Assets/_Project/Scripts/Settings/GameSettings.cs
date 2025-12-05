@@ -102,6 +102,7 @@ public class GameSettings : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
+            Debug.LogError("[GameSettings] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }

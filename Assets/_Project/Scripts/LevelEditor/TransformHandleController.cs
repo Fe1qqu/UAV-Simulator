@@ -11,9 +11,11 @@ public class TransformHandleController : MonoBehaviour
     {
         if (Instance != null)
         {
+            Debug.LogError("[TransformHandleController] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
     }
 

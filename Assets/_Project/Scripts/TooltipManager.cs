@@ -46,7 +46,7 @@ public class TooltipManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("[TooltipManager] Duplicate instance detected. Destroying this one.");
+            Debug.LogError("[TooltipManager] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }
