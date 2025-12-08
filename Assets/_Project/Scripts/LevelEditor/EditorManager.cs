@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
 /// </summary>
-public class LevelEditorManager : MonoBehaviour
+public class EditorManager : MonoBehaviour, IBackHandler
 {
     [Header("UI References")]
     [SerializeField] private GameObject loadingScreen;
+
+    [SerializeField] private EditorPauseMenu pauseMenu;
 
     [Tooltip("Parent transform where category buttons will be instantiated.")]
     [SerializeField] private Transform categoryListContainer;
@@ -54,64 +56,69 @@ public class LevelEditorManager : MonoBehaviour
     {
         if (loadingScreen == null)
         {
-            Debug.LogError("[LevelEditorManager] loadingScreen is not assigned.");
+            Debug.LogError("[EditorManager] loadingScreen is not assigned.");
+        }
+
+        if (pauseMenu == null)
+        {
+            Debug.LogError("[EditorManager] PauseMenu is not assigned.");
         }
 
         if (categoryListContainer == null)
         {
-            Debug.LogError("[LevelEditorManager] CategoryListContainer is not assigned.");
+            Debug.LogError("[EditorManager] CategoryListContainer is not assigned.");
         }
 
         if (objectListContainer == null)
         {
-            Debug.LogError("[LevelEditorManager] ObjectListContainer is not assigned.");
+            Debug.LogError("[EditorManager] ObjectListContainer is not assigned.");
         }
 
         if (currentCategoryLocalizeEvent == null)
         {
-            Debug.LogWarning("[LevelEditorManager] currentCategoryLocalizeEvent is not assigned.");
+            Debug.LogWarning("[EditorManager] currentCategoryLocalizeEvent is not assigned.");
         }
 
         if (categoryButtonPrefab == null)
         {
-            Debug.LogError("[LevelEditorManager] CategoryButtonPrefab is not assigned.");
+            Debug.LogError("[EditorManager] CategoryButtonPrefab is not assigned.");
         }
 
         if (placeableObjectButtonPrefab == null)
         {
-            Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab is not assigned.");
+            Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab is not assigned.");
         }
 
         if (locationDatabase == null || locationDatabase.locations.Count == 0)
         {
-            Debug.LogError("[LevelEditorManager] LocationDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] LocationDatabase is missing or empty.");
         }
 
         if (placeableObjectDatabase == null || placeableObjectDatabase.objects.Count == 0)
         {
-            Debug.LogError("[LevelEditorManager] PlaceableObjectDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] PlaceableObjectDatabase is missing or empty.");
         }
 
         if (categoryDatabase == null || categoryDatabase.categories.Count == 0)
         {
-            Debug.LogError("[LevelEditorManager] CategoryDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] CategoryDatabase is missing or empty.");
         }
 
         if (levelRoot == null)
         {
-            Debug.LogError("[LevelEditorManager] LevelRoot is not assigned.");
+            Debug.LogError("[EditorManager] LevelRoot is not assigned.");
         }
 
         loadingFader = loadingScreen.GetComponent<FadeManager>();
         if (loadingFader == null)
         {
-            Debug.LogError("[LevelEditorManager] FadeManager not found on loadingScreen.");
+            Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
         }
 
         localizationPreloader = GetComponent<EditorLocalizationPreloader>();
         if (localizationPreloader == null)
         {
-            Debug.LogError("[LevelEditorManager] EditorLocalizationPreloader not found on this GameObject.");
+            Debug.LogError("[EditorManager] EditorLocalizationPreloader not found on this GameObject.");
         }
     }
 
@@ -145,13 +152,13 @@ public class LevelEditorManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var category in categoryDatabase.categories)
+        foreach (CategoryData category in categoryDatabase.categories)
         {
             var buttonObj = Instantiate(categoryButtonPrefab, categoryListContainer);
             
             if (!buttonObj.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
-                Debug.LogError("[LevelEditorManager] CategoryButtonPrefab missing UICategoryButton");
+                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton");
                 continue;
             }
 
@@ -161,8 +168,8 @@ public class LevelEditorManager : MonoBehaviour
         // Auto–select first category
         if (categoryDatabase.categories.Count > 0)
         {
-            var firstCategory = categoryDatabase.categories[0];
-            var firstButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
+            CategoryData firstCategory = categoryDatabase.categories[0];
+            UICategoryButton firstButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
             OnCategorySelected(firstCategory, firstButton);
         }
     }
@@ -205,16 +212,16 @@ public class LevelEditorManager : MonoBehaviour
 
         if (filteredObjects == null || filteredObjects.Count == 0)
         {
-            Debug.LogWarning($"[LevelEditorManager] No objects found for category '{currentCategory}'.");
+            Debug.LogWarning($"[EditorManager] No objects found for category '{currentCategory}'.");
             return;
         }
 
-        foreach (var objData in filteredObjects)
+        foreach (PlaceableObjectData objData in filteredObjects)
         {
-            var buttonObj = Instantiate(placeableObjectButtonPrefab, objectListContainer);
+            GameObject buttonObj = Instantiate(placeableObjectButtonPrefab, objectListContainer);
             if (!buttonObj.TryGetComponent<UIPlaceableObjectButton>(out var button))
             {
-                Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
+                Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
                 continue;
             }
 
@@ -231,27 +238,34 @@ public class LevelEditorManager : MonoBehaviour
 
         if (selectedLocationId == 0 && locationDatabase.locations.Count > 0)
         {
-            Debug.LogWarning("[LevelEditorManager] No selected location found. Loading first available location.");
+            Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
             selectedLocationId = locationDatabase.locations[0].localizationKey.TableEntryReference.KeyId;
             GameSettings.Instance.SelectedLocationId = selectedLocationId;
         }
 
-        var data = locationDatabase.locations.Find(location => location.localizationKey.TableEntryReference.KeyId == selectedLocationId);
+        LocationData data = locationDatabase.locations.Find(location => location.localizationKey.TableEntryReference.KeyId == selectedLocationId);
         if (data == null)
         {
-            Debug.LogWarning($"[LevelEditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
+            Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
             data = locationDatabase.locations[0];
         }
 
         if (data.prefab == null)
         {
-            Debug.LogError($"[LevelEditorManager] Prefab missing for location '{data.localizationKey}'.");
+            Debug.LogError($"[EditorManager] Prefab missing for location '{data.localizationKey}'.");
             return;
         }
 
         Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
         //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-        //Debug.Log($"[LevelEditorManager] Loaded location: {location.name}");
+        //Debug.Log($"[EditorManager] Loaded location: {location.name}");
+    }
+
+    public bool OnBack()
+    {
+        Debug.Log("[EditorManager] OnBack.");
+        pauseMenu.Open();
+        return true;
     }
 
     //public void ExitEditor()

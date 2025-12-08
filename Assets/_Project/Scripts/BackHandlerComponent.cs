@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(IBackHandler))]
 public class BackHandlerComponent : MonoBehaviour
 {
     private IBackHandler handler;
@@ -8,17 +7,23 @@ public class BackHandlerComponent : MonoBehaviour
     private void Awake()
     {
         handler = GetComponent<IBackHandler>();
+        if (handler == null)
+        {
+            Debug.LogError($"[BackHandlerComponent] {name} missing IBackHandler reference.");
+        }
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        //Debug.Log("[BackHandlerComponent] Start for: " + name);
+
         if (handler != null)
         {
             BackDispatcher.Instance.Register(handler);
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (handler != null)
         {

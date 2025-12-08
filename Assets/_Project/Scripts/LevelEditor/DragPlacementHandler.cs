@@ -239,14 +239,11 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     {
         return false;
         // TO DO: Cancel drag
-
         //if (!IsDragging)
         //{
         //    return false;
         //}
-
         //CancelDrag();
-
         //return true;
     }
 }
