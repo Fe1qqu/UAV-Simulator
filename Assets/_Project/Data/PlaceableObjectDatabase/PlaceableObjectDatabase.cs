@@ -19,11 +19,17 @@ public enum PlaceableObjectType
 [System.Serializable]
 public class PlaceableObjectData
 {
-    public LocalizedString localizationKey;
+    [Header("Identity")]
+    [Tooltip("Stable unique identifier used for saving/loading.")]
+    public string objectId;
 
+    [Header("Presentation")]
+    public LocalizedString localizationKey;
+        
     [Tooltip("Icon shown on the placeable object's button.")]
     public Sprite icon;
 
+    [Header("Runtime")]
     [Tooltip("Prefab instantiated when the object is placed in the scene.")]
     public GameObject prefab;
 
@@ -51,5 +57,10 @@ public class PlaceableObjectDatabase : ScriptableObject
         }
 
         return objects.FindAll(obj => obj != null && obj.type == type);
+    }
+
+    public PlaceableObjectData GetById(string id)
+    {
+        return objects.Find(obj => obj.objectId == id);
     }
 }

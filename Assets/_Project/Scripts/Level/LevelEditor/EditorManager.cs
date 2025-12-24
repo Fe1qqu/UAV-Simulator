@@ -56,7 +56,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     {
         if (loadingScreen == null)
         {
-            Debug.LogError("[EditorManager] loadingScreen is not assigned.");
+            Debug.LogError("[EditorManager] LoadingScreen is not assigned.");
         }
 
         if (pauseMenu == null)
@@ -76,7 +76,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
 
         if (currentCategoryLocalizeEvent == null)
         {
-            Debug.LogWarning("[EditorManager] currentCategoryLocalizeEvent is not assigned.");
+            Debug.LogWarning("[EditorManager] CurrentCategoryLocalizeEvent is not assigned.");
         }
 
         if (categoryButtonPrefab == null)
@@ -234,16 +234,23 @@ public class EditorManager : MonoBehaviour, IBackHandler
     /// </summary>
     private void LoadSelectedLocation()
     {
-        long selectedLocationId = GameSettings.Instance.SelectedLocationId;
+        string selectedLocationId = GameSettings.Instance.SelectedLocationId;
 
-        if (selectedLocationId == 0 && locationDatabase.locations.Count > 0)
+        if (string.IsNullOrEmpty(selectedLocationId))
         {
             Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
-            selectedLocationId = locationDatabase.locations[0].localizationKey.TableEntryReference.KeyId;
+
+            if (locationDatabase.locations.Count == 0)
+            {
+                Debug.LogError("[EditorManager] LocationDatabase is empty.");
+                return;
+            }
+
+            selectedLocationId = locationDatabase.locations[0].locationId;
             GameSettings.Instance.SelectedLocationId = selectedLocationId;
         }
 
-        LocationData data = locationDatabase.locations.Find(location => location.localizationKey.TableEntryReference.KeyId == selectedLocationId);
+        LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);
         if (data == null)
         {
             Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");

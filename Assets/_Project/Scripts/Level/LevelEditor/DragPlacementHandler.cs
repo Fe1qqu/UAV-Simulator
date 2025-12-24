@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -33,7 +34,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     [Tooltip("Maximum ray distance used for placement checks.")]
     [SerializeField] private float rayLength = 100000f;
 
-    private GameObject prefabToPlace;
+    private PlaceableObjectData placeableData;
     private GameObject previewInstance;
     private Renderer[] previewRenderers;
     private bool isVisible;
@@ -68,17 +69,17 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     /// <summary>
     /// Starts placement drag by creating a hidden preview instance.
     /// </summary>
-    public void BeginDrag(GameObject prefab)
+    public void BeginDrag(PlaceableObjectData data)
     {
-        if (prefab == null)
+        if (data == null || data.prefab == null)
         {
-            Debug.LogError("[DragPlacementHandler] BeginDrag called with null prefab.");
+            Debug.LogError("[DragPlacementHandler] BeginDrag called with invalid PlaceableObjectData.");
             return;
         }
 
-        prefabToPlace = prefab;
+        placeableData = data;
 
-        previewInstance = Instantiate(prefabToPlace);
+        previewInstance = Instantiate(data.prefab);
         previewRenderers = previewInstance.GetComponentsInChildren<Renderer>();
         isVisible = false;
 
@@ -102,9 +103,9 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     /// </summary>
     public void EndDrag(PointerEventData eventData)
     {
-        if (prefabToPlace == null)
+        if (placeableData == null)
         {
-            //Debug.LogWarning("[DragPlacementHandler] EndDrag called but prefabToPlace is null.");
+            //Debug.LogWarning("[DragPlacementHandler] EndDrag called but placeableData is null.");
             Cleanup();
             return;
         }
@@ -114,7 +115,12 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
 
         if (Physics.Raycast(ray, out RaycastHit hit, rayLength, placementLayerMask))
         {
-            GameObject instance = Instantiate(prefabToPlace, hit.point, Quaternion.identity, levelRoot);
+            GameObject instance = Instantiate(placeableData.prefab, hit.point, Quaternion.identity, levelRoot);
+            if (!instance.TryGetComponent<LevelObject>(out var levelObject))
+            {
+                Debug.LogError($"[DragPlacementHandler] {instance.name} has no LevelObject component.");
+            }
+            levelObject.SetObjectId(placeableData.objectId);
 
             // Create an undo/redo action
             RTG.PostObjectSpawnAction spawnAction = new RTG.PostObjectSpawnAction(new List<GameObject> { instance });
@@ -130,11 +136,11 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
                 Debug.Log("[DragPlacementHandler] Failed to automatically select the installed object.");
             }
 
-            Debug.Log($"[DragPlacementHandler] Placed '{prefabToPlace.name}' at world pos {hit.point}");
+            Debug.Log($"[DragPlacementHandler] Placed '{placeableData.prefab.name}' at world pos {hit.point}");
         }
         else
         {
-            Debug.Log($"[DragPlacementHandler] Failed to place '{prefabToPlace.name}' — no valid surface at pointer.");
+            Debug.Log($"[DragPlacementHandler] Failed to place '{placeableData.prefab.name}' — no valid surface at pointer.");
         }
 
         UIDragContext.Instance.ResetContext();
@@ -163,7 +169,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             Destroy(previewInstance);
         }
 
-        prefabToPlace = null;
+        placeableData = null;
         previewInstance = null;
         previewRenderers = null;
 

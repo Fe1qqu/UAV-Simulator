@@ -72,6 +72,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7135614711723274634}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -756640643500556821}
   m_SourcePrefab: {fileID: 100100000, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
 --- !u!1 &1325102438002783170 stripped
 GameObject:
@@ -137,3 +140,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableHighlight
   highlightLayer: 6
+--- !u!114 &-756640643500556821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325102438002783170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1903b00e9e95e2b46b6911d18d70a008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelObject
+  objectId: 

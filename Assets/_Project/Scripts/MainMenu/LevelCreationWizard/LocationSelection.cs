@@ -21,8 +21,8 @@ public class LocationSelection : MonoBehaviour
     [Tooltip("Database containing all available locations.")]
     [SerializeField] private LocationDatabase locationDatabase;
 
-    // Currently selected location localization key
-    private LocalizedString selectedLocationKey = null;
+    // Currently selected location data
+    private LocationData selectedLocation;
 
     // List of created buttons and their checkmarks
     private List<(Button button, GameObject checkmark)> createdButtons = new List<(Button, GameObject)>();
@@ -48,7 +48,7 @@ public class LocationSelection : MonoBehaviour
     private void Start()
     {
         PopulateList();
-        OnLocationSelected(locationDatabase.locations[0].localizationKey, createdButtons[0].button);
+        OnLocationSelected(locationDatabase.locations[0], createdButtons[0].button);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class LocationSelection : MonoBehaviour
 
         createdButtons.Clear();
 
-        foreach (var location in locationDatabase.locations)
+        foreach (LocationData location in locationDatabase.locations)
         {
             GameObject btnObj = Instantiate(locationButtonPrefab, contentParent);
             if (btnObj == null)
@@ -124,20 +124,15 @@ public class LocationSelection : MonoBehaviour
                 checkmarkObj.SetActive(false);
             }
 
-            btn.onClick.AddListener(() => OnLocationSelected(location.localizationKey, btn));
+            btn.onClick.AddListener(() => OnLocationSelected(location, btn));
             createdButtons.Add((btn, checkmarkObj));
         }
     }
 
-    /// <summary>
-    /// Called when a location button is clicked. Updates the selected location and visual checkmarks.
-    /// </summary>
-    /// <param name="localizationKey">Localization key of the selected location.</param>
-    /// <param name="clickedButton">Button that was clicked.</param>
-    private void OnLocationSelected(LocalizedString localizationKey, Button clickedButton)
+    private void OnLocationSelected(LocationData location, Button clickedButton)
     {
-        selectedLocationKey = localizationKey;
-        
+        selectedLocation = location;
+
         foreach (var (button, checkmark) in createdButtons)
         {
             bool isSelected = button == clickedButton;
@@ -148,14 +143,11 @@ public class LocationSelection : MonoBehaviour
             }
         }
 
-        //Debug.Log($"[LocationSelection] Selected: {selectedLocation}");
+        //Debug.Log($"[LocationSelection] Selected: {location.locationId}");
     }
 
-    /// <summary>
-    /// Returns the currently selected location key.
-    /// </summary>
-    public LocalizedString GetSelectedLocationKey()
+    public LocationData GetSelectedLocation()
     {
-        return selectedLocationKey;
+        return selectedLocation;
     }
 }

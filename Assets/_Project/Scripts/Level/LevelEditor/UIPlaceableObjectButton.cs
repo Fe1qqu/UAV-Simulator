@@ -67,7 +67,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
         Debug.Log($"[UIPlaceableObjectButton] Begin drag {linkedObjectData.localizationKey}");
 
         TooltipManager.Instance.EnterDragMode();
-        DragPlacementHandler.Instance.BeginDrag(linkedObjectData.prefab);
+        DragPlacementHandler.Instance.BeginDrag(linkedObjectData);
 
         ApplyDragVisual();
         DragPlacementHandler.Instance.OnDragCancelled += ResetDragVisual;

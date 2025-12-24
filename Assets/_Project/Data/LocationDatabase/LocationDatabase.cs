@@ -8,11 +8,17 @@ using System.Collections.Generic;
 [System.Serializable]
 public class LocationData
 {
+    [Header("Identity")]
+    [Tooltip("Stable unique identifier used for saving/loading.")]
+    public string locationId;
+
+    [Header("Presentation")]
     public LocalizedString localizationKey;
 
     [Tooltip("Preview thumbnail shown in the UI.")]
     public Sprite preview;
 
+    [Header("Runtime")]
     [Tooltip("Prefab representing the location/scene root to instantiate.")]
     public GameObject prefab;
 }

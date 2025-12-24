@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class EditorPauseMenu : MonoBehaviour, IBackHandler
 {
     [SerializeField] private GameObject pauseMenuRoot;
+    [SerializeField] private LevelSaveManager levelSaveManager;
     //[SerializeField] private EditorManager editorManager;
 
     [Header("Buttons")]
@@ -22,6 +23,11 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
         }
 
         pauseMenuRoot.SetActive(false);
+
+        if (levelSaveManager == null)
+        {
+            Debug.LogError("[EditorPauseMenu] LevelSaveManager is not assigned.");
+        }
 
         if (continueButton == null)
         {
@@ -65,7 +71,9 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
 
     public void OnSaveClicked()
     {
-        Debug.Log("[EditorPauseMenu] OnSaveClicked");
+        Debug.Log("[EditorPauseMenu] Saving level...");
+
+        levelSaveManager.Save(GameSettings.Instance.LevelName);
     }
 
     public void OnExitClicked()
