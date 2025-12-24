@@ -1,17 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class MainMenuScreen : UIScreen
 {
-    [SerializeField] private Button createLevelButton;
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button levelEditorButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitButton;
 
     private void Awake()
     {
-        if (createLevelButton == null)
+        if (playButton == null)
         {
-            Debug.LogError("[MainMenuScreen] CreateLevelButton is not assigned.");
+            Debug.LogError("[MainMenuScreen] PlayButton is not assigned.");
+        }
+
+        if (levelEditorButton == null)
+        {
+            Debug.LogError("[MainMenuScreen] LevelEditorButton is not assigned.");
         }
 
         if (settingsButton == null)
@@ -27,21 +34,29 @@ public class MainMenuScreen : UIScreen
 
     public override void OnShow()
     {
-        createLevelButton.onClick.AddListener(OnCreateLevel);
+        playButton.onClick.AddListener(OnPlay);
+        levelEditorButton.onClick.AddListener(OnCreateLevel);
         settingsButton.onClick.AddListener(OnSettings);
         exitButton.onClick.AddListener(OnExit);
     }
 
     public override void OnHide()
     {
-        createLevelButton.onClick.RemoveAllListeners();
+        playButton.onClick.RemoveAllListeners();
+        levelEditorButton.onClick.RemoveAllListeners();
         settingsButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
     }
 
+    private void OnPlay()
+    {
+        stateMachine.Show<PlayMenuScreen>();
+    }
+
     private void OnCreateLevel()
     {
-        stateMachine.Show<LevelCreationWizardScreen>();
+        stateMachine.Show<LevelEditorMenuScreen>();
+        //stateMachine.Show<LevelCreationWizardScreen>();
     }
 
     private void OnSettings()

@@ -35,10 +35,6 @@ MonoBehaviour:
     m_Key: to_main_menu
     m_Metadata:
       m_Items: []
-  - m_Id: 1868618162176
-    m_Key: create_level
-    m_Metadata:
-      m_Items: []
   - m_Id: 12882399092736
     m_Key: back
     m_Metadata:

@@ -14,23 +14,38 @@ public class LevelCreationWizardScreen : UIScreen, IBackHandler
 
     public override void OnShow()
     {
-        levelCreationWizard.OnExitToMenu = () => stateMachine.Show<MainMenuScreen>();
+        levelCreationWizard.OnExit = ExitToEditorMenu;
+        levelCreationWizard.OnExitToMainMenu = ExitToMainMenu;
+
         levelCreationWizard.StartWizard();
     }
 
     public override void OnHide()
     {
         levelCreationWizard.StopWizard();
-        levelCreationWizard.OnExitToMenu = null;
+
+        levelCreationWizard.OnExit = null;
+        levelCreationWizard.OnExitToMainMenu = null;
+    }
+
+    private void ExitToEditorMenu()
+    {
+        stateMachine.Show<LevelEditorMenuScreen>();
+    }
+
+    private void ExitToMainMenu()
+    {
+        stateMachine.Show<MainMenuScreen>();
     }
 
     public bool OnBack()
     {
-        if (!levelCreationWizard.GoBackOneStep())
+        if (levelCreationWizard.GoBackOneStep())
         {
-            stateMachine.Show<MainMenuScreen>();
+            return true;
         }
 
+        ExitToEditorMenu();
         return true;
     }
 }

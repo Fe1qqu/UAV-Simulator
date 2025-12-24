@@ -32,7 +32,8 @@ public class LevelCreationWizard : MonoBehaviour
 
     private LocationLocalizationPreloader localizationPreloader;
 
-    public System.Action OnExitToMenu;
+    public System.Action OnExit;
+    public System.Action OnExitToMainMenu;
 
     private void Awake()
     {
@@ -153,7 +154,7 @@ public class LevelCreationWizard : MonoBehaviour
     {
         if (currentStep == 0)
         {
-            OnMainMenuClicked();
+            OnExit?.Invoke();
             return;
         }
 
@@ -177,7 +178,7 @@ public class LevelCreationWizard : MonoBehaviour
     private void OnMainMenuClicked()
     {
         localizationPreloader.Unload();
-        OnExitToMenu?.Invoke();
+        OnExitToMainMenu?.Invoke();
     }
 
     /// <summary>
