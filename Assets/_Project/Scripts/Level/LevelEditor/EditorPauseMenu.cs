@@ -1,11 +1,13 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EditorPauseMenu : MonoBehaviour, IBackHandler
 {
     [SerializeField] private GameObject pauseMenuRoot;
     [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private EditorLevelDataBuilder levelDataBuilder;
     //[SerializeField] private EditorManager editorManager;
 
     [Header("Buttons")]
@@ -23,6 +25,11 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
         }
 
         pauseMenuRoot.SetActive(false);
+
+        if (levelDataBuilder == null)
+        {
+            Debug.LogError("[EditorPauseMenu] LevelDataBuilder is not assigned.");
+        }
 
         if (levelSaveManager == null)
         {
@@ -74,7 +81,31 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
         Debug.Log("[EditorPauseMenu] Saving level...");
 
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-        levelSaveManager.Save(editorSession.LevelName);
+
+        if (string.IsNullOrEmpty(editorSession.SelectedLevelFilePath))
+        {
+            Debug.Log("[EditorPauseMenu] No level file path. Creating new one.");
+            CreateNewLevelFilePath(editorSession);
+        }
+
+        LevelData data = levelDataBuilder.CollectLevelData();
+        levelSaveManager.SaveByPath(editorSession.SelectedLevelFilePath, data);
+    }
+
+    private void CreateNewLevelFilePath(EditorSession editorSession)
+    {
+        string fileName = editorSession.LevelName;
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            Debug.LogError("[EditorPauseMenu] LevelName is empty. Cannot save.");
+            return;
+        }
+
+        string directory = Path.Combine(Application.persistentDataPath, "levels");
+        string path = Path.Combine(directory, fileName + ".json");
+
+        editorSession.SelectedLevelFilePath = path;
     }
 
     public void OnExitClicked()

@@ -6,13 +6,24 @@ public class LevelObject : MonoBehaviour
 
     public string ObjectId => objectId;
 
-    public void SetObjectId(string id)
+    public void Initialize(string objectId)
     {
-        objectId = id;
+        if (string.IsNullOrEmpty(objectId))
+        {
+            Debug.LogError($"[LevelObject] Initialize called with empty ObjectId on {name}.");
+            return;
+        }
+
+        this.objectId = objectId;
     }
 
-    public virtual LevelObjectData ToData()
+    public LevelObjectData ToData()
     {
+        if (string.IsNullOrEmpty(objectId))
+        {
+            Debug.LogError($"[LevelObject] ObjectId is empty on {name}.");
+        }
+
         return new LevelObjectData
         {
             objectId = objectId,
@@ -22,8 +33,18 @@ public class LevelObject : MonoBehaviour
         };
     }
 
-    public virtual void FromData(LevelObjectData data)
+    public void FromData(LevelObjectData data)
     {
+        if (!string.IsNullOrEmpty(data.objectId))
+        {
+            objectId = data.objectId;
+        }
+        else
+        {
+            Debug.LogError($"[LevelObject] ObjectId is empty on {name}.");
+        }
+
+        objectId = data.objectId;
         transform.position = data.position;
         transform.rotation = data.rotation;
         transform.localScale = data.scale;

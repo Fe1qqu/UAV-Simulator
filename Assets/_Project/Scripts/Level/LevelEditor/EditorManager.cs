@@ -9,6 +9,7 @@ using UnityEngine.Localization.Components;
 public class EditorManager : MonoBehaviour, IBackHandler
 {
     [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private LevelLoader levelLoader;
 
     [Header("UI References")]
     [SerializeField] private GameObject loadingScreen;
@@ -62,6 +63,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] LevelSaveManager is not assigned.");
         }
 
+        if (levelLoader == null)
+        {
+            Debug.LogError("[EditorManager] LevelLoader is not assigned.");
+        }
+   
         if (loadingScreen == null)
         {
             Debug.LogError("[EditorManager] LoadingScreen is not assigned.");
@@ -240,30 +246,33 @@ public class EditorManager : MonoBehaviour, IBackHandler
     private void LoadLevelOrEmpty()
     {
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-        string levelFile = editorSession.SelectedLevelFile;
+        string levelFilePath = editorSession.SelectedLevelFilePath;
 
-        if (string.IsNullOrEmpty(levelFile) || !File.Exists(levelFile))
+        if (string.IsNullOrEmpty(levelFilePath) || !File.Exists(levelFilePath))
         {
             Debug.Log("[EditorManager] Creating new empty level.");
-            LoadSelectedLocation();
+            LoadEmptyLevel();
             return;
         }
 
-        string json = File.ReadAllText(levelFile);
-        LevelData data = JsonUtility.FromJson<LevelData>(json);
-
-        if (data == null)
-        {
-            Debug.LogError("[EditorManager] Failed to parse level file.");
-            LoadSelectedLocation();
-            return;
-        }
+        LevelData data = levelSaveManager.LoadByPath(editorSession.SelectedLevelFilePath);
+        levelLoader.Load(data);
 
         editorSession.LevelName = data.levelName;
         editorSession.SelectedLocationId = data.locationId;
+    }
 
-        LoadSelectedLocation();
-        levelSaveManager.Load(Path.GetFileNameWithoutExtension(levelFile));
+    private void LoadEmptyLevel()
+    {
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+
+        LevelData empty = new LevelData
+        {
+            levelName = editorSession.LevelName,
+            locationId = editorSession.SelectedLocationId
+        };
+
+        levelLoader.Load(empty);
     }
 
     /// <summary>

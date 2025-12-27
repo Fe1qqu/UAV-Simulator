@@ -120,7 +120,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             {
                 Debug.LogError($"[DragPlacementHandler] {instance.name} has no LevelObject component.");
             }
-            levelObject.SetObjectId(placeableData.objectId);
+            levelObject.Initialize(placeableData.objectId);
 
             // Create an undo/redo action
             RTG.PostObjectSpawnAction spawnAction = new RTG.PostObjectSpawnAction(new List<GameObject> { instance });

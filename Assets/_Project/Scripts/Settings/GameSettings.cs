@@ -1,16 +1,26 @@
 using UnityEngine;
 
+public class PlaySession
+{
+    public string LevelFilePath;
+
+    public void Clear()
+    {
+        LevelFilePath = null;
+    }
+}
+
 public class EditorSession
 {
     public string LevelName;
     public string SelectedLocationId;
-    public string SelectedLevelFile;
+    public string SelectedLevelFilePath;
 
     public void Clear()
     {
         LevelName = null;
         SelectedLocationId = null;
-        SelectedLevelFile = null;
+        SelectedLevelFilePath = null;
     }
 }
 
@@ -42,7 +52,14 @@ public class GameSettings : MonoBehaviour
         }
     }
 
+    public PlaySession CurrentPlaySession { get; private set; } = new PlaySession();
+
     public EditorSession CurrentEditorSession { get; private set; } = new EditorSession();
+
+    public void ClearPlaySession()
+    {
+        CurrentPlaySession.Clear();
+    }
 
     public void ClearEditorSession()
     {

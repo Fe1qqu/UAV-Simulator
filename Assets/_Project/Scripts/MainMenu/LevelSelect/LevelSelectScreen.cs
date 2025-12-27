@@ -131,17 +131,19 @@ public class LevelSelectScreen : UIScreen, IBackHandler
 
     private void OnConfirm()
     {
-        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-        editorSession.SelectedLevelFile = selectedFile;
-
         if (mode == LevelSelectMode.Editor)
         {
+            GameSettings.Instance.CurrentEditorSession.SelectedLevelFilePath = selectedFile;
+
             SceneManager.LoadScene("LevelEditor");
         }
         else
         {
-            print("[LevelSelectScreen] ScenarioSelectScreen");
-            //stateMachine.Show<ScenarioSelectScreen>();
+            PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
+            playSession.Clear();
+            playSession.LevelFilePath = selectedFile;
+
+            SceneManager.LoadScene("Play");
         }
     }
 

@@ -30,7 +30,7 @@ public class EditorSessionDebugUI : MonoBehaviour
             GUILayout.Label("<b>EditorSession</b>");
             GUILayout.Label($"LevelName: {session.LevelName ?? "null"}");
             GUILayout.Label($"SelectedLocationId: {session.SelectedLocationId ?? "null"}");
-            GUILayout.Label($"SelectedLevelFile: {session.SelectedLevelFile ?? "null"}");
+            GUILayout.Label($"SelectedLevelFilePath: {session.SelectedLevelFilePath ?? "null"}");
         }
 
         GUILayout.Space(5);
