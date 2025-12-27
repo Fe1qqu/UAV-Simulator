@@ -30,7 +30,8 @@ public class Step2_LocationSelect : LevelCreationStep
             return false;
         }
 
-        GameSettings.Instance.SelectedLocationId = location.locationId;
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+        editorSession.SelectedLocationId = location.locationId;
         return true;
     }
 }

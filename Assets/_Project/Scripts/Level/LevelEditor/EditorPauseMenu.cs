@@ -73,7 +73,8 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
     {
         Debug.Log("[EditorPauseMenu] Saving level...");
 
-        levelSaveManager.Save(GameSettings.Instance.LevelName);
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+        levelSaveManager.Save(editorSession.LevelName);
     }
 
     public void OnExitClicked()

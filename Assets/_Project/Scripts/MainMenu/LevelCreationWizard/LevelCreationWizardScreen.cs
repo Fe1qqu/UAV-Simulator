@@ -14,6 +14,8 @@ public class LevelCreationWizardScreen : UIScreen, IBackHandler
 
     public override void OnShow()
     {
+        GameSettings.Instance.ClearEditorSession();
+
         levelCreationWizard.OnExit = ExitToEditorMenu;
         levelCreationWizard.OnExitToMainMenu = ExitToMainMenu;
 

@@ -1,12 +1,15 @@
-﻿using UnityEngine;
-using UnityEngine.Localization.Components;
+﻿using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
 /// </summary>
 public class EditorManager : MonoBehaviour, IBackHandler
 {
+    [SerializeField] private LevelSaveManager levelSaveManager;
+
     [Header("UI References")]
     [SerializeField] private GameObject loadingScreen;
 
@@ -54,6 +57,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
 
     private void Awake()
     {
+        if (levelSaveManager == null)
+        {
+            Debug.LogError("[EditorManager] LevelSaveManager is not assigned.");
+        }
+
         if (loadingScreen == null)
         {
             Debug.LogError("[EditorManager] LoadingScreen is not assigned.");
@@ -136,7 +144,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     {
         Task loadTask = localizationPreloader.Load();
 
-        LoadSelectedLocation();
+        LoadLevelOrEmpty();
         SetupCategories();
 
         await loadTask;
@@ -229,12 +237,42 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
     }
 
+    private void LoadLevelOrEmpty()
+    {
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+        string levelFile = editorSession.SelectedLevelFile;
+
+        if (string.IsNullOrEmpty(levelFile) || !File.Exists(levelFile))
+        {
+            Debug.Log("[EditorManager] Creating new empty level.");
+            LoadSelectedLocation();
+            return;
+        }
+
+        string json = File.ReadAllText(levelFile);
+        LevelData data = JsonUtility.FromJson<LevelData>(json);
+
+        if (data == null)
+        {
+            Debug.LogError("[EditorManager] Failed to parse level file.");
+            LoadSelectedLocation();
+            return;
+        }
+
+        editorSession.LevelName = data.levelName;
+        editorSession.SelectedLocationId = data.locationId;
+
+        LoadSelectedLocation();
+        levelSaveManager.Load(Path.GetFileNameWithoutExtension(levelFile));
+    }
+
     /// <summary>
     /// Loads the location chosen earlier in GameSettings.
     /// </summary>
     private void LoadSelectedLocation()
     {
-        string selectedLocationId = GameSettings.Instance.SelectedLocationId;
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+        string selectedLocationId = editorSession.SelectedLocationId;
 
         if (string.IsNullOrEmpty(selectedLocationId))
         {
@@ -247,7 +285,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
             }
 
             selectedLocationId = locationDatabase.locations[0].locationId;
-            GameSettings.Instance.SelectedLocationId = selectedLocationId;
+            editorSession.SelectedLocationId = selectedLocationId;
         }
 
         LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);

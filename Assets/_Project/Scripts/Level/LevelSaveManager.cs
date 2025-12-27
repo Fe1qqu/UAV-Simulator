@@ -55,15 +55,17 @@ public class LevelSaveManager : MonoBehaviour
         string json = File.ReadAllText(path);
         LevelData data = JsonUtility.FromJson<LevelData>(json);
 
-        LoadData(data);
+        ApplyLevelData(data);
     }
 
     private LevelData Collect()
     {
+        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+
         LevelData data = new LevelData
         {
-            levelName = GameSettings.Instance.LevelName,
-            locationId = GameSettings.Instance.SelectedLocationId
+            levelName = editorSession.LevelName,
+            locationId = editorSession.SelectedLocationId
         };
 
         foreach (Transform child in levelRoot)
@@ -79,11 +81,14 @@ public class LevelSaveManager : MonoBehaviour
         return data;
     }
 
-    private void LoadData(LevelData data)
+    private void ApplyLevelData(LevelData data)
     {
         foreach (Transform child in levelRoot)
         {
-            Destroy(child.gameObject);
+            if (child.GetComponent<LevelObject>() != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         foreach (LevelObjectData obj in data.objects)

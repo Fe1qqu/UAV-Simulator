@@ -22,10 +22,7 @@ public class PlayMenuScreen : UIScreen, IBackHandler
     public override void OnShow()
     {
         selectLevelButton.onClick.AddListener(OnSelectLevel);
-        backButton.onClick.AddListener(() =>
-        {
-            stateMachine.Show<MainMenuScreen>();
-        });
+        backButton.onClick.AddListener(OnBackClicked);
     }
 
     public override void OnHide()
@@ -36,13 +33,22 @@ public class PlayMenuScreen : UIScreen, IBackHandler
 
     private void OnSelectLevel()
     {
-        print("[PlayMenuScreen] OnSelectLevel");
-        //stateMachine.Show<LevelSelectForPlayScreen>();
+        stateMachine.Show<LevelSelectScreen>(
+            new LevelSelectContext(
+                LevelSelectMode.Play,
+                () => stateMachine.Show<PlayMenuScreen>()
+            )
+        );
+    }
+
+    private void OnBackClicked()
+    {
+        stateMachine.Show<MainMenuScreen>();
     }
 
     public bool OnBack()
     {
-        stateMachine.Show<MainMenuScreen>();
+        OnBackClicked();
         return true;
     }
 }

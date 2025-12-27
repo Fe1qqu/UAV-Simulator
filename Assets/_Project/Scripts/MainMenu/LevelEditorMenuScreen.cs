@@ -29,10 +29,7 @@ public class LevelEditorMenuScreen : UIScreen, IBackHandler
     {
         createLevelButton.onClick.AddListener(OnCreate);
         loadLevelButton.onClick.AddListener(OnLoad);
-        backButton.onClick.AddListener(() =>
-        {
-            stateMachine.Show<MainMenuScreen>();
-        });
+        backButton.onClick.AddListener(OnBackClicked);
     }
 
     public override void OnHide()
@@ -49,13 +46,22 @@ public class LevelEditorMenuScreen : UIScreen, IBackHandler
 
     private void OnLoad()
     {
-        print("[LevelEditorMenuScreen] OnLoad");
-        //stateMachine.Show<LevelLoadScreen>();
+        stateMachine.Show<LevelSelectScreen>(
+            new LevelSelectContext(
+                LevelSelectMode.Editor,
+                () => stateMachine.Show<LevelEditorMenuScreen>()
+            )
+        );
+    }
+
+    private void OnBackClicked()
+    {
+        stateMachine.Show<MainMenuScreen>();
     }
 
     public bool OnBack()
     {
-        stateMachine.Show<MainMenuScreen>();
+        OnBackClicked();
         return true;
     }
 }

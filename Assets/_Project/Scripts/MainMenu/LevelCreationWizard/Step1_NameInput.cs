@@ -64,7 +64,8 @@ public class Step1_NameInput : LevelCreationStep
 
         if (valid)
         {
-            GameSettings.Instance.LevelName = name;
+            EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+            editorSession.LevelName = name;
         }
 
         return valid;

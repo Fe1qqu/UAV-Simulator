@@ -1,5 +1,19 @@
 using UnityEngine;
 
+public class EditorSession
+{
+    public string LevelName;
+    public string SelectedLocationId;
+    public string SelectedLevelFile;
+
+    public void Clear()
+    {
+        LevelName = null;
+        SelectedLocationId = null;
+        SelectedLevelFile = null;
+    }
+}
+
 /// <summary>
 /// Centralized settings manager for game-wide data.
 /// </summary>
@@ -28,35 +42,52 @@ public class GameSettings : MonoBehaviour
         }
     }
 
-    // -------------------------------
-    // === LEVEL CREATION SETTINGS ===
-    // -------------------------------
+    public EditorSession CurrentEditorSession { get; private set; } = new EditorSession();
 
-    /// <summary>
-    /// Name of the level currently being created or edited.
-    /// </summary>
-    public string LevelName
+    public void ClearEditorSession()
     {
-        get => PlayerPrefs.GetString("LevelName");
-        set
-        {
-            PlayerPrefs.SetString("LevelName", value);
-            Save();
-        }
+        CurrentEditorSession.Clear();
     }
 
-    /// <summary>
-    /// Selected location ID for level creation.
-    /// </summary>
-    public string SelectedLocationId
-    {
-        get => PlayerPrefs.GetString("SelectedLocationId");
-        set
-        {
-            PlayerPrefs.SetString("SelectedLocationId", value);
-            Save();
-        }
-    }
+    // -------------------------------
+    // === EDITOR SESSION SETTINGS ===
+    // -------------------------------
+
+    ///// <summary>
+    ///// Name of the level currently being created or edited.
+    ///// </summary>
+    //public string LevelName
+    //{
+    //    get => PlayerPrefs.GetString("LevelName");
+    //    set
+    //    {
+    //        PlayerPrefs.SetString("LevelName", value);
+    //        Save();
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Selected location ID for level creation.
+    ///// </summary>
+    //public string SelectedLocationId
+    //{
+    //    get => PlayerPrefs.GetString("SelectedLocationId");
+    //    set
+    //    {
+    //        PlayerPrefs.SetString("SelectedLocationId", value);
+    //        Save();
+    //    }
+    //}
+
+    //public string SelectedLevelFile
+    //{
+    //    get => PlayerPrefs.GetString("SelectedLevelFile");
+    //    set
+    //    {
+    //        PlayerPrefs.SetString("SelectedLevelFile", value);
+    //        Save();
+    //    }
+    //}
 
     // -----------------------
     // === GENERAL SETTINGS ===
@@ -110,7 +141,8 @@ public class GameSettings : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         // Clear temporary level creation settings at startup
-        PlayerPrefs.DeleteKey("LevelName");
-        PlayerPrefs.DeleteKey("SelectedLocationId");
+        //PlayerPrefs.DeleteKey("LevelName");
+        //PlayerPrefs.DeleteKey("SelectedLocationId");
+        //PlayerPrefs.DeleteKey("SelectedLevelFile");
     }
 }

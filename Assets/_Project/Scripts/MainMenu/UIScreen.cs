@@ -10,5 +10,6 @@ public abstract class UIScreen : MonoBehaviour
     }
 
     public virtual void OnShow() { }
+    public virtual void OnShow(object context) => OnShow();
     public virtual void OnHide() { }
 }
