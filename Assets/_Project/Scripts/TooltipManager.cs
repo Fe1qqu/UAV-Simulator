@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Manages the display of tooltips in the UI.
@@ -35,7 +36,8 @@ public class TooltipManager : MonoBehaviour
 
     private bool isVisible;
     private bool dragMode = false;
-    private Coroutine showCoroutine;
+
+    private CancellationTokenSource cancellationTokenSource;
 
     /// <summary>
     /// Returns true if the tooltip system is in drag mode.
@@ -58,6 +60,11 @@ public class TooltipManager : MonoBehaviour
             Debug.LogError("[TooltipManager] TooltipCanvas is not assigned.");
         }
 
+        if (tooltipCanvas.renderMode == RenderMode.WorldSpace)
+        {
+            Debug.LogError("[TooltipManager] WorldSpace canvas is not supported.");
+        }
+
         if (tooltipRect == null)
         {
             Debug.LogError("[TooltipManager] TooltipRect is not assigned.");
@@ -74,7 +81,7 @@ public class TooltipManager : MonoBehaviour
             Debug.LogWarning("[TooltipManager] FadeManager not found on tooltipRect.");
         }
 
-        Hide();
+        HideImmediate();
     }
 
     private void Update()
@@ -92,17 +99,33 @@ public class TooltipManager : MonoBehaviour
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Vector2 screenPosition = mousePosition + tooltipOffset;
 
-        Vector2 tooltipSize = tooltipRect.sizeDelta * tooltipCanvas.scaleFactor;
+        Vector2 tooltipSize = tooltipRect.sizeDelta;
 
-        float maxX = Screen.width - tooltipSize.x;
-        screenPosition.x = Mathf.Clamp(screenPosition.x, 0, maxX);
-        screenPosition.y = Mathf.Clamp(screenPosition.y, tooltipSize.y, Screen.height);
+        // Clamp inside screen bounds
+        screenPosition.x = Mathf.Clamp(
+            screenPosition.x,
+            0,
+            Screen.width - tooltipSize.x
+        );
+
+        screenPosition.y = Mathf.Clamp(
+            screenPosition.y,
+            tooltipSize.y,
+            Screen.height
+        );
+
+        Camera cam = null;
+        if (tooltipCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            cam = tooltipCanvas.worldCamera;
+        }
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-             tooltipCanvas.transform as RectTransform,
-             screenPosition,
-             tooltipCanvas.worldCamera,
-             out var localPoint);
+            tooltipCanvas.transform as RectTransform,
+            screenPosition,
+            cam,
+            out Vector2 localPoint
+        );
 
         tooltipRect.localPosition = localPoint;
     }
@@ -117,37 +140,41 @@ public class TooltipManager : MonoBehaviour
         if (dragMode && !force)
         {
             return;
-        }    
+        }
 
         //Debug.Log($"tooltipShow message: {localizedKey}");
 
-        if (showCoroutine != null)
-        {
-            StopCoroutine(showCoroutine);
-        }
+        CancelPendingShow();
+        cancellationTokenSource = new CancellationTokenSource();
 
-        isVisible = true;
-        showCoroutine = StartCoroutine(ShowWithDelay(localizedKey));
+        _ = ShowAsync(localizedKey, cancellationTokenSource.Token);
     }
 
-    private IEnumerator ShowWithDelay(LocalizedString localizedKey)
+    private async Task ShowAsync(LocalizedString localizedKey, CancellationToken token)
     {
-        yield return new WaitForSeconds(tooltipDelay);
+        isVisible = true;
 
-        // If Hide was called during the waiting period, we do not show
-        if (!isVisible)
+        try
         {
-            yield break;
+            int delayMs = Mathf.RoundToInt(tooltipDelay * 1000f);
+            await Task.Delay(delayMs, token);
+
+            if (token.IsCancellationRequested || !isVisible)
+            {
+                return;
+            }
+
+            tooltipLocalizeEvent.StringReference = localizedKey;
+            tooltipLocalizeEvent.RefreshString();
+
+            tooltipRect.gameObject.SetActive(true);
+            fadeManager.SetAlpha(0f);
+            fadeManager.FadeIn(tooltipFadeSpeed);
         }
-
-        tooltipLocalizeEvent.StringReference = localizedKey;
-        tooltipLocalizeEvent.RefreshString();
-
-        fadeManager.SetAlpha(0);
-        tooltipRect.gameObject.SetActive(true);
-        fadeManager.FadeIn(tooltipFadeSpeed);
-
-        showCoroutine = null;
+        catch (TaskCanceledException)
+        {
+            // expected
+        }
     }
 
     /// <summary>
@@ -157,8 +184,24 @@ public class TooltipManager : MonoBehaviour
     {
         //Debug.Log("tooltipHide");
 
-        tooltipRect.gameObject.SetActive(false);
+        CancelPendingShow();
+        HideImmediate();
+    }
+
+    private void HideImmediate()
+    {
         isVisible = false;
+        tooltipRect.gameObject.SetActive(false);
+    }
+
+    private void CancelPendingShow()
+    {
+        if (cancellationTokenSource != null)
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+            cancellationTokenSource = null;
+        }
     }
 
     /// <summary>
@@ -175,5 +218,10 @@ public class TooltipManager : MonoBehaviour
     public void ExitDragMode()
     {
         dragMode = false;
+    }
+
+    private void OnDestroy()
+    {
+        CancelPendingShow();
     }
 }
