@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: plane
     m_Metadata:
       m_Items: []
+  - m_Id: 14974251858812928
+    m_Key: drone_spawn_point
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class DroneSpawnPoint : LevelObject, IRequiredLevelObject
+public class DroneSpawnPoint : LevelObject/*, IRequiredLevelObject,*/
 {
 }

@@ -10,7 +10,8 @@ public enum PlaceableObjectType
     Generic,
     Tree,
     Building,
-    Light
+    Light,
+    Gameplay
 }
 
 /// <summary>

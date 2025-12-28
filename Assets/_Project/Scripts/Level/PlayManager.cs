@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RuntimeLevelLoader : MonoBehaviour
+public class PlayManager : MonoBehaviour
 {
     [SerializeField] private LevelSaveManager levelSaveManager;
     [SerializeField] private LevelLoader levelLoader;
@@ -14,29 +14,32 @@ public class RuntimeLevelLoader : MonoBehaviour
     {
         if (levelSaveManager == null)
         {
-            Debug.LogError("[RuntimeLevelLoader] LevelSaveManager is not assigned.");
+            Debug.LogError("[PlayManager] LevelSaveManager is not assigned.");
         }
 
         if (levelLoader == null)
         {
-            Debug.LogError("[RuntimeLevelLoader] LevelLoader is not assigned.");
+            Debug.LogError("[PlayManager] LevelLoader is not assigned.");
         }
 
         if (dronePrefab == null)
         {
-            Debug.LogError("[RuntimeLevelLoader] DronePrefab is not assigned.");
+            Debug.LogError("[PlayManager] DronePrefab is not assigned.");
         }
     }
 
     private void Start()
     {
-        PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
-
-        LevelData data = levelSaveManager.LoadByPath(playSession.LevelFilePath);
-        levelLoader.Load(data);
-
+        LoadLevel();
         //ValidateLevel();
         SpawnDrone();
+    }
+
+    private void LoadLevel()
+    {
+        PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
+        LevelData data = levelSaveManager.LoadByPath(playSession.LevelFilePath);
+        levelLoader.Load(data);
     }
 
     //private void ValidateLevel()
@@ -55,13 +58,13 @@ public class RuntimeLevelLoader : MonoBehaviour
         DroneSpawnPoint spawnPoint = FindFirstObjectByType<DroneSpawnPoint>();
         if (spawnPoint == null)
         {
-            Debug.LogError("[RuntimeLevelLoader] DroneSpawnPoint not found.");
+            Debug.LogError("[PlayManager] DroneSpawnPoint not found.");
             return;
         }
 
         if (dronePrefab == null)
         {
-            Debug.LogError("[RuntimeLevelLoader] DronePrefab is not assigned.");
+            Debug.LogError("[PlayManager] DronePrefab is not assigned.");
             return;
         }
 

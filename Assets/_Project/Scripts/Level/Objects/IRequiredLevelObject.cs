@@ -1,1 +1,3 @@
-public interface IRequiredLevelObject { }
+public interface IRequiredLevelObject
+{
+}

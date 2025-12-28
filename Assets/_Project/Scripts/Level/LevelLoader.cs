@@ -47,12 +47,19 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLocation(string locationId)
     {
-        LocationData location = locationDatabase.locations.Find(l => l.locationId == locationId);
+        LocationData location = locationDatabase.locations.Find(location => location.locationId == locationId);
 
         if (location == null)
         {
-            Debug.LogError($"[LevelLoader] Location '{locationId}' not found");
-            return;
+            if (locationDatabase.locations == null || locationDatabase.locations.Count == 0)
+            {
+                Debug.LogError("[LevelLoader] LocationDatabase is empty.");
+                return;
+            }
+
+            location = locationDatabase.locations[0];
+
+            Debug.LogWarning($"[LevelLoader] Location '{locationId}' not found. Falling back to default location '{location.locationId}'.");
         }
 
         Instantiate(location.prefab, Vector3.zero, Quaternion.identity, levelRoot);
