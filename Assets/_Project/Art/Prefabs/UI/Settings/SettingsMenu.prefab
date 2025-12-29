@@ -908,17 +908,17 @@ MonoBehaviour:
   tabsButtonsContainer: {fileID: 2463537596246209646}
   tabButtonPrefab: {fileID: 7310059484980507223}
   tabsContainer: {fileID: 1395171511155475407}
-  tabMappingContexts:
+  settingsContextTabs:
   - context: 0
     tabIds:
     - audio
     - video
   - context: 1
     tabIds:
-    - video
+    - audio
   - context: 2
     tabIds:
-    - audio
+    - video
 --- !u!114 &8826595011071953615
 MonoBehaviour:
   m_ObjectHideFlags: 0
