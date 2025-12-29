@@ -97,7 +97,7 @@ public class SettingsMenuController : MonoBehaviour
     /// </summary>
     private void BuildTabsForContext(SettingsContext context)
     {
-        foreach (var button in createdTabButtons)
+        foreach (TabButton button in createdTabButtons)
         {
             if (button != null)
             {
