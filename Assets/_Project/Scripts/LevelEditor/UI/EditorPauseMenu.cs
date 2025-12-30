@@ -3,9 +3,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
 
-public class EditorPauseMenu : MonoBehaviour, IBackHandler
+public class EditorPauseMenu : BasePauseMenu
 {
-    [SerializeField] private GameObject pauseMenuRoot;
     [SerializeField] private LevelSaveManager levelSaveManager;
     [SerializeField] private EditorLevelDataBuilder levelDataBuilder;
     //[SerializeField] private EditorManager editorManager;
@@ -15,16 +14,9 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
     [SerializeField] private Button saveButton;
     [SerializeField] private Button exitButton;
 
-    private bool isOpen;
-
-    private void Awake()
+    protected override void Awake()
     {
-        if (pauseMenuRoot == null)
-        {
-            Debug.LogError("[EditorPauseMenu] PauseMenuRoot is not assigned.");
-        }
-
-        pauseMenuRoot.SetActive(false);
+        base.Awake();
 
         if (levelDataBuilder == null)
         {
@@ -71,6 +63,16 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
         exitButton.onClick.RemoveListener(OnExitClicked);
     }
 
+    protected override void OnOpened()
+    {
+        EditorCameraInput.Instance.enabled = false;
+    }
+
+    protected override void OnClosed()
+    {
+        EditorCameraInput.Instance.enabled = true;
+    }
+
     public void OnContinueClicked()
     {
         Close();
@@ -81,7 +83,6 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
         Debug.Log("[EditorPauseMenu] Saving level...");
 
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-
         if (string.IsNullOrEmpty(editorSession.SelectedLevelFilePath))
         {
             Debug.Log("[EditorPauseMenu] No level file path. Creating new one.");
@@ -114,52 +115,9 @@ public class EditorPauseMenu : MonoBehaviour, IBackHandler
 
         //if (editorManager != null)
         //{
-        //    editorManager.UnloadLocalization(); // если сделаешь такой метод
+        //    editorManager.UnloadLocalization();
         //}
 
         SceneManager.LoadScene("MainMenu");
-    }
-
-    public void Open()
-    {
-        if (isOpen)
-        {
-            return;
-        }
-
-        isOpen = true;
-        pauseMenuRoot.SetActive(true);
-        Time.timeScale = 0f;
-
-        EditorCameraInput.Instance.enabled = false;
-        BackDispatcher.Instance.Register(this);
-    }
-
-    public void Close()
-    {
-        if (!isOpen)
-        {
-            return;
-        }
-
-        isOpen = false;
-        pauseMenuRoot.SetActive(false);
-        Time.timeScale = 1f;
-
-        EditorCameraInput.Instance.enabled = true;
-        BackDispatcher.Instance.Unregister(this);
-    }
-
-    public bool OnBack()
-    {
-        if (!isOpen)
-        {
-            return false;
-        }
-
-        Debug.Log("[EditorPauseMenu] OnBack.");
-
-        Close();
-        return true;
     }
 }

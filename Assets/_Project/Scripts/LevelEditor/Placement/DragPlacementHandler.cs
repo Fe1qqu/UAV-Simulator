@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles placement drag workflow:

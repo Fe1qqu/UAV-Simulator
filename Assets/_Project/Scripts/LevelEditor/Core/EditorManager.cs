@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Localization.Components;
+using System.IO;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
@@ -278,42 +278,42 @@ public class EditorManager : MonoBehaviour, IBackHandler
     /// <summary>
     /// Loads the location chosen earlier in GameSettings.
     /// </summary>
-    private void LoadSelectedLocation()
-    {
-        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-        string selectedLocationId = editorSession.SelectedLocationId;
+    //private void LoadSelectedLocation()
+    //{
+    //    EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+    //    string selectedLocationId = editorSession.SelectedLocationId;
 
-        if (string.IsNullOrEmpty(selectedLocationId))
-        {
-            Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
+    //    if (string.IsNullOrEmpty(selectedLocationId))
+    //    {
+    //        Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
 
-            if (locationDatabase.locations.Count == 0)
-            {
-                Debug.LogError("[EditorManager] LocationDatabase is empty.");
-                return;
-            }
+    //        if (locationDatabase.locations.Count == 0)
+    //        {
+    //            Debug.LogError("[EditorManager] LocationDatabase is empty.");
+    //            return;
+    //        }
 
-            selectedLocationId = locationDatabase.locations[0].locationId;
-            editorSession.SelectedLocationId = selectedLocationId;
-        }
+    //        selectedLocationId = locationDatabase.locations[0].locationId;
+    //        editorSession.SelectedLocationId = selectedLocationId;
+    //    }
 
-        LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);
-        if (data == null)
-        {
-            Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
-            data = locationDatabase.locations[0];
-        }
+    //    LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);
+    //    if (data == null)
+    //    {
+    //        Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
+    //        data = locationDatabase.locations[0];
+    //    }
 
-        if (data.prefab == null)
-        {
-            Debug.LogError($"[EditorManager] Prefab missing for location '{data.localizationKey}'.");
-            return;
-        }
+    //    if (data.prefab == null)
+    //    {
+    //        Debug.LogError($"[EditorManager] Prefab missing for location '{data.localizationKey}'.");
+    //        return;
+    //    }
 
-        Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-        //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-        //Debug.Log($"[EditorManager] Loaded location: {location.name}");
-    }
+    //    Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
+    //    //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
+    //    //Debug.Log($"[EditorManager] Loaded location: {location.name}");
+    //}
 
     public bool OnBack()
     {

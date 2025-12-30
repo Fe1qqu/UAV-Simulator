@@ -128,4 +128,30 @@ public class QuadcopterController : DroneControllerBase, IControllable
     public void ApplyYaw(float value) => yawInput = value;
     public void ApplyPitch(float value) => pitchInput = value;
     public void ApplyRoll(float value) => rollInput = value;
+
+    public override void ResetState()
+    {
+        // Resetting control inputs
+        throttleInput = 0f;
+        yawInput = 0f;
+        pitchInput = 0f;
+        rollInput = 0f;
+
+        // Resetting RPM of all rotors
+        foreach (Rotor rotor in rotors.Values)
+        {
+            rotor.CurrentRPM = 0f;
+        }
+
+        // Physics reset
+        if (rigidBody != null)
+        {
+            rigidBody.linearVelocity = Vector3.zero;
+            rigidBody.angularVelocity = Vector3.zero;
+            rigidBody.Sleep();
+        }
+
+        // Clearing debug data
+        rpmDebugDict.Clear();
+    }
 }
