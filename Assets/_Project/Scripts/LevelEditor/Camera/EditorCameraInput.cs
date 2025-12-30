@@ -51,8 +51,8 @@ public class EditorCameraInput : MonoBehaviour
         moveAction = input.EditorCamera.Move;
         upDownAction = input.EditorCamera.UpDown;
         enableMovementAction = input.EditorCamera.EnableMovement;
-        enableMovementAction.performed += context => SetMovementEnabled(true);
-        enableMovementAction.canceled += context => SetMovementEnabled(false);
+        enableMovementAction.performed += _ => SetMovementEnabled(true);
+        enableMovementAction.canceled += _ => SetMovementEnabled(false);
     }
 
     private void OnEnable()

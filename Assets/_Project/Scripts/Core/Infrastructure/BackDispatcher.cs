@@ -27,7 +27,7 @@ public class BackDispatcher : MonoBehaviour
     private void OnEnable() => input.Enable();
     private void OnDisable() => input.Disable();
 
-    private void OnCancelPressed(InputAction.CallbackContext callbackContext)
+    private void OnCancelPressed(InputAction.CallbackContext _)
     {
         for (int i = handlers.Count - 1; i >= 0; i--)
         {

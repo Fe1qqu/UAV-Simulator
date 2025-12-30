@@ -33,14 +33,14 @@ public class DroneInput : MonoBehaviour
     private void OnEnable()
     {
         input.Enable();
-        input.DroneControl.DebugUI.performed += context => debugUI.ToggleVisibility();
-        input.DroneControl.SwitchCamera.performed += context => cameraSwitcher.NextCamera();
+        input.DroneControl.DebugUI.performed += _ => debugUI.ToggleVisibility();
+        input.DroneControl.SwitchCamera.performed += _ => cameraSwitcher.NextCamera();
     }
 
     private void OnDisable()
     {
-        input.DroneControl.DebugUI.performed -= context => debugUI.ToggleVisibility();
-        input.DroneControl.SwitchCamera.performed -= context => cameraSwitcher.NextCamera();
+        input.DroneControl.DebugUI.performed -= _ => debugUI.ToggleVisibility();
+        input.DroneControl.SwitchCamera.performed -= _ => cameraSwitcher.NextCamera();
 
         input.Disable();
     }

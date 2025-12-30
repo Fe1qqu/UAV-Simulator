@@ -31,8 +31,8 @@ public class DroneCameraInput : MonoBehaviour
 
         lookAction = input.DroneCamera.Look;
         enableMovementAction = input.DroneCamera.EnableMovement;
-        enableMovementAction.performed += context => SetMovementEnabled(true);
-        enableMovementAction.canceled += context => SetMovementEnabled(false);
+        enableMovementAction.performed += _ => SetMovementEnabled(true);
+        enableMovementAction.canceled += _ => SetMovementEnabled(false);
     }
 
     private void OnEnable()
