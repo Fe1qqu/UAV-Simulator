@@ -24,6 +24,12 @@ public class EditorLevelDataBuilder : MonoBehaviour
 
         foreach (Transform child in levelRoot)
         {
+            // Ignore inactive objects (deleted / undone)
+            if (!child.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
             if (!child.TryGetComponent<LevelObject>(out var levelObject))
             {
                 continue;
