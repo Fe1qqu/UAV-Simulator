@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Localization;
+using Alchemy.Inspector;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// Types used to classify placeable objects in the editor.
@@ -12,6 +14,13 @@ public enum PlaceableObjectType
     Building,
     Light,
     Gameplay
+}
+
+public enum PreviewMaterialMode
+{
+    UseDefault,   // use the general previewMaterial
+    Override,     // use previewMaterialOverride
+    None          // do not use the material at all
 }
 
 /// <summary>
@@ -36,6 +45,15 @@ public class PlaceableObjectData
 
     [Tooltip("Category/type used for filtering in the editor UI.")]
     public PlaceableObjectType type = PlaceableObjectType.Generic;
+
+    [Header("Preview")]
+    public PreviewMaterialMode previewMaterialMode = PreviewMaterialMode.UseDefault;
+
+    [ShowIf("IsPreviewOverride")]
+    public Material previewMaterialOverride;
+
+    [SuppressMessage("Usage", "IDE0051:Remove unused private members", Justification = "Used via reflection by Alchemy ShowIf")]
+    private bool IsPreviewOverride => previewMaterialMode == PreviewMaterialMode.Override;
 }
 
 /// <summary>

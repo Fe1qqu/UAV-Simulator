@@ -14,13 +14,13 @@ public class TooltipManager : MonoBehaviour
 
     [Header("References")]
     [Tooltip("Canvas containing the tooltip UI.")]
-    [SerializeField] private Canvas tooltipCanvas;
+    [SerializeField] private Canvas canvas;
 
     [Tooltip("RectTransform of the tooltip panel.")]
-    [SerializeField] private RectTransform tooltipRect;
+    [SerializeField] private RectTransform rectTransform;
 
     [Tooltip("Localize event that updates tooltip text.")]
-    [SerializeField] private LocalizeStringEvent tooltipLocalizeEvent;
+    [SerializeField] private LocalizeStringEvent localizeStringEvent;
 
     [Header("Settings")]
     [Tooltip("Offset from mouse position for tooltip.")]
@@ -55,30 +55,30 @@ public class TooltipManager : MonoBehaviour
 
         Instance = this;
 
-        if (tooltipCanvas == null)
+        if (canvas == null)
         {
-            Debug.LogError("[TooltipManager] TooltipCanvas is not assigned.");
+            Debug.LogError("[TooltipManager] Canvas is not assigned.");
         }
 
-        if (tooltipCanvas.renderMode == RenderMode.WorldSpace)
+        if (canvas.renderMode == RenderMode.WorldSpace)
         {
             Debug.LogError("[TooltipManager] WorldSpace canvas is not supported.");
         }
 
-        if (tooltipRect == null)
+        if (rectTransform == null)
         {
-            Debug.LogError("[TooltipManager] TooltipRect is not assigned.");
+            Debug.LogError("[TooltipManager] RectTransform is not assigned.");
         }
 
-        if (tooltipLocalizeEvent == null)
+        if (localizeStringEvent == null)
         {
-            Debug.LogError("[TooltipManager] TooltipLocalizeEvent is not assigned.");
+            Debug.LogError("[TooltipManager] LocalizeStringEvent is not assigned.");
         }
 
-        fadeManager = tooltipRect.GetComponent<FadeManager>();
+        fadeManager = rectTransform.GetComponent<FadeManager>();
         if (fadeManager == null)
         {
-            Debug.LogWarning("[TooltipManager] FadeManager not found on tooltipRect.");
+            Debug.LogWarning("[TooltipManager] FadeManager not found on RectTransform.");
         }
 
         HideImmediate();
@@ -99,35 +99,26 @@ public class TooltipManager : MonoBehaviour
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Vector2 screenPosition = mousePosition + tooltipOffset;
 
-        Vector2 tooltipSize = tooltipRect.sizeDelta;
+        Vector2 tooltipSize = rectTransform.sizeDelta * canvas.scaleFactor;
 
         // Clamp inside screen bounds
-        screenPosition.x = Mathf.Clamp(
-            screenPosition.x,
-            0,
-            Screen.width - tooltipSize.x
-        );
+        screenPosition.x = Mathf.Clamp(screenPosition.x, 0, Screen.width - tooltipSize.x);
+        screenPosition.y = Mathf.Clamp(screenPosition.y, tooltipSize.y, Screen.height);
 
-        screenPosition.y = Mathf.Clamp(
-            screenPosition.y,
-            tooltipSize.y,
-            Screen.height
-        );
-
-        Camera cam = null;
-        if (tooltipCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        Camera camera = null;
+        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
         {
-            cam = tooltipCanvas.worldCamera;
+            camera = canvas.worldCamera;
         }
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            tooltipCanvas.transform as RectTransform,
+            canvas.transform as RectTransform,
             screenPosition,
-            cam,
+            camera,
             out Vector2 localPoint
         );
 
-        tooltipRect.localPosition = localPoint;
+        rectTransform.localPosition = localPoint;
     }
 
     /// <summary>
@@ -164,10 +155,10 @@ public class TooltipManager : MonoBehaviour
                 return;
             }
 
-            tooltipLocalizeEvent.StringReference = localizedKey;
-            tooltipLocalizeEvent.RefreshString();
+            localizeStringEvent.StringReference = localizedKey;
+            localizeStringEvent.RefreshString();
 
-            tooltipRect.gameObject.SetActive(true);
+            rectTransform.gameObject.SetActive(true);
             fadeManager.SetAlpha(0f);
             fadeManager.FadeIn(tooltipFadeSpeed);
         }
@@ -191,7 +182,7 @@ public class TooltipManager : MonoBehaviour
     private void HideImmediate()
     {
         isVisible = false;
-        tooltipRect.gameObject.SetActive(false);
+        rectTransform.gameObject.SetActive(false);
     }
 
     private void CancelPendingShow()

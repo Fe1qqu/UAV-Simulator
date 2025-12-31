@@ -345,6 +345,8 @@ MonoBehaviour:
     icon: {fileID: 0}
     prefab: {fileID: 0}
     type: 0
+    previewMaterialMode: 0
+    previewMaterialOverride: {fileID: 0}
   references:
     version: 2
     RefIds: []
@@ -1251,8 +1253,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820032608}
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5098,7 +5100,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 9
   levelRoot: {fileID: 1078942368}
-  previewMaterial: {fileID: 2100000, guid: 041a620545331f7469345432bf01b4cc, type: 2}
+  defaultPreviewMaterial: {fileID: 2100000, guid: 041a620545331f7469345432bf01b4cc, type: 2}
   rayLength: 100000
 --- !u!4 &732054243
 Transform:
@@ -8491,7 +8493,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0768b395059e2b545b85f933e230fb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIDragContext
-  dragZoneContexts: []
+  dragZoneContexts:
+  - tag: UI
+    tooltipLocalizedKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:2ec303a8f3a42c9479b870808142144e
+      m_TableEntryReference:
+        m_KeyId: 10348552192
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    cancelsDrag: 1
   references:
     version: 2
     RefIds: []

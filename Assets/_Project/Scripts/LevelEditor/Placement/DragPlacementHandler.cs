@@ -27,8 +27,8 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     [SerializeField] private Transform levelRoot;
 
     [Header("Preview settings")]
-    [Tooltip("Material applied to the preview instance during drag.")]
-    [SerializeField] private Material previewMaterial;
+    [Tooltip("Default material applied to the preview instance during drag.")]
+    [SerializeField] private Material defaultPreviewMaterial;
 
     [Tooltip("Maximum ray distance used for placement checks.")]
     [SerializeField] private float rayLength = 100000f;
@@ -59,9 +59,9 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             Debug.LogError("[DragPlacementHandler] LevelRoot is not assigned.");
         }
         
-        if (previewMaterial == null)
+        if (defaultPreviewMaterial == null)
         {
-            Debug.LogError("[DragPlacementHandler] PreviewMaterial is not assigned.");
+            Debug.LogError("[DragPlacementHandler] DefaultPreviewMaterial is not assigned.");
         }
     }
 
@@ -82,14 +82,35 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         previewRenderers = previewInstance.GetComponentsInChildren<Renderer>();
         isVisible = false;
 
-        foreach (var renderer in previewRenderers)
+        foreach (Renderer renderer in previewRenderers)
         {
-            renderer.material = previewMaterial;
+            switch (data.previewMaterialMode)
+            {
+                case PreviewMaterialMode.UseDefault:
+                    renderer.material = defaultPreviewMaterial;
+                    break;
+
+                case PreviewMaterialMode.Override:
+                    if (data.previewMaterialOverride != null)
+                    {
+                        renderer.material = data.previewMaterialOverride;
+                    }
+                    else
+                    {
+                        Debug.LogError("[DragPlacementHandler] PreviewMaterialOverride is not assigned.");
+                    }
+                    break;
+
+                case PreviewMaterialMode.None:
+                    // Do nothing - leave the original prefab material
+                    break;
+            }
+
             renderer.enabled = false;
         }
 
         // Disable colliders to avoid self-intersection
-        foreach (var ñollider in previewInstance.GetComponentsInChildren<Collider>())
+        foreach (Collider ñollider in previewInstance.GetComponentsInChildren<Collider>())
         {
             ñollider.enabled = false;
         }
@@ -192,7 +213,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
 
         isVisible = visible;
 
-        foreach (var renderer in previewRenderers)
+        foreach (Renderer renderer in previewRenderers)
         {
             if (renderer != null)
             {
