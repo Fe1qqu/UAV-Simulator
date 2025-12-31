@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Localization;
 using Alchemy.Inspector;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// Types used to classify placeable objects in the editor.
@@ -49,11 +48,10 @@ public class PlaceableObjectData
     [Header("Preview")]
     public PreviewMaterialMode previewMaterialMode = PreviewMaterialMode.UseDefault;
 
-    [ShowIf("IsPreviewOverride")]
-    public Material previewMaterialOverride;
-
-    [SuppressMessage("Usage", "IDE0051:Remove unused private members", Justification = "Used via reflection by Alchemy ShowIf")]
     private bool IsPreviewOverride => previewMaterialMode == PreviewMaterialMode.Override;
+
+    [ShowIf(nameof(IsPreviewOverride))]
+    public Material previewMaterialOverride;
 }
 
 /// <summary>
