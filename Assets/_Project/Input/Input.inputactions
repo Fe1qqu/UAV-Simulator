@@ -398,6 +398,34 @@
             ]
         },
         {
+            "name": "Editor",
+            "id": "0560722f-3fd3-400f-9ae8-0e71d49cb6af",
+            "actions": [
+                {
+                    "name": "DeleteSelected",
+                    "type": "Button",
+                    "id": "a3fafce3-5244-4c88-b7db-f8f4e3736aa0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5223307e-4ed5-4c51-a29a-7721192af314",
+                    "path": "<Keyboard>/delete",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DeleteSelected",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "EditorCamera",
             "id": "fab95a40-713e-4753-9b86-da0369cb9feb",
             "actions": [

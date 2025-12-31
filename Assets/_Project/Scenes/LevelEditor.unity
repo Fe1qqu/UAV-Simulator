@@ -5707,6 +5707,8 @@ Transform:
   - {fileID: 271739613}
   - {fileID: 1962120559}
   - {fileID: 614972947}
+  - {fileID: 1640637208}
+  - {fileID: 2027232543}
   - {fileID: 702272467}
   - {fileID: 732054243}
   - {fileID: 511035850}
@@ -7090,6 +7092,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639402327}
   m_CullTransparentMesh: 1
+--- !u!1 &1640637206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1640637208}
+  - component: {fileID: 1640637207}
+  m_Layer: 0
+  m_Name: EditorInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1640637207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640637206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36e6363f2aec85f468acfa2bb4133707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorInput
+--- !u!4 &1640637208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640637206}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 905371459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682855470
 GameObject:
   m_ObjectHideFlags: 0
@@ -8312,6 +8358,51 @@ MonoBehaviour:
   tooltipOffset: {x: 12, y: -8}
   tooltipFadeSpeed: 0.2
   tooltipDelay: 0.1
+--- !u!1 &2027232542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2027232543}
+  - component: {fileID: 2027232544}
+  m_Layer: 0
+  m_Name: EditorDeleteController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2027232543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027232542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 905371459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2027232544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027232542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6178ebb65f3b72a418bd35aba90a72f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorDeleteController
+  editorInput: {fileID: 1640637207}
 --- !u!1 &2042731139
 GameObject:
   m_ObjectHideFlags: 0
@@ -8400,18 +8491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0768b395059e2b545b85f933e230fb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIDragContext
-  dragZones:
-  - tag: UI
-    tooltipLocalizedKey:
-      m_TableReference:
-        m_TableCollectionName: GUID:2ec303a8f3a42c9479b870808142144e
-      m_TableEntryReference:
-        m_KeyId: 10348552192
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    cancelsDrag: 1
+  dragZoneContexts: []
   references:
     version: 2
     RefIds: []
