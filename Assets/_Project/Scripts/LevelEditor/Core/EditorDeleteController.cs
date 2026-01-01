@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Localization.SmartFormat.Core.Parsing;
 
 public class EditorDeleteController : MonoBehaviour
 {

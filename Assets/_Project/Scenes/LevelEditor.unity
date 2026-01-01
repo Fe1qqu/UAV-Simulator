@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 74227647}
   m_Layer: 0
   m_Name: PlaceableObjectButtonPrefab
-  m_TagString: Untagged
+  m_TagString: PlaceableObjectButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -234,7 +234,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1352.0999, y: 0}
+  m_AnchoredPosition: {x: -1291, y: -65}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &74227644
@@ -347,6 +347,7 @@ MonoBehaviour:
     type: 0
     previewMaterialMode: 0
     previewMaterialOverride: {fileID: 0}
+    tooltipSettings: {fileID: 0}
   references:
     version: 2
     RefIds: []
@@ -1082,6 +1083,81 @@ MonoBehaviour:
   levelRoot: {fileID: 1078942368}
   locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
   placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
+--- !u!1 &476034559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 476034560}
+  - component: {fileID: 476034562}
+  - component: {fileID: 476034561}
+  m_Layer: 0
+  m_Name: TooltipAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &476034560
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476034559}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1833584261}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 5, y: 0}
+  m_SizeDelta: {x: 5, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &476034561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476034559}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &476034562
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476034559}
+  m_CullTransparentMesh: 1
 --- !u!1 &480836485
 GameObject:
   m_ObjectHideFlags: 0
@@ -5627,7 +5703,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876399158}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -7836,7 +7912,7 @@ GameObject:
   - component: {fileID: 1833584265}
   m_Layer: 0
   m_Name: CategoryButtonPrefab
-  m_TagString: Untagged
+  m_TagString: CategoryButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7854,6 +7930,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 937093691}
+  - {fileID: 476034560}
   m_Father: {fileID: 1915384088}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7955,6 +8032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d340e570e6a6de941aa33306bc3be9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CategoryButtonUI
+  tooltipAnchor: {fileID: 476034560}
 --- !u!225 &1833584266
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8354,12 +8432,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fe5f0caf3497384ea2b4cb97760e7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipManager
-  tooltipCanvas: {fileID: 659072433}
-  tooltipRect: {fileID: 1129042859}
-  tooltipLocalizeEvent: {fileID: 1393325793}
-  tooltipOffset: {x: 12, y: -8}
-  tooltipFadeSpeed: 0.2
-  tooltipDelay: 0.1
+  canvas: {fileID: 659072433}
+  rectTransform: {fileID: 1129042859}
+  localizeStringEvent: {fileID: 1393325793}
+  fadeManager: {fileID: 1129042865}
+  resolvers:
+  - {fileID: 11400000, guid: 93f624881e8095b4db63d15309ed9ed3, type: 2}
+  - {fileID: 11400000, guid: 336ad66d0500ef24b9366782dce2efbf, type: 2}
 --- !u!1 &2027232542
 GameObject:
   m_ObjectHideFlags: 0
@@ -8505,6 +8584,7 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     cancelsDrag: 1
+    tooltipSettings: {fileID: 0}
   references:
     version: 2
     RefIds: []

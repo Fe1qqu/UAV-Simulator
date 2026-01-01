@@ -24,6 +24,8 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   - type: 1
     localizationKey:
       m_TableReference:
@@ -35,6 +37,8 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   - type: 2
     localizationKey:
       m_TableReference:
@@ -46,6 +50,8 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   - type: 4
     localizationKey:
       m_TableReference:
@@ -57,6 +63,8 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   references:
     version: 2
     RefIds: []

@@ -69,7 +69,7 @@ public class UIDragContext : MonoBehaviour
 
             if (CurrentZone?.tooltipLocalizedKey != null)
             {
-                TooltipManager.Instance.Show(CurrentZone.tooltipLocalizedKey, force: true);
+                TooltipManager.Instance.Show(CurrentZone, eventData.pointerEnter);
             }
         }
 

@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
+using UnityEngine.UI;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,21 +24,17 @@ public class TooltipManager : MonoBehaviour
     [Tooltip("Localize event that updates tooltip text.")]
     [SerializeField] private LocalizeStringEvent localizeStringEvent;
 
-    [Header("Settings")]
-    [Tooltip("Offset from mouse position for tooltip.")]
-    [SerializeField] private Vector2 tooltipOffset = new Vector2(12f, -8f);
+    [SerializeField] private FadeManager fadeManager;
 
-    [Tooltip("Speed of tooltip fade-in.")]
-    [SerializeField] private float tooltipFadeSpeed = 0.1f;
+    [SerializeField] private ScriptableObject[] resolvers;
 
-    [Tooltip("Delay before showing the tooltip.")]
-    [SerializeField] private float tooltipDelay = 0.1f;
-
-    private FadeManager fadeManager;
+    [Header("Settings Providers")]
+    private TooltipSettingsPipeline pipeline;
 
     private bool isVisible;
-    private bool dragMode = false;
-
+    private bool dragMode;
+    private TooltipRequest currentRequest;
+    private TooltipSettings currentTooltipSettings;
     private CancellationTokenSource cancellationTokenSource;
 
     /// <summary>
@@ -75,18 +73,19 @@ public class TooltipManager : MonoBehaviour
             Debug.LogError("[TooltipManager] LocalizeStringEvent is not assigned.");
         }
 
-        fadeManager = rectTransform.GetComponent<FadeManager>();
         if (fadeManager == null)
         {
-            Debug.LogWarning("[TooltipManager] FadeManager not found on RectTransform.");
+            Debug.LogWarning("[TooltipManager] FadeManager is not assigned.");
         }
+
+        pipeline = new TooltipSettingsPipeline(resolvers.OfType<ITooltipSettingsResolver>());
 
         HideImmediate();
     }
 
     private void Update()
     {
-        if (!isVisible)
+        if (!isVisible || currentTooltipSettings == null || currentTooltipSettings.displayMode != TooltipDisplayMode.FollowPointer)
         {
             return;
         }
@@ -97,7 +96,7 @@ public class TooltipManager : MonoBehaviour
         }
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Vector2 screenPosition = mousePosition + tooltipOffset;
+        Vector2 screenPosition = mousePosition + currentTooltipSettings.tooltipOffset;
 
         Vector2 tooltipSize = rectTransform.sizeDelta * canvas.scaleFactor;
 
@@ -105,11 +104,7 @@ public class TooltipManager : MonoBehaviour
         screenPosition.x = Mathf.Clamp(screenPosition.x, 0, Screen.width - tooltipSize.x);
         screenPosition.y = Mathf.Clamp(screenPosition.y, tooltipSize.y, Screen.height);
 
-        Camera camera = null;
-        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-        {
-            camera = canvas.worldCamera;
-        }
+        Camera camera = canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvas.transform as RectTransform,
@@ -121,24 +116,27 @@ public class TooltipManager : MonoBehaviour
         rectTransform.localPosition = localPoint;
     }
 
-    /// <summary>
-    /// Shows the tooltip with the message.
-    /// <param name="localizedKey">Localized key used to display text in the tooltip.</param>
-    /// <param name="force">If true, ignores dragMode suppression (used by UIDragContext).</param>
-    /// </summary>
-    public void Show(LocalizedString localizedKey, bool force = false)
+    public void Show(ITooltipSource source, GameObject context)
     {
-        if (dragMode && !force)
+        if (source == null)
         {
             return;
         }
 
-        //Debug.Log($"tooltipShow message: {localizedKey}");
+        TooltipRequest request = source.CreateTooltipRequest(context);
+
+        if (dragMode && !request.force)
+        {
+            return;
+        }
+
+        currentRequest = request;
+        currentTooltipSettings = pipeline.Resolve(request);
 
         CancelPendingShow();
         cancellationTokenSource = new CancellationTokenSource();
 
-        _ = ShowAsync(localizedKey, cancellationTokenSource.Token);
+        _ = ShowAsync(request.text, cancellationTokenSource.Token);
     }
 
     private async Task ShowAsync(LocalizedString localizedKey, CancellationToken token)
@@ -147,7 +145,7 @@ public class TooltipManager : MonoBehaviour
 
         try
         {
-            int delayMs = Mathf.RoundToInt(tooltipDelay * 1000f);
+            int delayMs = Mathf.RoundToInt(currentTooltipSettings.delay * 1000f);
             await Task.Delay(delayMs, token);
 
             if (token.IsCancellationRequested || !isVisible)
@@ -159,8 +157,44 @@ public class TooltipManager : MonoBehaviour
             localizeStringEvent.RefreshString();
 
             rectTransform.gameObject.SetActive(true);
+
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
+            if (currentTooltipSettings.displayMode == TooltipDisplayMode.FixedAnchor)
+            {
+                if (currentRequest.fixedAnchor != null)
+                {
+                    Vector3 basePosition = currentRequest.fixedAnchor.position;
+                    Vector2 tooltipSize = rectTransform.sizeDelta * canvas.scaleFactor;
+                    Vector2 offset = currentTooltipSettings.fixedOffset;
+
+                    switch (currentTooltipSettings.anchorSide)
+                    {
+                        case TooltipAnchorSide.Top:
+                            offset += new Vector2(-tooltipSize.x * 0.5f, tooltipSize.y);
+                            break;
+                        case TooltipAnchorSide.Bottom:
+                            offset += new Vector2(-tooltipSize.x * 0.5f, 0);
+                            break;
+                        case TooltipAnchorSide.Left:
+                            offset += new Vector2(-tooltipSize.x, tooltipSize.y * 0.5f);
+                            break;
+                        case TooltipAnchorSide.Right:
+                            offset += new Vector2(0f, tooltipSize.y * 0.5f);
+                            break;
+                    }
+
+                    rectTransform.position = basePosition + (Vector3)offset;
+                }
+                else
+                {
+                    Debug.LogError($"[TooltipManager] TooltipDisplayMode.FixedAnchor requested, but fixedAnchor is null for context '{currentRequest.context.name}'.");
+                }
+            }
+
             fadeManager.SetAlpha(0f);
-            fadeManager.FadeIn(tooltipFadeSpeed);
+            fadeManager.FadeIn(currentTooltipSettings.fadeInSpeed);
         }
         catch (TaskCanceledException)
         {
@@ -183,6 +217,8 @@ public class TooltipManager : MonoBehaviour
     {
         isVisible = false;
         rectTransform.gameObject.SetActive(false);
+        currentTooltipSettings = null;
+        currentRequest = default;
     }
 
     private void CancelPendingShow()

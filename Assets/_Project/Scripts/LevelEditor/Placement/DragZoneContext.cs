@@ -8,7 +8,7 @@ using UnityEngine.Localization;
 /// Used by UIDragContext to give context-aware drag rules.
 /// </summary>
 [System.Serializable]
-public class DragZoneContext
+public class DragZoneContext : ITooltipSource
 {
     [Tooltip("Tag of the UI element or panel that acts as a drag context zone.")]
     public string tag;
@@ -18,4 +18,17 @@ public class DragZoneContext
 
     [Tooltip("If enabled, releasing drag over this zone cancels the drag instead of placing.")]
     public bool cancelsDrag = true;
+
+    public TooltipSettings tooltipSettings;
+
+    public TooltipRequest CreateTooltipRequest(GameObject context)
+    {
+        return new TooltipRequest
+        {
+            text = tooltipLocalizedKey,
+            explicitSettings = tooltipSettings,
+            context = context,
+            force = true
+        };
+    }
 }

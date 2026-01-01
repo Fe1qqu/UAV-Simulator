@@ -25,15 +25,24 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     // Callback invoked when this button is clicked
     private System.Action<CategoryData, UICategoryButton> onClick;
 
+    [SerializeField] private RectTransform tooltipAnchor;
+
+    public RectTransform TooltipAnchor => tooltipAnchor;
+
     private void Awake()
     {
         button = GetComponent<Button>();
         canvasGroup = GetComponent<CanvasGroup>();
 
-        icon = transform.Find("Icon")?.GetComponent<Image>();
+        icon = transform.Find("Icon").GetComponent<Image>();
         if (icon == null)
         {
-            Debug.LogWarning($"[UICategoryButton] Missing icon on {name}");
+            Debug.LogWarning($"[UICategoryButton] Missing icon on {name}.");
+        }
+
+        if (tooltipAnchor == null)
+        {
+            Debug.LogWarning($"[UICategoryButton] TooltipAnchor is not assigned.");
         }
     }
 
@@ -82,7 +91,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
             return; 
         }
 
-        TooltipManager.Instance.Show(categoryData.localizationKey);
+        TooltipManager.Instance.Show(categoryData, gameObject);
     }
 
     /// <summary>

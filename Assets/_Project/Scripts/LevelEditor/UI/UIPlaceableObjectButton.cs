@@ -21,7 +21,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
 
     void Awake()
     {
-        icon = transform.Find("Icon")?.GetComponent<Image>();
+        icon = transform.Find("Icon").GetComponent<Image>();
         if (icon == null)
         {
             Debug.LogWarning($"[UIPlaceableObjectButton] Icon not found on '{name}'.");
@@ -139,7 +139,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        TooltipManager.Instance.Show(linkedObjectData.localizationKey);
+        TooltipManager.Instance.Show(linkedObjectData, gameObject);
     }
 
     /// <summary>
