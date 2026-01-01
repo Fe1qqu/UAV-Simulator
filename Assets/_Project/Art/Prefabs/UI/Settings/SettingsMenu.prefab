@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -147,7 +148,7 @@ GameObject:
   - component: {fileID: 1010123698582886108}
   - component: {fileID: 9212308254383611481}
   m_Layer: 0
-  m_Name: VideoPage
+  m_Name: VideoTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022bc1aba29ccc04f942f59c634ab360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorSettingsPage
-  pageId: video
+  tabId: video
   displayName: "\u0413\u0440\u0430\u0444\u0438\u043A\u0430"
   vSyncToggle: {fileID: 4319127773207002088}
 --- !u!1 &1389836217473017971
@@ -327,6 +328,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -449,7 +451,7 @@ GameObject:
   - component: {fileID: 7043537861079290944}
   - component: {fileID: 6101941052819029754}
   m_Layer: 0
-  m_Name: TabsContainer
+  m_Name: TabsButtonsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -806,7 +808,7 @@ GameObject:
   - component: {fileID: 6911663598878258705}
   - component: {fileID: 1787794498637683837}
   m_Layer: 0
-  m_Name: AudioPage
+  m_Name: AudioTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -844,7 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0421ce478da4f459543dcaa2042d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsPage
-  pageId: audio
+  tabId: audio
   displayName: "\u0417\u0432\u0443\u043A"
   masterVolumeSlider: {fileID: 550297121714982647}
 --- !u!1 &4447996306722436264
@@ -858,6 +860,7 @@ GameObject:
   - component: {fileID: 2809944382108909174}
   - component: {fileID: 997624914290587851}
   - component: {fileID: 8826595011071953615}
+  - component: {fileID: 3972205210797321036}
   m_Layer: 0
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -902,17 +905,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf5a23b80c6b1b4381c7192973c61c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
-  tabsContainer: {fileID: 2463537596246209646}
+  tabsButtonsContainer: {fileID: 2463537596246209646}
   tabButtonPrefab: {fileID: 7310059484980507223}
-  pagesContainer: {fileID: 1395171511155475407}
-  closeButton: {fileID: 4288814176534859183}
-  contextMappings:
+  tabsContainer: {fileID: 1395171511155475407}
+  settingsContextTabs:
   - context: 0
-    pageIds:
+    tabIds:
     - audio
     - video
   - context: 1
-    pageIds:
+    tabIds:
+    - audio
+  - context: 2
+    tabIds:
     - video
 --- !u!114 &8826595011071953615
 MonoBehaviour:
@@ -928,6 +933,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsScreen
   settingsMenuController: {fileID: 997624914290587851}
   closeButton: {fileID: 4288814176534859183}
+--- !u!114 &3972205210797321036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447996306722436264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7abacddf4cb8bee47b5608fb5431d49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackHandlerComponent
 --- !u!1 &4739886516925452591
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +1003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8862745}
+  m_Color: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1036,7 +1053,7 @@ RectTransform:
   m_Father: {fileID: 6128768731651819829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1126,7 +1143,7 @@ GameObject:
   - component: {fileID: 8201245681974253068}
   - component: {fileID: 1425982778735560389}
   m_Layer: 0
-  m_Name: PagesContainer
+  m_Name: TabsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1224,7 +1241,7 @@ RectTransform:
   m_Father: {fileID: 5658977186812180509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1565,6 +1582,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1636,7 +1654,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1284, y: 0}
+  m_AnchoredPosition: {x: -1413, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &10784664732476545

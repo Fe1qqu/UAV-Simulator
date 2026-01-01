@@ -31,6 +31,10 @@ MonoBehaviour:
     m_Key: tree
     m_Metadata:
       m_Items: []
+  - m_Id: 14975682787565568
+    m_Key: gameplay
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

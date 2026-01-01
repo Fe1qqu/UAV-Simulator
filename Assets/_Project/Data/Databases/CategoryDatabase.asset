@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6296c217df8301c43a4d1341cee23669, type: 3}
+  m_Name: CategoryDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::CategoryDatabase
+  categories:
+  - type: 0
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 130448252928
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  - type: 1
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 287118090240
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  - type: 2
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 368491782144
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  - type: 4
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableEntryReference:
+        m_KeyId: 14975682787565568
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

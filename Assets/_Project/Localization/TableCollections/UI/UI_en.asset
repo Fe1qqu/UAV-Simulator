@@ -26,10 +26,6 @@ MonoBehaviour:
     m_Localized: Main menu
     m_Metadata:
       m_Items: []
-  - m_Id: 1868618162176
-    m_Localized: Create level
-    m_Metadata:
-      m_Items: []
   - m_Id: 1986725568512
     m_Localized: Exit
     m_Metadata:

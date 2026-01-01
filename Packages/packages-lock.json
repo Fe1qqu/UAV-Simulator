@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "com.annulusgames.alchemy": {
+      "version": "file:com.annulusgames.alchemy",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.addressables": {
       "version": "2.7.4",
       "depth": 1,
