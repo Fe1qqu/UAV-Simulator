@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.IO;
 
 public class EditorPauseMenu : BasePauseMenu
@@ -63,16 +63,6 @@ public class EditorPauseMenu : BasePauseMenu
         exitButton.onClick.RemoveListener(OnExitClicked);
     }
 
-    protected override void OnOpened()
-    {
-        EditorCameraInput.Instance.enabled = false;
-    }
-
-    protected override void OnClosed()
-    {
-        EditorCameraInput.Instance.enabled = true;
-    }
-
     public void OnContinueClicked()
     {
         Close();
@@ -111,7 +101,7 @@ public class EditorPauseMenu : BasePauseMenu
 
     public void OnExitClicked()
     {
-        Time.timeScale = 1f;
+        PauseManager.SetPaused(false);
 
         //if (editorManager != null)
         //{

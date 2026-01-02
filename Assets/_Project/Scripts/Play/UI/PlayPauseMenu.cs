@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayPauseMenu : BasePauseMenu
 {
@@ -50,16 +50,6 @@ public class PlayPauseMenu : BasePauseMenu
         exitButton.onClick.RemoveListener(OnExitClicked);
     }
 
-    protected override void OnOpened()
-    {
-        //PlayerCameraInput.Instance.enabled = false;
-    }
-
-    protected override void OnClosed()
-    {
-        //PlayerCameraInput.Instance.enabled = true;
-    }
-
     public void OnContinueClicked()
     {
         Close();
@@ -67,13 +57,14 @@ public class PlayPauseMenu : BasePauseMenu
 
     public void OnRestartClicked()
     {
+        PauseManager.SetPaused(false);
         playManager.RestartLevel();
         Close();
     }
 
     public void OnExitClicked()
     {
-        Time.timeScale = 1f;
+        PauseManager.SetPaused(false);
         SceneManager.LoadScene("MainMenu");
     }
 }

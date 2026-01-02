@@ -5,7 +5,6 @@ public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
     [SerializeField] protected GameObject pauseMenuRoot;
 
     protected bool isOpen;
-
     public bool IsOpen => isOpen; 
 
     protected virtual void Awake()
@@ -28,7 +27,8 @@ public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
 
         isOpen = true;
         pauseMenuRoot.SetActive(true);
-        Time.timeScale = 0f;
+
+        PauseManager.SetPaused(true);
 
         OnOpened();
         BackDispatcher.Instance.Register(this);
@@ -43,7 +43,8 @@ public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
 
         isOpen = false;
         pauseMenuRoot.SetActive(false);
-        Time.timeScale = 1f;
+
+        PauseManager.SetPaused(false);
 
         OnClosed();
         BackDispatcher.Instance.Unregister(this);

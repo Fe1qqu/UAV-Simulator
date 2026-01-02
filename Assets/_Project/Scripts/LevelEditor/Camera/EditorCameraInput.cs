@@ -57,16 +57,40 @@ public class EditorCameraInput : MonoBehaviour
 
     private void OnEnable()
     {
-        input.Enable();
+        PauseManager.PauseStateChanged += OnPauseChanged;
+
+        if (!PauseManager.IsPaused)
+        {
+            input.Enable();
+        }
     }
 
     private void OnDisable()
     {
+        PauseManager.PauseStateChanged -= OnPauseChanged;
         input.Disable();
+    }
+
+    private void OnPauseChanged(bool paused)
+    {
+        if (paused)
+        {
+            input.Disable();
+            SetMovementEnabled(false);
+        }
+        else
+        {
+            input.Enable();
+        }
     }
 
     private void SetMovementEnabled(bool enabled)
     {
+        if (IsMovementEnabled == enabled)
+        {
+            return; 
+        }
+
         IsMovementEnabled = enabled;
         MovementEnabledChanged?.Invoke(enabled);
     }
