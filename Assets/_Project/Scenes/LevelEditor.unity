@@ -347,7 +347,8 @@ MonoBehaviour:
     type: 0
     previewMaterialMode: 0
     previewMaterialOverride: {fileID: 0}
-    tooltipSettings: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   references:
     version: 2
     RefIds: []
@@ -5512,6 +5513,7 @@ MonoBehaviour:
   rotationSmoothTime: 0.05
   pitchMin: -80
   pitchMax: 80
+  cameraInput: {fileID: 833246105}
 --- !u!1 &863683304
 GameObject:
   m_ObjectHideFlags: 0

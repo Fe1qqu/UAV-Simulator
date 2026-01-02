@@ -52,16 +52,15 @@ public class EditorCameraController : MonoBehaviour
     // Velocity reference for pitch smoothing
     private float pitchVelocity;
 
-    private EditorCameraInput cameraInput;
+    [SerializeField] private EditorCameraInput cameraInput;
 
     private void Awake()
     {
         cam = GetComponent<Camera>();
 
-        cameraInput = GetComponent<EditorCameraInput>();
         if (cameraInput == null)
         {
-            Debug.LogError("[EditorCameraController] EditorCameraInput component not found on the same GameObject.");
+            Debug.LogError("[EditorCameraController] EditorCameraInput is not assigned.");
         }
     }
 
@@ -93,18 +92,6 @@ public class EditorCameraController : MonoBehaviour
         UnlockCursor();
     }
 
-    private void OnMovementEnabledChanged(bool enabled)
-    {
-        if (enabled)
-        {
-            LockCursor();
-        }
-        else
-        {
-            UnlockCursor();
-        }
-    }
-
     private void Update()
     {
         if (!cameraInput.IsMovementEnabled)
@@ -124,6 +111,30 @@ public class EditorCameraController : MonoBehaviour
 
         HandleRotation(lookInput);
         HandleMovement(moveInput);
+    }
+
+    private void OnMovementEnabledChanged(bool enabled)
+    {
+        if (enabled)
+        {
+            LockCursor();
+        }
+        else
+        {
+            ResetState();
+            UnlockCursor();
+        }
+    }
+
+    private void ResetState()
+    {
+        targetYaw = yaw;
+        targetPitch = pitch;
+        targetPosition = transform.position;
+
+        yawVelocity = 0f;
+        pitchVelocity = 0f;
+        moveVelocity = Vector3.zero;
     }
 
     /// <summary>
@@ -164,11 +175,7 @@ public class EditorCameraController : MonoBehaviour
     /// </summary>
     private void HandleMovement(Vector3 moveInput)
     {
-        float speed = moveSpeed;
-
-        Vector3 move = (transform.right * moveInput.x +
-                        Vector3.up * moveInput.y +
-                        transform.forward * moveInput.z) * (speed * Time.deltaTime);
+        Vector3 move = (transform.right * moveInput.x + Vector3.up * moveInput.y + transform.forward * moveInput.z) * (moveSpeed * Time.deltaTime);
 
         targetPosition += move;
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref moveVelocity, moveSmoothTime, Mathf.Infinity, Time.deltaTime);
