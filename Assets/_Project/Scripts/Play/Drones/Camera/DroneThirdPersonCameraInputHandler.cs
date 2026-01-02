@@ -3,24 +3,20 @@ using Unity.Cinemachine;
 
 public class DroneThirdPersonCameraInputHandler : MonoBehaviour
 {
-    private CinemachineInputAxisController cinemachineInputAxisController;
-    private DroneCameraInput cameraInput;
+    [SerializeField] private CinemachineInputAxisController cinemachineInputAxisController;
+    [SerializeField] private DroneCameraInput droneCameraInput;
 
     private void Awake()
     {
-        cinemachineInputAxisController = GetComponent<CinemachineInputAxisController>();
         if (cinemachineInputAxisController == null)
         {
-            Debug.LogError("[ThirdPersonCameraInputHandler] Missing CinemachineInputAxisController.");
-            enabled = false;
+            Debug.LogError("[ThirdPersonCameraInputHandler] CinemachineInputAxisController is not assigned.");
             return;
         }
 
-        cameraInput = GetComponent<DroneCameraInput>();
-        if (cameraInput == null)
+        if (droneCameraInput == null)
         {
-            Debug.LogError("[ThirdPersonCameraInputHandler] DroneCameraInput component not found on the same GameObject.");
-            enabled = false;
+            Debug.LogError("[ThirdPersonCameraInputHandler] DroneCameraInput is not assigned.");
             return;
         }
 
@@ -29,12 +25,12 @@ public class DroneThirdPersonCameraInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        cameraInput.MovementEnabledChanged += OnMovementEnabledChanged;
+        droneCameraInput.MovementEnabledChanged += OnMovementEnabledChanged;
     }
 
     private void OnDisable()
     {
-        cameraInput.MovementEnabledChanged -= OnMovementEnabledChanged;
+        droneCameraInput.MovementEnabledChanged -= OnMovementEnabledChanged;
     }
 
     private void OnMovementEnabledChanged(bool enabled)
