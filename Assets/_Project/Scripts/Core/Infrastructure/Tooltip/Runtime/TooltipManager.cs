@@ -121,22 +121,36 @@ public class TooltipManager : MonoBehaviour
         rectTransform.localPosition = localPoint;
     }
 
-    public void Show(ITooltipSource source, GameObject context)
+    public void Show(ITooltipSource source)
     {
         if (source == null)
         {
+            Debug.LogWarning("[TooltipManager] Show called with null ITooltipSource.");
             return;
         }
 
-        TooltipRequest request = source.CreateTooltipRequest(context);
+        TooltipRequest request = source.CreateTooltipRequest();
+
+        if (!request.isValid)
+        {
+            Debug.LogWarning($"[TooltipManager] TooltipRequest is invalid. Source: {source.GetType().Name}");
+            return;
+        }
 
         if (dragMode && !request.force)
         {
+            //Debug.Log($"[TooltipManager] Tooltip suppressed due to drag mode. Context: {(request.context != null ? request.context.name : "null")}");
             return;
         }
 
         currentRequest = request;
         currentTooltipSettings = pipeline.Resolve(request);
+
+        if (currentTooltipSettings == null)
+        {
+            Debug.LogError($"[TooltipManager] TooltipSettingsPipeline returned null settings. Context: {(request.context != null ? request.context.name : "null")}");
+            return;
+        }
 
         CancelPendingShow();
         showCancellationTokenSource = new CancellationTokenSource();

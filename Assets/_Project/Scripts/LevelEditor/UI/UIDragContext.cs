@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// Manages the context of UI drag operations, tracking which UI zones the pointer is over.
 /// Handles cancel zones and shows tooltips for relevant UI areas.
 /// </summary>
-public class UIDragContext : MonoBehaviour
+public class UIDragContext : MonoBehaviour, ITooltipSource
 {
     public static UIDragContext Instance { get; private set; }
 
@@ -19,10 +19,11 @@ public class UIDragContext : MonoBehaviour
     /// </summary>
     public bool IsPointerOverCancelZone { get; private set; }
 
-    /// <summary>
-    /// Current drag context zone the pointer is over.
-    /// </summary>
-    public DragZoneContext CurrentZone { get; private set; }
+    // Current drag context zone the pointer is over.
+    private DragZoneContext currentZone;
+
+    // Current game object the pointer is over.
+    private GameObject currentContext;
 
     private void Awake()
     {
@@ -43,14 +44,14 @@ public class UIDragContext : MonoBehaviour
     /// <param name="eventData">Pointer event data from the UI system.</param>
     public void UpdateContext(PointerEventData eventData)
     {
-        GameObject target = eventData.pointerEnter;
+        currentContext = eventData.pointerEnter;
         DragZoneContext dragContextZone = null;
 
-        if (target != null)
+        if (currentContext != null)
         {
             foreach (DragZoneContext zoneContext in dragZoneContexts)
             {
-                if (IsPointerOverTaggedParent(target, zoneContext.tag))
+                if (IsPointerOverTaggedParent(currentContext, zoneContext.tag))
                 {
                     dragContextZone = zoneContext;
                     break;
@@ -58,22 +59,22 @@ public class UIDragContext : MonoBehaviour
             }
         }
 
-        if (dragContextZone != CurrentZone)
+        if (dragContextZone != currentZone)
         {
-            if (CurrentZone != null)
+            if (currentZone != null)
             {
                 TooltipManager.Instance.Hide();
             }
 
-            CurrentZone = dragContextZone;
+            currentZone = dragContextZone;
 
-            if (CurrentZone?.tooltipLocalizedKey != null)
+            if (currentZone != null && currentZone.tooltipLocalizedKey != null)
             {
-                TooltipManager.Instance.Show(CurrentZone, eventData.pointerEnter);
+                TooltipManager.Instance.Show(this);
             }
         }
 
-        IsPointerOverCancelZone = CurrentZone != null && CurrentZone.cancelsDrag;
+        IsPointerOverCancelZone = currentZone != null && currentZone.cancelsDrag;
     }
 
     /// <summary>
@@ -110,6 +111,30 @@ public class UIDragContext : MonoBehaviour
         TooltipManager.Instance.Hide();
 
         IsPointerOverCancelZone = false;
-        CurrentZone = null;
+        currentZone = null;
+    }
+
+    public TooltipRequest CreateTooltipRequest()
+    {
+        if (currentZone == null)
+        {
+            Debug.LogWarning("[UIDragContext] Tooltip requested but CurrentZone is null.");
+            return TooltipRequest.Invalid;
+        }
+
+        if (currentContext == null)
+        {
+            Debug.LogWarning("[UIDragContext] Tooltip requested but currentContext is null.");
+            return TooltipRequest.Invalid;
+        }
+
+        return new TooltipRequest
+        {
+            isValid = true,
+            text = currentZone.tooltipLocalizedKey,
+            explicitSettings = currentZone.tooltipSettings,
+            context = currentContext,
+            force = true
+        };
     }
 }

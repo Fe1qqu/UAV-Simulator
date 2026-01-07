@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 [RequireComponent(typeof(Button))]
 [RequireComponent(typeof(CanvasGroup))]
-public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, ITooltipSource
 {
     [Tooltip("Object data that defines icon, prefab, and type.")]
     [HideInInspector] public PlaceableObjectData linkedObjectData;
@@ -139,7 +139,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        TooltipManager.Instance.Show(linkedObjectData, gameObject);
+        TooltipManager.Instance.Show(this);
     }
 
     /// <summary>
@@ -154,5 +154,22 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
         }
 
         TooltipManager.Instance.Hide();
+    }
+
+    public TooltipRequest CreateTooltipRequest()
+    {
+        if (linkedObjectData == null)
+        {
+            Debug.LogWarning("[UIPlaceableObjectButton] Tried to create tooltip request with null linkedObjectData.");
+            return TooltipRequest.Invalid;
+        }
+
+        return new TooltipRequest
+        {
+            isValid = true,
+            text = linkedObjectData.localizationKey,
+            explicitSettings = linkedObjectData.useTooltipSettingsOverride ? linkedObjectData.tooltipSettingsOverride : null,
+            context = gameObject,
+        };
     }
 }
