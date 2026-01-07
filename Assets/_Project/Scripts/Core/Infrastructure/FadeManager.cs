@@ -1,16 +1,22 @@
 using UnityEngine;
-using System.Collections;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class FadeManager : MonoBehaviour
 {
     private CanvasGroup canvasGroup;
-    private Coroutine currentCoroutine;
+    private CancellationTokenSource fadeCancellationTokenSource;
 
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+    }
+
+    private void OnDestroy()
+    {
+        CancelFade();
     }
 
     /// <summary>
@@ -18,96 +24,63 @@ public class FadeManager : MonoBehaviour
     /// </summary>
     public void SetAlpha(float value)
     {
-        if (currentCoroutine != null)
-        {
-            StopCoroutine(currentCoroutine);
-            currentCoroutine = null;
-        }
-
+        CancelFade();
         canvasGroup.alpha = value;
     }
 
     /// <summary>
     /// Smooth fade in to alpha 1.
     /// </summary>
-    public void FadeIn(float duration)
+    public Task FadeInAsync(float duration, CancellationToken token)
     {
-        StartFade(1f, duration);
+        return FadeToAsync(1f, duration, token);
     }
 
     /// <summary>
     /// Smooth fade out to alpha 0.
     /// </summary>
-    public void FadeOut(float duration)
+    public Task FadeOutAsync(float duration, CancellationToken token)
     {
-        StartFade(0f, duration);
+        return FadeToAsync(0f, duration, token);
     }
 
-    private void StartFade(float target, float duration)
+    private async Task FadeToAsync(float target, float duration, CancellationToken externalToken)
     {
-        if (currentCoroutine != null)
-        {
-            StopCoroutine(currentCoroutine);
-        }
-
-        currentCoroutine = StartCoroutine(FadeCoroutine(target, duration));
-    }
-
-    private IEnumerator FadeCoroutine(float target, float duration)
-    {
-        float start = canvasGroup.alpha;
-        float time = 0f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(start, target, time / duration);
-            yield return null;
-        }
-
-        canvasGroup.alpha = target;
-        currentCoroutine = null;
-    }
-
-    // ================== Async versions ==================
-
-    /// <summary>
-    /// Smooth fade in asynchronously.
-    /// </summary>
-    public Task FadeInAsync(float duration)
-    {
-        return FadeToAsync(1f, duration);
-    }
-
-    /// <summary>
-    /// Smooth fade out asynchronously.
-    /// </summary>
-    public Task FadeOutAsync(float duration)
-    {
-        return FadeToAsync(0f, duration);
-    }
-
-    /// <summary>
-    /// Core async fade logic.
-    /// </summary>
-    private async Task FadeToAsync(float target, float duration)
-    {
-        if (currentCoroutine != null)
-        {
-            StopCoroutine(currentCoroutine);
-            currentCoroutine = null;
-        }
+        CancelFade();
+        fadeCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(externalToken);
+        CancellationToken token = fadeCancellationTokenSource.Token;
 
         float start = canvasGroup.alpha;
         float time = 0f;
 
-        while (time < duration)
+        try
         {
-            time += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(start, target, time / duration);
-            await Task.Yield();
-        }
+            while (time < duration)
+            {
+                token.ThrowIfCancellationRequested();
 
-        canvasGroup.alpha = target;
+                time += Time.deltaTime;
+                float t = Mathf.Clamp01(time / duration);
+                canvasGroup.alpha = Mathf.Lerp(start, target, t);
+
+                await Task.Yield();
+            }
+
+            canvasGroup.alpha = target;
+        }
+        catch (OperationCanceledException)
+        {
+            // expected
+        }
+    }
+
+    private void CancelFade()
+    {
+        if (fadeCancellationTokenSource != null)
+        {
+            fadeCancellationTokenSource.Cancel();
+            fadeCancellationTokenSource.Dispose();
+            fadeCancellationTokenSource = null;
+        }
     }
 }

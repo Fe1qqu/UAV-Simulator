@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.Localization.Components;
-using System.IO;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
@@ -52,7 +53,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     // Active category enum value
     private PlaceableObjectType currentCategory;
 
-    private FadeManager loadingFader;
+    private FadeManager loadingScreenFader;
 
     private EditorLocalizationPreloader localizationPreloader;
 
@@ -123,8 +124,8 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] LevelRoot is not assigned.");
         }
 
-        loadingFader = loadingScreen.GetComponent<FadeManager>();
-        if (loadingFader == null)
+        loadingScreenFader = loadingScreen.GetComponent<FadeManager>();
+        if (loadingScreenFader == null)
         {
             Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
         }
@@ -136,14 +137,24 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
     }
 
-    private async void Start()
+    private void Start()
+    {
+        _ = StartAsync();
+    }
+
+    private async Task StartAsync()
     {
         loadingScreen.SetActive(true);
 
-        await InitializeEditorAsync();
-
-        await loadingFader.FadeOutAsync(0.35f);
-        loadingScreen.SetActive(false);
+        try
+        {
+            await InitializeEditorAsync();
+            await loadingScreenFader.FadeOutAsync(0.35f, destroyCancellationToken);
+        }
+        finally
+        {
+            loadingScreen.SetActive(false);
+        }
     }
 
     private async Task InitializeEditorAsync()
