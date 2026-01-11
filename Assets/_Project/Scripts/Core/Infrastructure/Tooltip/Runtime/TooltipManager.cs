@@ -35,7 +35,7 @@ public class TooltipManager : MonoBehaviour
     private bool dragMode;
     private TooltipRequest currentRequest;
     private TooltipSettings currentTooltipSettings;
-    private CancellationTokenSource cancellationTokenSource;
+    private CancellationTokenSource showCancellationTokenSource;
 
     /// <summary>
     /// Returns true if the tooltip system is in drag mode.
@@ -83,6 +83,11 @@ public class TooltipManager : MonoBehaviour
         HideImmediate();
     }
 
+    private void OnDestroy()
+    {
+        CancelPendingShow();
+    }
+
     private void Update()
     {
         if (!isVisible || currentTooltipSettings == null || currentTooltipSettings.displayMode != TooltipDisplayMode.FollowPointer)
@@ -116,85 +121,70 @@ public class TooltipManager : MonoBehaviour
         rectTransform.localPosition = localPoint;
     }
 
-    public void Show(ITooltipSource source, GameObject context)
+    public void Show(ITooltipSource source)
     {
         if (source == null)
         {
+            Debug.LogWarning("[TooltipManager] Show called with null ITooltipSource.");
             return;
         }
 
-        TooltipRequest request = source.CreateTooltipRequest(context);
+        TooltipRequest request = source.CreateTooltipRequest();
+
+        if (!request.isValid)
+        {
+            Debug.LogWarning($"[TooltipManager] TooltipRequest is invalid. Source: {source.GetType().Name}");
+            return;
+        }
 
         if (dragMode && !request.force)
         {
+            //Debug.Log($"[TooltipManager] Tooltip suppressed due to drag mode. Context: {(request.context != null ? request.context.name : "null")}");
             return;
         }
 
         currentRequest = request;
         currentTooltipSettings = pipeline.Resolve(request);
 
-        CancelPendingShow();
-        cancellationTokenSource = new CancellationTokenSource();
+        if (currentTooltipSettings == null)
+        {
+            Debug.LogError($"[TooltipManager] TooltipSettingsPipeline returned null settings. Context: {(request.context != null ? request.context.name : "null")}");
+            return;
+        }
 
-        _ = ShowAsync(request.text, cancellationTokenSource.Token);
+        CancelPendingShow();
+        showCancellationTokenSource = new CancellationTokenSource();
+
+        _ = ShowAsync(request.text, showCancellationTokenSource.Token);
+    }
+
+    public void Hide()
+    {
+        _ = HideAsync();
     }
 
     private async Task ShowAsync(LocalizedString localizedKey, CancellationToken token)
     {
-        isVisible = true;
-
         try
         {
             int delayMs = Mathf.RoundToInt(currentTooltipSettings.delay * 1000f);
             await Task.Delay(delayMs, token);
 
-            if (token.IsCancellationRequested || !isVisible)
-            {
-                return;
-            }
+            token.ThrowIfCancellationRequested();
 
             localizeStringEvent.StringReference = localizedKey;
             localizeStringEvent.RefreshString();
 
+            isVisible = true;
             rectTransform.gameObject.SetActive(true);
 
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 
-            if (currentTooltipSettings.displayMode == TooltipDisplayMode.FixedAnchor)
-            {
-                if (currentRequest.fixedAnchor != null)
-                {
-                    Vector3 basePosition = currentRequest.fixedAnchor.position;
-                    Vector2 tooltipSize = rectTransform.sizeDelta * canvas.scaleFactor;
-                    Vector2 offset = currentTooltipSettings.fixedOffset;
-
-                    switch (currentTooltipSettings.anchorSide)
-                    {
-                        case TooltipAnchorSide.Top:
-                            offset += new Vector2(-tooltipSize.x * 0.5f, tooltipSize.y);
-                            break;
-                        case TooltipAnchorSide.Bottom:
-                            offset += new Vector2(-tooltipSize.x * 0.5f, 0);
-                            break;
-                        case TooltipAnchorSide.Left:
-                            offset += new Vector2(-tooltipSize.x, tooltipSize.y * 0.5f);
-                            break;
-                        case TooltipAnchorSide.Right:
-                            offset += new Vector2(0f, tooltipSize.y * 0.5f);
-                            break;
-                    }
-
-                    rectTransform.position = basePosition + (Vector3)offset;
-                }
-                else
-                {
-                    Debug.LogError($"[TooltipManager] TooltipDisplayMode.FixedAnchor requested, but fixedAnchor is null for context '{currentRequest.context.name}'.");
-                }
-            }
+            ApplyFixedAnchorIfNeeded();
 
             fadeManager.SetAlpha(0f);
-            fadeManager.FadeIn(currentTooltipSettings.fadeInSpeed);
+            await fadeManager.FadeInAsync(currentTooltipSettings.fadeInDuration, token);
         }
         catch (TaskCanceledException)
         {
@@ -202,20 +192,69 @@ public class TooltipManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Hides the currently displayed tooltip.
-    /// </summary>
-    public void Hide()
+    private void ApplyFixedAnchorIfNeeded()
     {
-        //Debug.Log("tooltipHide");
+        if (currentTooltipSettings.displayMode != TooltipDisplayMode.FixedAnchor)
+        {
+            return;
+        }
 
+        if (currentRequest.fixedAnchor == null)
+        {
+            Debug.LogError($"[TooltipManager] FixedAnchor is null for '{currentRequest.context.name}'.");
+            return;
+        }
+
+        Vector3 basePosition = currentRequest.fixedAnchor.position;
+        Vector2 tooltipSize = rectTransform.sizeDelta * canvas.scaleFactor;
+        Vector2 offset = currentTooltipSettings.fixedOffset;
+
+        switch (currentTooltipSettings.anchorSide)
+        {
+            case TooltipAnchorSide.Top:
+                offset += new Vector2(-tooltipSize.x * 0.5f, tooltipSize.y);
+                break;
+            case TooltipAnchorSide.Bottom:
+                offset += new Vector2(-tooltipSize.x * 0.5f, 0);
+                break;
+            case TooltipAnchorSide.Left:
+                offset += new Vector2(-tooltipSize.x, tooltipSize.y * 0.5f);
+                break;
+            case TooltipAnchorSide.Right:
+                offset += new Vector2(0f, tooltipSize.y * 0.5f);
+                break;
+        }
+
+        rectTransform.position = basePosition + (Vector3)offset;
+    }
+
+    private async Task HideAsync()
+    {
         CancelPendingShow();
-        HideImmediate();
+
+        if (!isVisible)
+        {
+            return;
+        }
+
+        isVisible = false;
+
+        try
+        {
+            if (fadeManager != null && currentTooltipSettings != null)
+            {
+                await fadeManager.FadeOutAsync(currentTooltipSettings.fadeOutDuration, CancellationToken.None);
+            }
+        }
+        finally
+        {
+            HideImmediate();
+        }
     }
 
     private void HideImmediate()
     {
-        isVisible = false;
+        //isVisible = false;
         rectTransform.gameObject.SetActive(false);
         currentTooltipSettings = null;
         currentRequest = default;
@@ -223,11 +262,11 @@ public class TooltipManager : MonoBehaviour
 
     private void CancelPendingShow()
     {
-        if (cancellationTokenSource != null)
+        if (showCancellationTokenSource != null)
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
-            cancellationTokenSource = null;
+            showCancellationTokenSource.Cancel();
+            showCancellationTokenSource.Dispose();
+            showCancellationTokenSource = null;
         }
     }
 
@@ -245,10 +284,5 @@ public class TooltipManager : MonoBehaviour
     public void ExitDragMode()
     {
         dragMode = false;
-    }
-
-    private void OnDestroy()
-    {
-        CancelPendingShow();
     }
 }

@@ -1331,7 +1331,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5138,6 +5138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorPauseMenu
   pauseMenuRoot: {fileID: 352434003}
+  editorManager: {fileID: 614972946}
   levelSaveManager: {fileID: 511035851}
   levelDataBuilder: {fileID: 480836487}
   continueButton: {fileID: 362032311}
@@ -5705,7 +5706,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876399158}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

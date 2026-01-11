@@ -1,8 +1,7 @@
-using Alchemy.Inspector;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.UIElements;
+using Alchemy.Inspector;
+using System.Collections.Generic;
 
 /// <summary>
 /// Types used to classify placeable objects in the editor.
@@ -27,7 +26,7 @@ public enum PreviewMaterialMode
 /// Serializable container for a single placeable object definition.
 /// </summary>
 [System.Serializable]
-public class PlaceableObjectData : ITooltipSource
+public class PlaceableObjectData
 {
     [Header("Identity")]
     [Tooltip("Stable unique identifier used for saving/loading.")]
@@ -60,16 +59,6 @@ public class PlaceableObjectData : ITooltipSource
     [ShowIf(nameof(useTooltipSettingsOverride))]
     [Tooltip("Optional override. If set, these tooltip settings will be used instead of those resolved by the TooltipSettingsPipeline.")]
     public TooltipSettings tooltipSettingsOverride;
-
-    public TooltipRequest CreateTooltipRequest(GameObject context)
-    {
-        return new TooltipRequest
-        {
-            text = localizationKey,
-            explicitSettings = tooltipSettingsOverride,
-            context = context
-        };
-    }
 }
 
 /// <summary>

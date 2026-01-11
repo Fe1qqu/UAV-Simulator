@@ -5,9 +5,9 @@ using System.IO;
 
 public class EditorPauseMenu : BasePauseMenu
 {
+    [SerializeField] private EditorManager editorManager;
     [SerializeField] private LevelSaveManager levelSaveManager;
     [SerializeField] private EditorLevelDataBuilder levelDataBuilder;
-    //[SerializeField] private EditorManager editorManager;
 
     [Header("Buttons")]
     [SerializeField] private Button continueButton;
@@ -18,14 +18,19 @@ public class EditorPauseMenu : BasePauseMenu
     {
         base.Awake();
 
-        if (levelDataBuilder == null)
+        if (editorManager == null)
         {
-            Debug.LogError("[EditorPauseMenu] LevelDataBuilder is not assigned.");
+            Debug.LogError("[EditorPauseMenu] EditorManager is not assigned.");
         }
 
         if (levelSaveManager == null)
         {
             Debug.LogError("[EditorPauseMenu] LevelSaveManager is not assigned.");
+        }
+
+        if (levelDataBuilder == null)
+        {
+            Debug.LogError("[EditorPauseMenu] LevelDataBuilder is not assigned.");
         }
 
         if (continueButton == null)
@@ -42,11 +47,6 @@ public class EditorPauseMenu : BasePauseMenu
         {
             Debug.LogError("[EditorPauseMenu] ExitButton is not assigned.");
         }
-
-        //if (editorManager == null)
-        //{
-        //    Debug.LogError("[EditorPauseMenu] EditorManager is not assigned.");
-        //}
     }
 
     private void Start()
@@ -103,10 +103,10 @@ public class EditorPauseMenu : BasePauseMenu
     {
         PauseManager.SetPaused(false);
 
-        //if (editorManager != null)
-        //{
-        //    editorManager.UnloadLocalization();
-        //}
+        if (editorManager != null)
+        {
+            editorManager.UnloadLocalization();
+        }
 
         SceneManager.LoadScene("MainMenu");
     }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 [RequireComponent(typeof(Button))]
 [RequireComponent(typeof(CanvasGroup))]
-public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ITooltipSource
 {
     // Button component attached to this UI element
     private Button button;
@@ -26,8 +26,6 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private System.Action<CategoryData, UICategoryButton> onClick;
 
     [SerializeField] private RectTransform tooltipAnchor;
-
-    public RectTransform TooltipAnchor => tooltipAnchor;
 
     private void Awake()
     {
@@ -85,13 +83,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     /// </summary>
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (categoryData == null)
-        {
-            Debug.LogWarning("[UICategoryButton] Tried to show tooltip with null categoryData.");
-            return; 
-        }
-
-        TooltipManager.Instance.Show(categoryData, gameObject);
+        TooltipManager.Instance.Show(this);
     }
 
     /// <summary>
@@ -106,5 +98,23 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
 
         TooltipManager.Instance.Hide();
+    }
+
+    public TooltipRequest CreateTooltipRequest()
+    {
+        if (categoryData == null)
+        {
+            Debug.LogWarning("[UICategoryButton] Tried to create tooltip request with null categoryData.");
+            return TooltipRequest.Invalid;
+        }
+
+        return new TooltipRequest
+        {
+            isValid = true,
+            text = categoryData.localizationKey,
+            explicitSettings = categoryData.useTooltipSettingsOverride ? categoryData.tooltipSettingsOverride : null,
+            context = gameObject,
+            fixedAnchor = tooltipAnchor
+        };
     }
 }

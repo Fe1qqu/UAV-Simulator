@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.Localization.Components;
-using System.IO;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
@@ -52,7 +53,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     // Active category enum value
     private PlaceableObjectType currentCategory;
 
-    private FadeManager loadingFader;
+    private FadeManager loadingScreenFader;
 
     private EditorLocalizationPreloader localizationPreloader;
 
@@ -123,8 +124,8 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] LevelRoot is not assigned.");
         }
 
-        loadingFader = loadingScreen.GetComponent<FadeManager>();
-        if (loadingFader == null)
+        loadingScreenFader = loadingScreen.GetComponent<FadeManager>();
+        if (loadingScreenFader == null)
         {
             Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
         }
@@ -136,14 +137,24 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
     }
 
-    private async void Start()
+    private void Start()
+    {
+        _ = StartAsync();
+    }
+
+    private async Task StartAsync()
     {
         loadingScreen.SetActive(true);
 
-        await InitializeEditorAsync();
-
-        await loadingFader.FadeOutAsync(0.35f);
-        loadingScreen.SetActive(false);
+        try
+        {
+            await InitializeEditorAsync();
+            await loadingScreenFader.FadeOutAsync(0.35f, destroyCancellationToken);
+        }
+        finally
+        {
+            loadingScreen.SetActive(false);
+        }
     }
 
     private async Task InitializeEditorAsync()
@@ -275,46 +286,6 @@ public class EditorManager : MonoBehaviour, IBackHandler
         levelLoader.Load(empty);
     }
 
-    /// <summary>
-    /// Loads the location chosen earlier in GameSettings.
-    /// </summary>
-    //private void LoadSelectedLocation()
-    //{
-    //    EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-    //    string selectedLocationId = editorSession.SelectedLocationId;
-
-    //    if (string.IsNullOrEmpty(selectedLocationId))
-    //    {
-    //        Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
-
-    //        if (locationDatabase.locations.Count == 0)
-    //        {
-    //            Debug.LogError("[EditorManager] LocationDatabase is empty.");
-    //            return;
-    //        }
-
-    //        selectedLocationId = locationDatabase.locations[0].locationId;
-    //        editorSession.SelectedLocationId = selectedLocationId;
-    //    }
-
-    //    LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);
-    //    if (data == null)
-    //    {
-    //        Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
-    //        data = locationDatabase.locations[0];
-    //    }
-
-    //    if (data.prefab == null)
-    //    {
-    //        Debug.LogError($"[EditorManager] Prefab missing for location '{data.localizationKey}'.");
-    //        return;
-    //    }
-
-    //    Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-    //    //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-    //    //Debug.Log($"[EditorManager] Loaded location: {location.name}");
-    //}
-
     public bool OnBack()
     {
         Debug.Log("[EditorManager] OnBack.");
@@ -322,9 +293,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
         return true;
     }
 
-    //public void ExitEditor()
-    //{
-    //    localizationPreloader.Unload();
-    //    SceneManager.LoadScene("MainMenu");
-    //}
+    public void UnloadLocalization()
+    {
+        if (localizationPreloader != null)
+        {
+            localizationPreloader.Unload();
+        }
+    }
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// Serializable container for a single category entry.
 /// </summary>
 [System.Serializable]
-public class CategoryData : ITooltipSource
+public class CategoryData
 {
     [Tooltip("Enum value that groups placeable objects.")]
     public PlaceableObjectType type;
@@ -23,17 +23,6 @@ public class CategoryData : ITooltipSource
     [ShowIf(nameof(useTooltipSettingsOverride))]
     [Tooltip("Optional override. If set, these tooltip settings will be used instead of those resolved by the TooltipSettingsPipeline.")]
     public TooltipSettings tooltipSettingsOverride;
-
-    public TooltipRequest CreateTooltipRequest(GameObject context)
-    {
-        return new TooltipRequest
-        {
-            text = localizationKey,
-            explicitSettings = tooltipSettingsOverride,
-            context = context,
-            fixedAnchor = context.GetComponent<UICategoryButton>().TooltipAnchor
-        };
-    }
 }
 
 /// <summary>

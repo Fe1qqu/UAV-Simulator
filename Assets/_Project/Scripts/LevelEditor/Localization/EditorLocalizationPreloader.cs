@@ -28,9 +28,6 @@ public class EditorLocalizationPreloader : MonoBehaviour
     public bool IsLoaded => categoriesLoadedSuccessfully && objectsLoadedSuccessfully;
 
     /// <summary>
-    /// Loads both tables asynchronously.
-    /// </summary>
-    /// <summary>
     /// Loads both tables asynchronously in parallel.
     /// </summary>
     public async Task Load()

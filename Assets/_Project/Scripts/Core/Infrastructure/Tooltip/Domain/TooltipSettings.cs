@@ -38,6 +38,6 @@ public class TooltipSettings : ScriptableObject
 
     [Header("Timing")]
     public float delay = 0.1f;
-    public float fadeInSpeed = 0.1f;
-    public float fadeOutSpeed = 0.0f;
+    public float fadeInDuration = 0.1f;
+    public float fadeOutDuration = 0.0f;
 }
