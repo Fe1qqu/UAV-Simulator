@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -40,7 +39,7 @@ public class DroneTcpServer : MonoBehaviour
 
     private async Task AcceptClientsLoopAsync(CancellationToken cancellationToken)
     {
-        // Зарегистрируем остановку TcpListener один раз
+        // Register the TcpListener stop once
         using (cancellationToken.Register(() => tcpListener.Stop()))
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -50,12 +49,12 @@ public class DroneTcpServer : MonoBehaviour
                 {
                     tcpClient = await tcpListener.AcceptTcpClientAsync();
                 }
-                catch (ObjectDisposedException)
+                catch (System.ObjectDisposedException)
                 {
                     // Listener has been stopped, exiting
                     break;
                 }
-                catch (InvalidOperationException)
+                catch (System.InvalidOperationException)
                 {
                     // The token may have been revoked before Accept
                     cancellationToken.ThrowIfCancellationRequested();
@@ -70,7 +69,7 @@ public class DroneTcpServer : MonoBehaviour
                     {
                         await HandleClientAsync(tcpClient);
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         Debug.LogError($"[DroneTcpServer] Client session error: {ex}");
                     }
