@@ -34,7 +34,7 @@ class Drone:
         LOGGER.info("Connecting to UAV simulator at %s:%s", host, port)
         
         self.connection_socket: socket.socket = socket.create_connection((self.server_host, self.server_port))
-        self.connection_socket.settimeout(10.0)
+        self.connection_socket.settimeout(60.0)
         
         LOGGER.info("Connection established")
 
