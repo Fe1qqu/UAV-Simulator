@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UavSim.Core.Protocol.Drone;
 
-[RequireComponent(typeof(DroneCommandController))]
 public class DroneTcpServer : MonoBehaviour
 {
     private TcpListener tcpListener;
@@ -18,9 +17,23 @@ public class DroneTcpServer : MonoBehaviour
 
     private CancellationTokenSource cancellationTokenSource;
 
-    private void Start()
+    private void Awake()
     {
         droneCommandController = GetComponent<DroneCommandController>();
+        if (droneCommandController == null)
+        {
+            Debug.LogError($"[DroneTcpServer] There is no DroneCommandController component on the object {gameObject.name}.");
+        }
+    }
+
+    private void Start()
+    {
+        if (!UnityMainThreadDispatcher.IsInitialized)
+        {
+            Debug.LogError("[DroneTcpServer] UnityMainThreadDispatcher is missing. Server will not start.");
+            enabled = false;
+            return;
+        }
 
         tcpListener = new TcpListener(IPAddress.Loopback, Port);
         tcpListener.Start();
@@ -164,6 +177,14 @@ public class DroneTcpServer : MonoBehaviour
             //    float degrees = arguments["degrees"]!.Value<float>();
             //    await droneCommandController.RotateClockwiseAsync(degrees);
             //    break;
+
+            case "streamon":
+                await droneCommandController.StreamOnAsync();
+                break;
+
+            case "streamoff":
+                await droneCommandController.StreamOffAsync();
+                break;
 
             default:
                 throw new System.InvalidOperationException($"Unknown command: {commandName}");

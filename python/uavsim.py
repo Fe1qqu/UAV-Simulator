@@ -5,6 +5,7 @@ import logging
 from enum import Enum
 from typing import Optional, Dict, Any
 
+from video_frame_reader import VideoFrameReader
 
 LOGGER = logging.getLogger("uavsim")
 LOGGER.setLevel(logging.INFO)
@@ -26,6 +27,7 @@ class Drone:
     server_host: str
     server_port: int
     connection_socket: socket.socket
+    _video_reader: Optional[VideoFrameReader]
     
     def __init__(self, host: str = "127.0.0.1", port: int = 9000):
         self.server_host = host
@@ -37,6 +39,8 @@ class Drone:
         self.connection_socket.settimeout(60.0)
         
         LOGGER.info("Connection established")
+        
+        self._video_reader: Optional[VideoFrameReader] = None
 
     # ---------- internal helpers ----------
 
@@ -95,6 +99,26 @@ class Drone:
     #         "rotate_clockwise",
     #         {"degrees": degrees}
     #     )
+    
+    def streamon(self) -> None:
+        LOGGER.info("Send command: streamon")
+        self._send_command_and_wait("streamon")
+
+        if self._video_reader is None:
+            self._video_reader = VideoFrameReader()
+
+    def streamoff(self) -> None:
+        LOGGER.info("Send command: streamoff")
+        self._send_command_and_wait("streamoff")
+
+        if self._video_reader is not None:
+            self._video_reader.stop()
+            self._video_reader = None
+
+    def get_frame_read(self):
+        if self._video_reader is None:
+            raise RuntimeError("Video stream is not enabled. Call streamon() first.")
+        return self._video_reader
 
     def close(self) -> None:
         LOGGER.info("Closing connection")

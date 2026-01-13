@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 public class DroneCommandController : MonoBehaviour
 {
+    private DroneVideoStreamer droneVideoStreamer;
+
     private readonly Queue<Func<Task>> commandQueue = new();
     private bool isExecutingQueue;
 
@@ -20,6 +22,12 @@ public class DroneCommandController : MonoBehaviour
 
     private void Awake()
     {
+        droneVideoStreamer = GetComponent<DroneVideoStreamer>();
+        if (droneVideoStreamer == null)
+        {
+            Debug.LogError($"[DroneCommandController] There is no DroneVideoStreamer component on the object {gameObject.name}.");
+        }
+
         controllable = GetComponent<IControllable>();
         if (controllable == null)
         {
@@ -96,5 +104,15 @@ public class DroneCommandController : MonoBehaviour
         await Task.Delay(3000); // заглушка
 
         Debug.Log("[DroneCommandController] MoveForward completed");
+    }
+
+    public Task StreamOnAsync()
+    {
+        return UnityMainThread.RunAsync(() => droneVideoStreamer.StreamOn());
+    }
+
+    public Task StreamOffAsync()
+    {
+        return UnityMainThread.RunAsync(() => droneVideoStreamer.StreamOff());
     }
 }
