@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class SettingsScreen : MainMenuScreenBase, IBackHandler
 {
     [SerializeField] private SettingsMenuController settingsMenuController;
-    [SerializeField] private Button closeButton;
+    [SerializeField] private Button backButton;
 
     private void Awake()
     {
@@ -13,9 +13,9 @@ public class SettingsScreen : MainMenuScreenBase, IBackHandler
             Debug.LogError("[SettingsScreen] SettingsMenuController is not assigned.");
         }
 
-        if (closeButton == null)
+        if (backButton == null)
         {
-            Debug.LogError("[SettingsScreen] CloseButton is not assigned.");
+            Debug.LogError("[SettingsScreen] BackButton is not assigned.");
         }
     }
 
@@ -23,21 +23,24 @@ public class SettingsScreen : MainMenuScreenBase, IBackHandler
     {
         settingsMenuController.Show(SettingsContext.MainMenu);
 
-        closeButton.onClick.AddListener(() =>
-        {
-            stateMachine.Show<MainMenuScreen>();
-        });
+        backButton.onClick.AddListener(OnBackClicked);
     }
 
     public override void OnHide()
     {
         settingsMenuController.Hide();
-        closeButton.onClick.RemoveAllListeners();
+
+        backButton.onClick.RemoveAllListeners();
+    }
+
+    private void OnBackClicked()
+    {
+        stateMachine.Show<MainMenuScreen>();
     }
 
     public bool OnBack()
     {
-        stateMachine.Show<MainMenuScreen>();
+        OnBackClicked();
         return true;
     }
 }
