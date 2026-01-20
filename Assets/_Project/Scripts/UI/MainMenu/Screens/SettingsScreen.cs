@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsScreen : UIScreen, IBackHandler
+public class SettingsScreen : MainMenuScreenBase, IBackHandler
 {
     [SerializeField] private SettingsMenuController settingsMenuController;
     [SerializeField] private Button closeButton;

@@ -21,7 +21,7 @@ public class LevelSelectContext
     }
 }
 
-public class LevelSelectScreen : UIScreen, IBackHandler
+public class LevelSelectScreen : MainMenuScreenBase, IBackHandler
 {
     [Header("UI")]
     [SerializeField] private Transform listRoot;
@@ -61,8 +61,7 @@ public class LevelSelectScreen : UIScreen, IBackHandler
 
     public override void OnShow(object context)
     {
-        var ctx = context as LevelSelectContext;
-        if (ctx == null)
+        if (context is not LevelSelectContext ctx)
         {
             Debug.LogError("[LevelSelectScreen] Missing context.");
             return;
@@ -76,7 +75,7 @@ public class LevelSelectScreen : UIScreen, IBackHandler
 
         confirmButton.interactable = false;
 
-        confirmButton.onClick.AddListener(OnConfirm);
+        confirmButton.onClick.AddListener(OnConfirmClicked);
         backButton.onClick.AddListener(OnBackClicked);
 
         BuildList();
@@ -129,7 +128,7 @@ public class LevelSelectScreen : UIScreen, IBackHandler
         confirmButton.interactable = true;
     }
 
-    private void OnConfirm()
+    private void OnConfirmClicked()
     {
         if (mode == LevelSelectMode.Editor)
         {

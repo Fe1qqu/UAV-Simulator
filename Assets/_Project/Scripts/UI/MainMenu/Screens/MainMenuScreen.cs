@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuScreen : UIScreen
+public class MainMenuScreen : MainMenuScreenBase
 {
     [SerializeField] private Button playButton;
     [SerializeField] private Button levelEditorButton;
@@ -34,10 +33,10 @@ public class MainMenuScreen : UIScreen
 
     public override void OnShow()
     {
-        playButton.onClick.AddListener(OnPlay);
-        levelEditorButton.onClick.AddListener(OnCreateLevel);
-        settingsButton.onClick.AddListener(OnSettings);
-        exitButton.onClick.AddListener(OnExit);
+        playButton.onClick.AddListener(OnPlayClicked);
+        levelEditorButton.onClick.AddListener(OnCreateLevelClicked);
+        settingsButton.onClick.AddListener(OnSettingsClicked);
+        exitButton.onClick.AddListener(OnExitClicked);
     }
 
     public override void OnHide()
@@ -48,23 +47,22 @@ public class MainMenuScreen : UIScreen
         exitButton.onClick.RemoveAllListeners();
     }
 
-    private void OnPlay()
+    private void OnPlayClicked()
     {
         stateMachine.Show<PlayMenuScreen>();
     }
 
-    private void OnCreateLevel()
+    private void OnCreateLevelClicked()
     {
         stateMachine.Show<LevelEditorMenuScreen>();
-        //stateMachine.Show<LevelCreationWizardScreen>();
     }
 
-    private void OnSettings()
+    private void OnSettingsClicked()
     {
         stateMachine.Show<SettingsScreen>();
     }
 
-    private void OnExit()
+    private void OnExitClicked()
     {
         stateMachine.ExitGame();
     }

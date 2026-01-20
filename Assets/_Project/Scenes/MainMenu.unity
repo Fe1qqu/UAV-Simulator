@@ -482,6 +482,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 117427531}
   m_CullTransparentMesh: 1
+--- !u!114 &153269458 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4801195510143256633, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+  m_PrefabInstance: {fileID: 1781021234}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf5a23b80c6b1b4381c7192973c61c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
 --- !u!1 &187228807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,7 +1051,7 @@ GameObject:
   - component: {fileID: 362075260}
   - component: {fileID: 362075261}
   m_Layer: 5
-  m_Name: LevelEditorMenuPanel
+  m_Name: LevelEditorMenuScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1267,7 +1278,7 @@ GameObject:
   - component: {fileID: 387805474}
   - component: {fileID: 387805476}
   m_Layer: 5
-  m_Name: MainMenuPanel
+  m_Name: MainMenuScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1537,7 +1548,7 @@ GameObject:
   - component: {fileID: 440120948}
   - component: {fileID: 440120949}
   m_Layer: 5
-  m_Name: LevelCreationWizardPanel
+  m_Name: LevelCreationWizardScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3288,7 +3299,7 @@ GameObject:
   - component: {fileID: 877077962}
   - component: {fileID: 877077963}
   m_Layer: 5
-  m_Name: PlayMenuPanel
+  m_Name: PlayMenuScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6281,6 +6292,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660007823}
   m_CullTransparentMesh: 1
+--- !u!114 &1716438640 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4288814176534859183, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+  m_PrefabInstance: {fileID: 1781021234}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!1 &1775088617 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4447996306722436264, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+  m_PrefabInstance: {fileID: 1781021234}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1781021234
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6289,6 +6316,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 414980914}
     m_Modifications:
+    - target: {fileID: 1368101850041987525, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2809944382108909174, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6369,9 +6400,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4326170630320465886, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4447996306722436264, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
       propertyPath: m_Name
-      value: SettingsMenu
+      value: SettingsScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 6379658353511427973, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7205854773042225265, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6384,24 +6423,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4447996306722436264, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1781021240}
   m_SourcePrefab: {fileID: 100100000, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
 --- !u!224 &1781021235 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2809944382108909174, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
   m_PrefabInstance: {fileID: 1781021234}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1781021238 stripped
+--- !u!114 &1781021240
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8826595011071953615, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
-  m_PrefabInstance: {fileID: 1781021234}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1775088617}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9b1fdf1682fbd241bc181fd0bf1fce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsScreen
+  settingsMenuController: {fileID: 153269458}
+  closeButton: {fileID: 1716438640}
 --- !u!1 &1797019156
 GameObject:
   m_ObjectHideFlags: 0
@@ -6452,7 +6497,7 @@ GameObject:
   - component: {fileID: 1820636600}
   - component: {fileID: 1820636596}
   m_Layer: 5
-  m_Name: LevelSelectPanel
+  m_Name: LevelSelectScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7197,7 +7242,7 @@ MonoBehaviour:
   screens:
   - {fileID: 387805476}
   - {fileID: 440120948}
-  - {fileID: 1781021238}
+  - {fileID: 1781021240}
   - {fileID: 877077962}
   - {fileID: 362075260}
   - {fileID: 1820636600}
