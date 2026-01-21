@@ -128,7 +128,7 @@ public class SettingsMenuController : MonoBehaviour
                 continue;
             }
 
-            tabButtonComponent.Setup(tab.TabId, tab.DisplayName, this);
+            tabButtonComponent.Setup(tab.TabId, this);
             createdTabButtons.Add(tabButtonComponent);
         }
 

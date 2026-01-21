@@ -12,8 +12,10 @@ public class LanguageSettingsTab : SettingsTabBase
     private readonly List<Locale> locales = new();
     private bool isInitialized;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (languageDropdown == null)
         {
             Debug.LogWarning("[LanguageSettingsTab] LanguageDropdown is not assigned.");

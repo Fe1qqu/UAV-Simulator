@@ -1,25 +1,30 @@
 using UnityEngine;
+using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Base class for the settings tab
 /// </summary>
 public abstract class SettingsTabBase : MonoBehaviour
 {
-    [Tooltip("Unique tab identifier.")]
-    [SerializeField] private string tabId;
+    [Header("Localization")]
+    [SerializeField] private string localizationKey;
 
-    [Tooltip("Tab title.")]
-    [SerializeField] private string displayName;
+    public string TabId => localizationKey;
 
-    public string TabId => tabId;
-    public string DisplayName => displayName;
+    protected virtual void Awake()
+    {
+        if (string.IsNullOrWhiteSpace(localizationKey))
+        {
+            Debug.LogError($"[SettingsTabBase] LocalizationKey is empty on {name}.");
+        }
+    }
 
     /// <summary>
     /// Called when the tab becomes active (selected)
     /// </summary>
     public virtual void OnTabSelected()
     {
-        Debug.Log($"[SettingsTab] OnTabSelected: {TabId}.");
+        //Debug.Log($"[SettingsTabBase] OnTabSelected: {TabId}.");
     }
 
     /// <summary>
@@ -27,6 +32,6 @@ public abstract class SettingsTabBase : MonoBehaviour
     /// </summary>
     public virtual void OnTabUnselected()
     {
-        Debug.Log($"[SettingsTab] OnTabUnselected: {TabId}.");
+        //Debug.Log($"[SettingsTabBase] OnTabUnselected: {TabId}.");
     }
 }

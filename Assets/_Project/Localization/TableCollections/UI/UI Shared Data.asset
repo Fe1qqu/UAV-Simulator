@@ -51,6 +51,62 @@ MonoBehaviour:
     m_Key: loading
     m_Metadata:
       m_Items: []
+  - m_Id: 23946542693113856
+    m_Key: play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23946648397963264
+    m_Key: level_editor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23946770435432448
+    m_Key: settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23947939471843328
+    m_Key: select_level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23950023667638272
+    m_Key: level_selection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23948990048526336
+    m_Key: load_level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23949277547094016
+    m_Key: create_new_level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23950719443951616
+    m_Key: confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24032718464638976
+    m_Key: language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24032764421627904
+    m_Key: audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24032766539751424
+    m_Key: video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24042547212083200
+    m_Key: continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24042782508343296
+    m_Key: save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24043821663936512
+    m_Key: restart
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

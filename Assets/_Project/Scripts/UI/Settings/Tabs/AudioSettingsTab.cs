@@ -6,8 +6,10 @@ public class AudioSettingsTab : SettingsTabBase
     [Header("UI")]
     [SerializeField] private Slider masterVolumeSlider;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (masterVolumeSlider == null)
         {
             Debug.LogWarning("[AudioSettingsTab] masterVolumeSlider not assigned.");

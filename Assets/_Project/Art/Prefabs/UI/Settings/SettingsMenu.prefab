@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 7869375532595907209}
   - component: {fileID: 5738675022769344063}
   - component: {fileID: 431671169829735248}
+  - component: {fileID: 5702524192259359291}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -335,6 +336,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5702524192259359291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600661848947966718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:d7821e5eea5fd8741a742285a5215172
+    m_TableEntryReference:
+      m_KeyId: 23946770435432448
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 431671169829735248}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &764963196361736234
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,8 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022bc1aba29ccc04f942f59c634ab360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorSettingsPage
-  tabId: video
-  displayName: "\u0413\u0440\u0430\u0444\u0438\u043A\u0430"
+  localizationKey: video
   vSyncToggle: {fileID: 4319127773207002088}
 --- !u!1 &1389836217473017971
 GameObject:
@@ -674,8 +714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f76e9219db30e4fb45a0471e462188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsTab1
-  tabId: language
-  displayName: "\u042F\u0437\u044B\u043A"
+  localizationKey: language
   languageDropdown: {fileID: 4873269283255853045}
 --- !u!1 &1596133274742425181
 GameObject:
@@ -763,6 +802,7 @@ GameObject:
   - component: {fileID: 2698404552578037428}
   - component: {fileID: 2173536328347386451}
   - component: {fileID: 7280693108092009869}
+  - component: {fileID: 3797268650338746944}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -889,6 +929,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3797268650338746944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619894165766796749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:d7821e5eea5fd8741a742285a5215172
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7280693108092009869}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1910199680183816650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,8 +1872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0421ce478da4f459543dcaa2042d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsPage
-  tabId: audio
-  displayName: "\u0417\u0432\u0443\u043A"
+  localizationKey: audio
   masterVolumeSlider: {fileID: 550297121714982647}
 --- !u!1 &4447996306722436264
 GameObject:
@@ -2608,6 +2687,7 @@ GameObject:
   - component: {fileID: 2328882625561613240}
   - component: {fileID: 945295258825911898}
   - component: {fileID: 2342407738609062102}
+  - component: {fileID: 6198883142028765282}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2734,6 +2814,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6198883142028765282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7141391969043342076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:d7821e5eea5fd8741a742285a5215172
+    m_TableEntryReference:
+      m_KeyId: 12882399092736
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2342407738609062102}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7160285481860588193
 GameObject:
   m_ObjectHideFlags: 0
@@ -2956,7 +3076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec81fdab60bbb91498cabd97dcaef329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TabButton
-  label: {fileID: 7280693108092009869}
+  labelLocalizationStringEvent: {fileID: 3797268650338746944}
 --- !u!225 &6999243394786770712
 CanvasGroup:
   m_ObjectHideFlags: 0

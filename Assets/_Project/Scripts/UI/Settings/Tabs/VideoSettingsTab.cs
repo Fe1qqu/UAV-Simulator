@@ -6,8 +6,10 @@ public class VideoSettingsTab : SettingsTabBase
     [Header("UI")]
     [SerializeField] private Toggle vSyncToggle;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (vSyncToggle == null)
         {
             Debug.LogWarning("[VideoSettingsTab] vSyncToggle not assigned.");
