@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AudioSettingsTab : SettingsTab
+public class AudioSettingsTab : SettingsTabBase
 {
     [Header("UI")]
     [SerializeField] private Slider masterVolumeSlider;
@@ -16,7 +16,7 @@ public class AudioSettingsTab : SettingsTab
 
     public override void OnTabSelected()
     {
-        //base.OnTabSelected();
+        base.OnTabSelected();
 
         // load current value
         //if (masterVolumeSlider != null)
@@ -30,7 +30,7 @@ public class AudioSettingsTab : SettingsTab
 
     public override void OnTabUnselected()
     {
-        //base.OnTabUnselected();
+        base.OnTabUnselected();
 
         //if (masterVolumeSlider != null)
         //{

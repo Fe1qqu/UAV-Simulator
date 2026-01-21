@@ -1,4 +1,7 @@
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using System.Threading.Tasks;
 
 public class PlaySession
 {
@@ -29,6 +32,15 @@ public class EditorSession
 /// </summary>
 public class GameSettings : MonoBehaviour
 {
+    #region Constants
+
+    private const string PREF_LANGUAGE_CODE = "LanguageCode";
+    private const string DEFAULT_LANGUAGE_CODE = "ru";
+
+    #endregion
+
+    #region Singleton
+
     private static GameSettings _instance;
     public static GameSettings Instance
     {
@@ -52,63 +64,92 @@ public class GameSettings : MonoBehaviour
         }
     }
 
-    public PlaySession CurrentPlaySession { get; private set; } = new PlaySession();
+    #endregion
 
+    #region Runtime Sessions (Not Persisted)
+
+    public PlaySession CurrentPlaySession { get; private set; } = new PlaySession();
     public EditorSession CurrentEditorSession { get; private set; } = new EditorSession();
 
-    public void ClearPlaySession()
+    public void ClearPlaySession() => CurrentPlaySession.Clear();
+    public void ClearEditorSession() => CurrentEditorSession.Clear();
+
+    #endregion
+
+    #region Localization
+
+    private TaskCompletionSource<bool> _localizationReadyTcs = new TaskCompletionSource<bool>();
+    public Task LocalizationReadyTask => _localizationReadyTcs.Task;
+
+    #endregion
+
+    #region Unity Lifecycle
+
+    private void Awake()
     {
-        CurrentPlaySession.Clear();
+        if (_instance != null && _instance != this)
+        {
+            Debug.LogError("[GameSettings] Duplicate instance detected. Only one instance is allowed in the scene.");
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    public void ClearEditorSession()
+    private void Start()
     {
-        CurrentEditorSession.Clear();
+        _ = InitializeLocalizationAsync();
     }
 
-    // -------------------------------
-    // === EDITOR SESSION SETTINGS ===
-    // -------------------------------
+    #endregion
 
-    ///// <summary>
-    ///// Name of the level currently being created or edited.
-    ///// </summary>
-    //public string LevelName
-    //{
-    //    get => PlayerPrefs.GetString("LevelName");
-    //    set
-    //    {
-    //        PlayerPrefs.SetString("LevelName", value);
-    //        Save();
-    //    }
-    //}
+    #region Initialization
 
-    ///// <summary>
-    ///// Selected location ID for level creation.
-    ///// </summary>
-    //public string SelectedLocationId
-    //{
-    //    get => PlayerPrefs.GetString("SelectedLocationId");
-    //    set
-    //    {
-    //        PlayerPrefs.SetString("SelectedLocationId", value);
-    //        Save();
-    //    }
-    //}
+    private async Task InitializeLocalizationAsync()
+    {
+        await LocalizationSettings.InitializationOperation.Task;
 
-    //public string SelectedLevelFile
-    //{
-    //    get => PlayerPrefs.GetString("SelectedLevelFile");
-    //    set
-    //    {
-    //        PlayerPrefs.SetString("SelectedLevelFile", value);
-    //        Save();
-    //    }
-    //}
+        Locale locale = LocalizationSettings.AvailableLocales.GetLocale(SavedLanguageCode);
+        if (locale == null)
+        {
+            locale = LocalizationSettings.SelectedLocale;
+        }
 
-    // -----------------------
-    // === GENERAL SETTINGS ===
-    // -----------------------
+        LocalizationSettings.SelectedLocale = locale;
+
+        _localizationReadyTcs.TrySetResult(true);
+    }
+
+    #endregion
+
+    #region Public API
+
+    public void SetLocale(Locale locale)
+    {
+        if (locale == null)
+        {
+            return;
+        }
+
+        LocalizationSettings.SelectedLocale = locale;
+        SavedLanguageCode = locale.Identifier.Code;
+    }
+
+    #endregion
+
+    #region Properties
+
+    private string SavedLanguageCode
+    {
+        get => PlayerPrefs.GetString(PREF_LANGUAGE_CODE, DEFAULT_LANGUAGE_CODE);
+        set
+        {
+            PlayerPrefs.SetString(PREF_LANGUAGE_CODE, value);
+            Save();
+        }
+    }
 
     //public float MasterVolume
     //{
@@ -130,9 +171,9 @@ public class GameSettings : MonoBehaviour
     //    }
     //}
 
-    // -----------------------
-    // === CORE METHODS ===
-    // -----------------------
+    #endregion
+
+    #region Utilities
 
     public void Save()
     {
@@ -145,21 +186,5 @@ public class GameSettings : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Debug.LogError("[GameSettings] Duplicate instance detected. Only one instance is allowed in the scene.");
-            Destroy(gameObject);
-            return;
-        }
-        
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        // Clear temporary level creation settings at startup
-        //PlayerPrefs.DeleteKey("LevelName");
-        //PlayerPrefs.DeleteKey("SelectedLocationId");
-        //PlayerPrefs.DeleteKey("SelectedLevelFile");
-    }
+    #endregion
 }

@@ -3,10 +3,11 @@ using UnityEngine;
 /// <summary>
 /// Base class for the settings tab
 /// </summary>
-public abstract class SettingsTab : MonoBehaviour
+public abstract class SettingsTabBase : MonoBehaviour
 {
     [Tooltip("Unique tab identifier.")]
     [SerializeField] private string tabId;
+
     [Tooltip("Tab title.")]
     [SerializeField] private string displayName;
 

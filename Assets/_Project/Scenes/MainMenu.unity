@@ -1838,6 +1838,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1546385268}
   - {fileID: 352228356}
   - {fileID: 536828112}
   - {fileID: 1916523440}
@@ -5782,6 +5783,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531736132}
   m_CullTransparentMesh: 1
+--- !u!1 &1546385267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1546385268}
+  - component: {fileID: 1546385269}
+  m_Layer: 0
+  m_Name: MainMenuBootstrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1546385268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546385267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 465102117}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1546385269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546385267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c51ec9baf9c094fa14d597834f42e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenuBootstrap
+  mainMenuRoot: {fileID: 387805472}
 --- !u!1 &1554246579
 GameObject:
   m_ObjectHideFlags: 0
@@ -6408,6 +6454,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsScreen
       objectReference: {fileID: 0}
+    - target: {fileID: 4447996306722436264, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6379658353511427973, guid: 9eb6e22ad74a3f7419937633b3830646, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6446,7 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsScreen
   settingsMenuController: {fileID: 153269458}
-  closeButton: {fileID: 1716438640}
+  backButton: {fileID: 1716438640}
 --- !u!1 &1797019156
 GameObject:
   m_ObjectHideFlags: 0
