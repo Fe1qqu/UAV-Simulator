@@ -121,7 +121,6 @@ public class LevelCreationWizard : MonoBehaviour
 
         string key = (currentStep < steps.Length - 1) ? "next" : "start";
         nextButtonLocalization.StringReference.TableEntryReference = key;
-        nextButtonLocalization.RefreshString();
 
         steps[currentStep].OnStepShown();
     }

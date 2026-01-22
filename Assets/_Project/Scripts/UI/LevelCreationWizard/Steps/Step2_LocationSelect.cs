@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Localization;
-using static UnityEditor.FilePathAttribute;
 
 /// <summary>
 /// Step 2 of the level creation wizard. Handles selecting a location for the level.

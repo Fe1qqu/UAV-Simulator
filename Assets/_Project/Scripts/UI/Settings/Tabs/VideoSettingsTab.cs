@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VideoSettingsTab : SettingsTab
+public class VideoSettingsTab : SettingsTabBase
 {
     [Header("UI")]
     [SerializeField] private Toggle vSyncToggle;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (vSyncToggle == null)
         {
             Debug.LogWarning("[VideoSettingsTab] vSyncToggle not assigned.");
@@ -16,7 +18,7 @@ public class VideoSettingsTab : SettingsTab
 
     public override void OnTabSelected()
     {
-        //base.OnTabSelected();
+        base.OnTabSelected();
 
         //if (vSyncToggle != null)
         //{
@@ -28,7 +30,7 @@ public class VideoSettingsTab : SettingsTab
 
     public override void OnTabUnselected()
     {
-        //base.OnTabUnselected();
+        base.OnTabUnselected();
 
         //if (vSyncToggle != null)
         //{

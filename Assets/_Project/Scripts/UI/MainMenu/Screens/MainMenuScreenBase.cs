@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class UIScreen : MonoBehaviour
+public abstract class MainMenuScreenBase : MonoBehaviour
 {
     protected MainMenuStateMachine stateMachine;
 

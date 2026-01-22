@@ -17,16 +17,13 @@ public class SettingsMenuController : MonoBehaviour
     [Tooltip("Container with tabs - child objects must have SettingsTab components.")]
     [SerializeField] private RectTransform tabsContainer;
 
-    //[Tooltip("Close button.")]
-    //[SerializeField] private Button closeButton;
-
     [Header("Context -> tab ids mapping")]
     [Tooltip("Matches a context with a set of tabIds that should be shown in that context.")]
     [SerializeField] private List<SettingsContextTabs> settingsContextTabs = new List<SettingsContextTabs>();
 
-    private Dictionary<string, SettingsTab> tabsById = new Dictionary<string, SettingsTab>();
+    private Dictionary<string, SettingsTabBase> tabsById = new Dictionary<string, SettingsTabBase>();
     private List<TabButton> createdTabButtons = new List<TabButton>();
-    private SettingsTab activeTab;
+    private SettingsTabBase activeTab;
     private SettingsContext? currentContext = null;
 
     private void Awake()
@@ -52,7 +49,7 @@ public class SettingsMenuController : MonoBehaviour
     private void CacheTabs()
     {
         tabsById.Clear();
-        foreach (SettingsTab tab in tabsContainer.GetComponentsInChildren<SettingsTab>(true))
+        foreach (SettingsTabBase tab in tabsContainer.GetComponentsInChildren<SettingsTabBase>(true))
         {
             if (string.IsNullOrEmpty(tab.TabId))
             {
@@ -131,7 +128,7 @@ public class SettingsMenuController : MonoBehaviour
                 continue;
             }
 
-            tabButtonComponent.Setup(tab.TabId, tab.DisplayName, this);
+            tabButtonComponent.Setup(tab.TabId, this);
             createdTabButtons.Add(tabButtonComponent);
         }
 

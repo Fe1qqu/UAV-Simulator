@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class LevelCreationWizardScreen : UIScreen, IBackHandler
+public class LevelCreationWizardScreen : MainMenuScreenBase, IBackHandler
 {
     [SerializeField] private LevelCreationWizard levelCreationWizard;
 
