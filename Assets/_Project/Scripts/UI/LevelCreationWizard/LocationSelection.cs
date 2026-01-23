@@ -142,7 +142,7 @@ public class LocationSelection : MonoBehaviour
             }
         }
 
-        //Debug.Log($"[LocationSelection] Selected: {location.locationId}");
+        //Debug.Log($"[LocationSelection] Selected: {location.locationId}.");
     }
 
     public LocationData GetSelectedLocation()

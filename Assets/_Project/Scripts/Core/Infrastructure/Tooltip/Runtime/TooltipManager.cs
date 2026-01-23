@@ -133,13 +133,13 @@ public class TooltipManager : MonoBehaviour
 
         if (!request.isValid)
         {
-            Debug.LogWarning($"[TooltipManager] TooltipRequest is invalid. Source: {source.GetType().Name}");
+            Debug.LogWarning($"[TooltipManager] TooltipRequest is invalid. Source: {source.GetType().Name}.");
             return;
         }
 
         if (dragMode && !request.force)
         {
-            //Debug.Log($"[TooltipManager] Tooltip suppressed due to drag mode. Context: {(request.context != null ? request.context.name : "null")}");
+            //Debug.Log($"[TooltipManager] Tooltip suppressed due to drag mode. Context: {(request.context != null ? request.context.name : "null")}.");
             return;
         }
 
@@ -148,7 +148,7 @@ public class TooltipManager : MonoBehaviour
 
         if (currentTooltipSettings == null)
         {
-            Debug.LogError($"[TooltipManager] TooltipSettingsPipeline returned null settings. Context: {(request.context != null ? request.context.name : "null")}");
+            Debug.LogError($"[TooltipManager] TooltipSettingsPipeline returned null settings. Context: {(request.context != null ? request.context.name : "null")}.");
             return;
         }
 

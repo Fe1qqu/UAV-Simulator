@@ -156,7 +156,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
                 Debug.Log("[DragPlacementHandler] Failed to automatically select the installed object.");
             }
 
-            Debug.Log($"[DragPlacementHandler] Placed '{placeableData.prefab.name}' at world pos {hit.point}");
+            Debug.Log($"[DragPlacementHandler] Placed '{placeableData.prefab.name}' at world pos {hit.point}.");
         }
         else
         {

@@ -11,7 +11,7 @@ public class DroneDebugUI : MonoBehaviour
         droneController = GetComponent<DroneControllerBase>();
         if (droneController == null)
         {
-            Debug.LogError($"[DroneDebugUI] No DroneControllerBase found on {gameObject.name}");
+            Debug.LogError($"[DroneDebugUI] No DroneControllerBase found on {gameObject.name}.");
             enabled = false;
             return;
         }

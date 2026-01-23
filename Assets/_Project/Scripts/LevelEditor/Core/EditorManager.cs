@@ -183,7 +183,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
             
             if (!buttonObj.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
-                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton");
+                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton.");
                 continue;
             }
 

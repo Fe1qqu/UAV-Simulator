@@ -73,7 +73,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
 
     //    if (!required.Any())
     //    {
-    //        Debug.LogError("[RuntimeLevelLoader] No required level objects found.");
+    //        Debug.LogError("[PlayManager] No required level objects found.");
     //    }
     //}
 

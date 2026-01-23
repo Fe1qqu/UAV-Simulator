@@ -44,6 +44,6 @@ public class AudioSettingsTab : SettingsTabBase
     {
         PlayerPrefs.SetFloat("MasterVolume", value);
         PlayerPrefs.Save();
-        Debug.Log($"[AudioSettingsTab] MasterVolume set to {value}");
+        Debug.Log($"[AudioSettingsTab] MasterVolume set to {value}.");
     }
 }

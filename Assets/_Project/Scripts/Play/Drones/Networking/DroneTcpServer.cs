@@ -74,7 +74,7 @@ public class DroneTcpServer : MonoBehaviour
                     throw;
                 }
 
-                Debug.Log("[DroneTcpServer] Client connected");
+                Debug.Log("[DroneTcpServer] Client connected.");
 
                 _ = Task.Run(async () =>
                 {
@@ -82,13 +82,13 @@ public class DroneTcpServer : MonoBehaviour
                     {
                         await HandleClientAsync(tcpClient);
                     }
-                    catch (System.Exception ex)
+                    catch (System.Exception exception)
                     {
-                        Debug.LogError($"[DroneTcpServer] Client session error: {ex}");
+                        Debug.LogError($"[DroneTcpServer] Client session error: {exception}.");
                     }
                     finally
                     {
-                        Debug.Log("[DroneTcpServer] Client disconnected");
+                        Debug.Log("[DroneTcpServer] Client disconnected.");
                         tcpClient.Close();
                     }
                 });
@@ -139,9 +139,9 @@ public class DroneTcpServer : MonoBehaviour
                 await ExecuteCommandAsync(commandName, arguments);
                 completionSource.SetResult(true);
             }
-            catch (System.Exception ex)
+            catch (System.Exception exception)
             {
-                completionSource.SetException(ex);
+                completionSource.SetException(exception);
             }
         });
 
@@ -150,9 +150,9 @@ public class DroneTcpServer : MonoBehaviour
             await completionSource.Task;
             await SendCommandResultAsync(stream, commandId, "ok");
         }
-        catch (System.Exception ex)
+        catch (System.Exception exception)
         {
-            await SendCommandErrorAsync(stream, commandId, ex.Message);
+            await SendCommandErrorAsync(stream, commandId, exception.Message);
         }
     }
 
@@ -187,7 +187,7 @@ public class DroneTcpServer : MonoBehaviour
                 break;
 
             default:
-                throw new System.InvalidOperationException($"Unknown command: {commandName}");
+                throw new System.InvalidOperationException($"Unknown command: {commandName}.");
         }
     }
 

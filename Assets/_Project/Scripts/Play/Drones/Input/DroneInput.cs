@@ -14,19 +14,19 @@ public class DroneInput : MonoBehaviour
         controllable = GetComponent<IControllable>();
         if (controllable == null)
         {
-            Debug.LogError($"[DroneInput] There is no IControllable component on the object {gameObject.name}");
+            Debug.LogError($"[DroneInput] There is no IControllable component on the object {gameObject.name}.");
         }
 
         cameraSwitcher = GetComponent<DroneCameraSwitcher>();
         if (cameraSwitcher == null)
         {
-            Debug.LogError($"[DroneInput] There is no DroneCameraSwitcher component on the object {gameObject.name}");
+            Debug.LogError($"[DroneInput] There is no DroneCameraSwitcher component on the object {gameObject.name}.");
         }
 
         debugUI = GetComponent<DroneDebugUI>();
         if (debugUI == null)
         {
-            Debug.LogError($"[DroneInput] There is no DroneDebugUI component on the object {gameObject.name}");
+            Debug.LogError($"[DroneInput] There is no DroneDebugUI component on the object {gameObject.name}.");
         }
     }
 

@@ -78,8 +78,8 @@ public class GameSettings : MonoBehaviour
 
     #region Localization
 
-    private TaskCompletionSource<bool> _localizationReadyTcs = new TaskCompletionSource<bool>();
-    public Task LocalizationReadyTask => _localizationReadyTcs.Task;
+    private TaskCompletionSource<bool> _localizationReadyTaskCompletionSource = new TaskCompletionSource<bool>();
+    public Task LocalizationReadyTask => _localizationReadyTaskCompletionSource.Task;
 
     #endregion
 
@@ -119,7 +119,7 @@ public class GameSettings : MonoBehaviour
 
         LocalizationSettings.SelectedLocale = locale;
 
-        _localizationReadyTcs.TrySetResult(true);
+        _localizationReadyTaskCompletionSource.TrySetResult(true);
     }
 
     #endregion

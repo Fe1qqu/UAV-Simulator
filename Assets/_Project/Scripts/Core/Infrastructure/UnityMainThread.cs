@@ -14,15 +14,15 @@ public static class UnityMainThread
                 action();
                 taskCompletionSource.SetResult(true);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                taskCompletionSource.SetException(ex);
+                taskCompletionSource.SetException(exception);
             }
         });
 
         if (await Task.WhenAny(taskCompletionSource.Task, Task.Delay(timeoutMs)) != taskCompletionSource.Task)
         {
-            throw new TimeoutException("Main thread execution timeout");
+            throw new TimeoutException("Main thread execution timeout.");
         }
 
         await taskCompletionSource.Task;

@@ -42,6 +42,6 @@ public class VideoSettingsTab : SettingsTabBase
     {
         //PlayerPrefs.SetInt("VSync", v ? 1 : 0);
         //PlayerPrefs.Save();
-        Debug.Log($"[VideoSettingsTab] VSync = {v}");
+        Debug.Log($"[VideoSettingsTab] VSync = {v}.");
     }
 }

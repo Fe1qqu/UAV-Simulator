@@ -178,6 +178,6 @@ public class SettingsMenuController : MonoBehaviour
             tabButton.SetSelected(isSelected);
         }
 
-        Debug.Log($"[SettingsMenuController] Selected tab '{tabId}'");
+        Debug.Log($"[SettingsMenuController] Selected tab '{tabId}'.");
     }
 }

@@ -78,7 +78,7 @@ public class DroneCommandController : MonoBehaviour
 
     public async Task TakeOffAsync()
     {
-        Debug.Log("[DroneCommandController] TakeOff started");
+        Debug.Log("[DroneCommandController] TakeOff started.");
 
         // TEST
         isTakingOff = true;
@@ -94,16 +94,16 @@ public class DroneCommandController : MonoBehaviour
         controllable.ApplyThrottle(currentThrottle);
         // TEST
 
-        Debug.Log("[DroneCommandController] TakeOff completed");
+        Debug.Log("[DroneCommandController] TakeOff completed.");
     }
 
     public async Task MoveForwardAsync(float distanceCm)
     {
-        Debug.Log($"[DroneCommandController] MoveForward {distanceCm}cm started");
+        Debug.Log($"[DroneCommandController] MoveForward {distanceCm}cm started.");
 
         await Task.Delay(3000); // заглушка
 
-        Debug.Log("[DroneCommandController] MoveForward completed");
+        Debug.Log("[DroneCommandController] MoveForward completed.");
     }
 
     public Task StreamOnAsync()

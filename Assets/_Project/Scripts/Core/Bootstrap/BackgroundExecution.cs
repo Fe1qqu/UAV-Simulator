@@ -6,6 +6,6 @@ public static class BackgroundExecution
     private static void EnableRunInBackground()
     {
         Application.runInBackground = true;
-        //Debug.Log("[BackgroundExecution] Application.runInBackground enabled");
+        //Debug.Log("[BackgroundExecution] Application.runInBackground enabled.");
     }
 }

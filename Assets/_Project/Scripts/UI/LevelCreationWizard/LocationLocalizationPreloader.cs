@@ -53,12 +53,12 @@ public class LocationLocalizationPreloader : MonoBehaviour
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             loadedSuccessfully = true;
-            Debug.Log($"[LocationTablePreloader] Table '{tableName}' loaded.");
+            Debug.Log($"[LocationLocalizationPreloader] Table '{tableName}' loaded.");
         }
         else
         {
             loadedSuccessfully = false;
-            Debug.LogError($"[LocationTablePreloader] Failed to load table '{tableName}'.");
+            Debug.LogError($"[LocationLocalizationPreloader] Failed to load table '{tableName}'.");
         }
     }
 
@@ -71,7 +71,7 @@ public class LocationLocalizationPreloader : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[LocationTablePreloader] Unloading '{tableName}'.");
+        Debug.Log($"[LocationLocalizationPreloader] Unloading '{tableName}'.");
         Addressables.Release(handle);
         handle = default;
         loadedSuccessfully = false;

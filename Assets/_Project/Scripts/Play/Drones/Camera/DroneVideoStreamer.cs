@@ -96,9 +96,9 @@ public class DroneVideoStreamer : MonoBehaviour
                 {
                     udpClient.Send(packet, packet.Length, remoteEndPoint);
                 }
-                catch (SocketException ex)
+                catch (SocketException socketException)
                 {
-                    Debug.LogError($"[DroneVideoStreamer] UDP send error: {ex.Message}.");
+                    Debug.LogError($"[DroneVideoStreamer] UDP send error: {socketException.Message}.");
                 }
             }
 

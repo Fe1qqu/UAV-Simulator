@@ -90,7 +90,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
     /// </summary>
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log($"[UIPlaceableObjectButton] End drag");
+        Debug.Log($"[UIPlaceableObjectButton] End drag.");
 
         TooltipManager.Instance.ExitDragMode();
 

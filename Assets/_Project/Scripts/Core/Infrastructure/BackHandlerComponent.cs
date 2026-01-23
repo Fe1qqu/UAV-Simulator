@@ -15,8 +15,6 @@ public class BackHandlerComponent : MonoBehaviour
 
     private void Start()
     {
-        //Debug.Log("[BackHandlerComponent] Start for: " + name);
-
         if (handler != null)
         {
             BackDispatcher.Instance.Register(handler);

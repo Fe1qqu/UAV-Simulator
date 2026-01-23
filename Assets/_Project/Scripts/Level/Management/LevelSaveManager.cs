@@ -7,7 +7,7 @@ public class LevelSaveManager : MonoBehaviour
     {
         //if (!LevelValidator.Validate(out var error))
         //{
-        //    Debug.LogError($"[LevelSaveManager] {error}");
+        //    Debug.LogError($"[LevelSaveManager] {error}.");
         //    return;
         //}
 
@@ -28,7 +28,7 @@ public class LevelSaveManager : MonoBehaviour
     {
         if (!File.Exists(path))
         {
-            Debug.LogError($"[LevelSaveManager] Level file not found: {path}");
+            Debug.LogError($"[LevelSaveManager] Level file not found: {path}.");
             return null;
         }
 
