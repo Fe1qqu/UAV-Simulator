@@ -25,23 +25,11 @@ public class BackHandlerComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        if (BackDispatcher.Instance == null)
-        {
-            Debug.LogError($"[BackHandlerComponent] BackDispatcher is missing in the scene. Cannot register handler on '{name}'.");
-            return;
-        }
-
-        BackDispatcher.Instance.Register(handler);
+        BackDispatcher.RegisterHandler(handler);
     }
 
     private void OnDisable()
     {
-        if (BackDispatcher.Instance == null)
-        {
-            Debug.LogError($"[BackHandlerComponent] BackDispatcher is missing in the scene. Cannot unregister handler on '{name}'.");
-            return;
-        }
-
-        BackDispatcher.Instance.Unregister(handler);
+        BackDispatcher.UnregisterHandler(handler);
     }
 }

@@ -54,7 +54,7 @@ public class BackDispatcher : MonoBehaviour
         }
     }
 
-    public void Register(IBackHandler handler)
+    private void Register(IBackHandler handler)
     {
         if (!handlers.Contains(handler))
         {
@@ -63,12 +63,34 @@ public class BackDispatcher : MonoBehaviour
         }
     }
 
-    public void Unregister(IBackHandler handler)
+    private void Unregister(IBackHandler handler)
     {
         if (handlers.Remove(handler))
         {
             DumpStack("Unregister");
         }
+    }
+
+    public static void RegisterHandler(IBackHandler handler)
+    {
+        if (Instance == null)
+        {
+            Debug.LogError($"[BackDispatcher] BackDispatcher is missing in the scene. Cannot register handler: {handler}.");
+            return;
+        }
+
+        Instance.Register(handler);
+    }
+
+    public static void UnregisterHandler(IBackHandler handler)
+    {
+        if (Instance == null)
+        {
+            Debug.LogError($"[BackDispatcher] BackDispatcher is missing in the scene. Cannot unregister handler: {handler}.");
+            return;
+        }
+
+        Instance.Unregister(handler);
     }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
