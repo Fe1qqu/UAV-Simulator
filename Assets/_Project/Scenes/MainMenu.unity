@@ -1789,6 +1789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adda1664dac26a943b5f859c4e7fa9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackDispatcher
+  enableDebugLogging: 0
 --- !u!1 &569240897
 GameObject:
   m_ObjectHideFlags: 0
@@ -4254,7 +4255,7 @@ GameObject:
   - component: {fileID: 1086500444}
   - component: {fileID: 1086500447}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9248,6 +9249,6 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1086500446}
   - {fileID: 465102117}
   - {fileID: 414980914}
+  - {fileID: 1086500446}
