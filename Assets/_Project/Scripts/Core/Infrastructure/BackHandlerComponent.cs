@@ -1,3 +1,13 @@
+// NOTE:
+// BackHandlerComponent is intended for state-driven UI where the Back context
+// is tied to the GameObject's enable/disable lifecycle.
+//
+// Typical usage assumes that only ONE BackHandler is active at a time.
+// Stack depth > 1 is expected only for overlay / modal UI (dialogs, popups).
+//
+// Do NOT use this component for logic-driven states (Pause, Gameplay, Modes).
+// In such cases, BackDispatcher.Register / Unregister should be called manually.
+
 using UnityEngine;
 
 public class BackHandlerComponent : MonoBehaviour
@@ -9,23 +19,29 @@ public class BackHandlerComponent : MonoBehaviour
         handler = GetComponent<IBackHandler>();
         if (handler == null)
         {
-            Debug.LogError($"[BackHandlerComponent] {name} missing IBackHandler reference.");
+            Debug.LogError($"[BackHandlerComponent] GameObject '{name}' has BackHandlerComponent but does not implement IBackHandler.");
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        if (handler != null)
+        if (BackDispatcher.Instance == null)
         {
-            BackDispatcher.Instance.Register(handler);
+            Debug.LogError($"[BackHandlerComponent] BackDispatcher is missing in the scene. Cannot register handler on '{name}'.");
+            return;
         }
+
+        BackDispatcher.Instance.Register(handler);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (handler != null)
+        if (BackDispatcher.Instance == null)
         {
-            BackDispatcher.Instance.Unregister(handler);
+            Debug.LogError($"[BackHandlerComponent] BackDispatcher is missing in the scene. Cannot unregister handler on '{name}'.");
+            return;
         }
+
+        BackDispatcher.Instance.Unregister(handler);
     }
 }
