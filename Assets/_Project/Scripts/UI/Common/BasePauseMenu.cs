@@ -30,8 +30,9 @@ public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
 
         PauseManager.SetPaused(true);
 
-        OnOpened();
         BackDispatcher.Instance.Register(this);
+
+        OnOpened();
     }
 
     public virtual void Close()
@@ -46,8 +47,9 @@ public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
 
         PauseManager.SetPaused(false);
 
-        OnClosed();
         BackDispatcher.Instance.Unregister(this);
+
+        OnClosed();
     }
 
     public bool OnBack()
