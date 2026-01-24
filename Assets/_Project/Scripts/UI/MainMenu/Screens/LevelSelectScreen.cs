@@ -21,7 +21,7 @@ public class LevelSelectContext
     }
 }
 
-public class LevelSelectScreen : MainMenuScreenBase, IBackHandler
+public class LevelSelectScreen : MainMenuScreenBase
 {
     [Header("UI")]
     [SerializeField] private Transform listRoot;
@@ -59,7 +59,7 @@ public class LevelSelectScreen : MainMenuScreenBase, IBackHandler
         }
     }
 
-    public override void OnShow(object context)
+    protected override void OnShowInternal(object context)
     {
         if (context is not LevelSelectContext ctx)
         {
@@ -81,7 +81,7 @@ public class LevelSelectScreen : MainMenuScreenBase, IBackHandler
         BuildList();
     }
 
-    public override void OnHide()
+    protected override void OnHideInternal()
     {
         confirmButton.onClick.RemoveAllListeners();
         backButton.onClick.RemoveAllListeners();
@@ -151,7 +151,7 @@ public class LevelSelectScreen : MainMenuScreenBase, IBackHandler
         onBackAction?.Invoke();
     }
 
-    public bool OnBack()
+    public override bool OnBack()
     {
         OnBackClicked();
         return true;

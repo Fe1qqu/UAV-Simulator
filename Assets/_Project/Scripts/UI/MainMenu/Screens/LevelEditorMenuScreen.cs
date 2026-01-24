@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelEditorMenuScreen : MainMenuScreenBase, IBackHandler
+public class LevelEditorMenuScreen : MainMenuScreenBase
 {
     [SerializeField] private Button createLevelButton;
     [SerializeField] private Button loadLevelButton;
@@ -25,14 +25,14 @@ public class LevelEditorMenuScreen : MainMenuScreenBase, IBackHandler
         }
     }
 
-    public override void OnShow()
+    protected override void OnShowInternal()
     {
         createLevelButton.onClick.AddListener(OnCreateClicked);
         loadLevelButton.onClick.AddListener(OnLoadClicked);
         backButton.onClick.AddListener(OnBackClicked);
     }
 
-    public override void OnHide()
+    protected override void OnHideInternal()
     {
         createLevelButton.onClick.RemoveAllListeners();
         loadLevelButton.onClick.RemoveAllListeners();
@@ -59,7 +59,7 @@ public class LevelEditorMenuScreen : MainMenuScreenBase, IBackHandler
         stateMachine.Show<MainMenuScreen>();
     }
 
-    public bool OnBack()
+    public override bool OnBack()
     {
         OnBackClicked();
         return true;

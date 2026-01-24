@@ -31,7 +31,7 @@ public class MainMenuScreen : MainMenuScreenBase
         }
     }
 
-    public override void OnShow()
+    protected override void OnShowInternal()
     {
         playButton.onClick.AddListener(OnPlayClicked);
         levelEditorButton.onClick.AddListener(OnCreateLevelClicked);
@@ -39,7 +39,7 @@ public class MainMenuScreen : MainMenuScreenBase
         exitButton.onClick.AddListener(OnExitClicked);
     }
 
-    public override void OnHide()
+    protected override void OnHideInternal()
     {
         playButton.onClick.RemoveAllListeners();
         levelEditorButton.onClick.RemoveAllListeners();
@@ -65,5 +65,11 @@ public class MainMenuScreen : MainMenuScreenBase
     private void OnExitClicked()
     {
         stateMachine.ExitGame();
+    }
+
+    public override bool OnBack()
+    {
+        Debug.Log("[MainMenuScreen] Exit.");
+        return true;
     }
 }

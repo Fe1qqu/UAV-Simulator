@@ -691,6 +691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adda1664dac26a943b5f859c4e7fa9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackDispatcher
+  enableDebugLogging: 0
 --- !u!1 &327111584
 GameObject:
   m_ObjectHideFlags: 0
@@ -5805,7 +5806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 905371459}
   m_Layer: 0
-  m_Name: Systems
+  m_Name: System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

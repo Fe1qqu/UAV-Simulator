@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class LevelCreationWizardScreen : MainMenuScreenBase, IBackHandler
+public class LevelCreationWizardScreen : MainMenuScreenBase
 {
     [SerializeField] private LevelCreationWizard levelCreationWizard;
 
@@ -12,7 +12,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase, IBackHandler
         }
     }
 
-    public override void OnShow()
+    protected override void OnShowInternal()
     {
         GameSettings.Instance.ClearEditorSession();
 
@@ -22,7 +22,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase, IBackHandler
         levelCreationWizard.StartWizard();
     }
 
-    public override void OnHide()
+    protected override void OnHideInternal()
     {
         levelCreationWizard.StopWizard();
 
@@ -40,7 +40,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase, IBackHandler
         stateMachine.Show<MainMenuScreen>();
     }
 
-    public bool OnBack()
+    public override bool OnBack()
     {
         if (levelCreationWizard.GoBackOneStep())
         {
