@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class MainMenuScreenBase : MonoBehaviour
+public abstract class MainMenuScreenBase : MonoBehaviour, IBackHandler
 {
     protected MainMenuStateMachine stateMachine;
 
@@ -9,7 +9,31 @@ public abstract class MainMenuScreenBase : MonoBehaviour
         this.stateMachine = stateMachine;
     }
 
-    public virtual void OnShow() { }
-    public virtual void OnShow(object context) => OnShow();
-    public virtual void OnHide() { }
+    // === PUBLIC API (NOT OVERRIDED) ===
+
+    public void OnShow()
+    {
+        BackDispatcher.RegisterHandler(this);
+        OnShowInternal();
+    }
+
+    public void OnShow(object context)
+    {
+        BackDispatcher.RegisterHandler(this);
+        OnShowInternal(context);
+    }
+
+    public void OnHide()
+    {
+        OnHideInternal();
+        BackDispatcher.UnregisterHandler(this);
+    }
+
+    // === EXTENSION POINTS ===
+    protected virtual void OnShowInternal() { }
+    protected virtual void OnShowInternal(object context) => OnShowInternal();
+    protected virtual void OnHideInternal() { }
+
+    // Each screen MUST define its own behavior Back
+    public abstract bool OnBack();
 }

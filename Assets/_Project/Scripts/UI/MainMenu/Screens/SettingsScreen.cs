@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsScreen : MainMenuScreenBase, IBackHandler
+public class SettingsScreen : MainMenuScreenBase
 {
     [SerializeField] private SettingsMenuController settingsMenuController;
     [SerializeField] private Button backButton;
@@ -19,14 +19,14 @@ public class SettingsScreen : MainMenuScreenBase, IBackHandler
         }
     }
 
-    public override void OnShow()
+    protected override void OnShowInternal()
     {
         settingsMenuController.Show(SettingsContext.MainMenu);
 
         backButton.onClick.AddListener(OnBackClicked);
     }
 
-    public override void OnHide()
+    protected override void OnHideInternal()
     {
         settingsMenuController.Hide();
 
@@ -38,7 +38,7 @@ public class SettingsScreen : MainMenuScreenBase, IBackHandler
         stateMachine.Show<MainMenuScreen>();
     }
 
-    public bool OnBack()
+    public override bool OnBack()
     {
         OnBackClicked();
         return true;
