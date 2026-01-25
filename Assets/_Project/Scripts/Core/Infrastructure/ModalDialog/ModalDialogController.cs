@@ -63,11 +63,11 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
 
     public void Hide()
     {
-        if (!IsShown)
-        {
-            Debug.LogWarning("[ModalDialogController] Hide called while dialog is already hidden.");
-            return;
-        }
+        //if (!IsShown)
+        //{
+        //    Debug.LogWarning("[ModalDialogController] Hide called while dialog is already hidden.");
+        //    return;
+        //}
 
         gameObject.SetActive(false);
 
