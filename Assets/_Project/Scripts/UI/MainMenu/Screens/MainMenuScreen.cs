@@ -84,17 +84,17 @@ public class MainMenuScreen : MainMenuScreenBase
     {
         modalDialogService.Show(new ModalDialogConfig
         {
-            Message = "Вы действительно хотите выйти?",
+            MessageKey = "modal_exit_message",
             Buttons = new[]
             {
                 new ModalButtonConfig
                 {
-                    Text = "Выйти",
+                    TextKey = "confirm",
                     Result = ModalResult.Confirm
                 },
                 new ModalButtonConfig
                 {
-                    Text = "Отмена",
+                    TextKey = "cancel",
                     Result = ModalResult.Cancel,
                     IsBackAction = true
                 }

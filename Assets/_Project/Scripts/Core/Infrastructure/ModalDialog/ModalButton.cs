@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Components;
 using System;
-using TMPro;
 
 public class ModalButton : MonoBehaviour
 {
     [SerializeField] private Button button;
-    [SerializeField] private TMP_Text label;
+    [SerializeField] private LocalizeStringEvent labelLocalizeStringEvent;
 
     private ModalResult result;
     private Action<ModalResult> callback;
@@ -20,18 +20,18 @@ public class ModalButton : MonoBehaviour
             Debug.LogError("[ModalButton] Button not assigned.");
         }
 
-        if (label == null)
+        if (labelLocalizeStringEvent == null)
         {
-            Debug.LogError("[ModalButton] Label not assigned.");
+            Debug.LogError("[ModalButton] LabelLocalizeStringEvent not assigned.");
         }
     }
 
-    public void Initialize(string text, ModalResult result, Action<ModalResult> callback)
+    public void Initialize(string localizationKey, ModalResult result, Action<ModalResult> callback)
     {
         this.result = result;
         this.callback = callback;
 
-        label.text = text;
+        labelLocalizeStringEvent.StringReference.TableEntryReference = localizationKey;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClicked);

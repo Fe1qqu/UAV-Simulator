@@ -3,7 +3,11 @@ using System;
 [Serializable]
 public class ModalButtonConfig
 {
-    public string Text;
+    /// <summary>
+    /// Localization table entry key
+    /// </summary>
+    public string TextKey;
+
     public ModalResult Result;
 
     /// <summary>

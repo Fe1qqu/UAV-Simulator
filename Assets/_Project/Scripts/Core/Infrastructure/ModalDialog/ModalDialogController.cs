@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Components;
 using System;
-using TMPro;
 
 public class ModalDialogController : MonoBehaviour, IBackHandler
 {
     [Header("UI")]
     [SerializeField] private RectTransform windowRoot; // Window with VerticalLayoutGroup and ContentSizeFitter
-    [SerializeField] private TMP_Text messageText;
+    [SerializeField] private LocalizeStringEvent messageLocalizeStringEvent;
     [SerializeField] private Transform buttonsContainer;
     [SerializeField] private ModalButton buttonPrefab;
 
@@ -24,9 +24,9 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
             Debug.LogError("[ModalDialogController] WindowRoot not assigned.");
         }
 
-        if (messageText == null)
+        if (messageLocalizeStringEvent == null)
         {
-            Debug.LogError("[ModalDialogController] MessageText not assigned.");
+            Debug.LogError("[ModalDialogController] MessageLocalizeStringEvent not assigned.");
         }
 
         if (buttonsContainer == null)
@@ -48,7 +48,7 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
             return;
         }
 
-        messageText.text = config.Message;
+        messageLocalizeStringEvent.StringReference.TableEntryReference = config.MessageKey;
         onResult = config.OnResult;
 
         ClearButtons();
@@ -82,7 +82,7 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
         {
             ModalButton button = Instantiate(buttonPrefab, buttonsContainer);
             button.gameObject.SetActive(true);
-            button.Initialize(modalButtonConfig.Text, modalButtonConfig.Result, OnButtonResult);
+            button.Initialize(modalButtonConfig.TextKey, modalButtonConfig.Result, OnButtonResult);
 
             if (modalButtonConfig.IsBackAction)
             {
