@@ -8,6 +8,8 @@ public class MainMenuScreen : MainMenuScreenBase
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitButton;
 
+    [SerializeField] private ModalDialogService modalDialogService;
+
     private void Awake()
     {
         if (playButton == null)
@@ -28,6 +30,11 @@ public class MainMenuScreen : MainMenuScreenBase
         if (exitButton == null)
         {
             Debug.LogError("[MainMenuScreen] ExitButton is not assigned.");
+        }
+
+        if (modalDialogService == null)
+        {
+            Debug.LogError("[MainMenuScreen] ModalDialogService is not assigned.");
         }
     }
 
@@ -64,12 +71,41 @@ public class MainMenuScreen : MainMenuScreenBase
 
     private void OnExitClicked()
     {
-        stateMachine.ExitGame();
+        ShowExitConfirmation();
     }
 
     public override bool OnBack()
     {
-        Debug.Log("[MainMenuScreen] Exit.");
+        ShowExitConfirmation();
         return true;
+    }
+
+    private void ShowExitConfirmation()
+    {
+        modalDialogService.Show(new ModalDialogConfig
+        {
+            Message = "Вы действительно хотите выйти?",
+            Buttons = new[]
+            {
+                new ModalButtonConfig
+                {
+                    Text = "Выйти",
+                    Result = ModalResult.Confirm
+                },
+                new ModalButtonConfig
+                {
+                    Text = "Отмена",
+                    Result = ModalResult.Cancel,
+                    IsBackAction = true
+                }
+            },
+            OnResult = result =>
+            {
+                if (result == ModalResult.Confirm)
+                {
+                    stateMachine.ExitGame();
+                }
+            }
+        });
     }
 }
