@@ -1638,7 +1638,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1936408294}
   m_HandleRect: {fileID: 1936408293}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3027,7 +3027,7 @@ GameObject:
   - component: {fileID: 740469541}
   - component: {fileID: 740469540}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3104,7 +3104,7 @@ GameObject:
   - component: {fileID: 754013492}
   - component: {fileID: 754013491}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4160,7 +4160,7 @@ GameObject:
   - component: {fileID: 1041285006}
   - component: {fileID: 1041285005}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4962,7 +4962,7 @@ GameObject:
   - component: {fileID: 1330204989}
   - component: {fileID: 1330204988}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5347,7 +5347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1365739908
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7725,7 +7725,7 @@ GameObject:
   - component: {fileID: 1881952671}
   - component: {fileID: 1881952670}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7744,10 +7744,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1338889055}
-  - {fileID: 1365739908}
   - {fileID: 789071667}
   - {fileID: 583914320}
   - {fileID: 67458492}
+  - {fileID: 1365739908}
   m_Father: {fileID: 1820636595}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7875,7 +7875,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 187228809}
   m_HandleRect: {fileID: 187228808}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8851,7 +8851,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2014283807
 RectTransform:
   m_ObjectHideFlags: 0

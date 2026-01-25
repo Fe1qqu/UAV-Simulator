@@ -64,21 +64,23 @@ public class LocationSelection : MonoBehaviour
 
         foreach (LocationData location in locationDatabase.locations)
         {
-            GameObject btnObj = Instantiate(locationButtonPrefab, contentParent);
-            if (btnObj == null)
+            GameObject locationButtonInstance = Instantiate(locationButtonPrefab, contentParent);
+            if (locationButtonInstance == null)
             {
                 Debug.LogError("[LocationSelection] Failed to instantiate location button prefab.");
                 continue;
             }
 
             // Button
-            if (!btnObj.TryGetComponent<Button>(out var btn))
+            if (!locationButtonInstance.TryGetComponent<Button>(out var btn))
             {
                 Debug.LogError($"[LocationSelection] Button component not found on prefab for location '{location.localizationKey}'.");
                 continue;
             }
 
-            LocalizeStringEvent localizeEvent = btnObj.GetComponentInChildren<LocalizeStringEvent>();
+            locationButtonInstance.SetActive(true);
+
+            LocalizeStringEvent localizeEvent = locationButtonInstance.GetComponentInChildren<LocalizeStringEvent>();
             if (localizeEvent != null)
             {
                 localizeEvent.StringReference = location.localizationKey;
@@ -90,7 +92,7 @@ public class LocationSelection : MonoBehaviour
             }
 
             // Icon
-            Transform iconTransform = btnObj.transform.Find("Icon");
+            Transform iconTransform = locationButtonInstance.transform.Find("Icon");
             if (iconTransform == null)
             {
                 Debug.LogWarning($"[LocationSelection] Icon transform not found for location '{location.localizationKey}'.");
@@ -111,7 +113,7 @@ public class LocationSelection : MonoBehaviour
                 }
             }
 
-            Transform checkmarkTransform = btnObj.transform.Find("Checkmark");
+            Transform checkmarkTransform = locationButtonInstance.transform.Find("Checkmark");
             GameObject checkmarkObj = null;
             if (checkmarkTransform == null)
             {

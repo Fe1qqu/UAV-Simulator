@@ -109,8 +109,9 @@ public class LevelSelectScreen : MainMenuScreenBase
 
         foreach (string file in Directory.GetFiles(directory, "*.json"))
         {
-            LevelSelectItem item = Instantiate(levelSelectItemPrefab, listRoot);
-            item.Setup(file, OnItemSelected);
+            LevelSelectItem levelSelectItem = Instantiate(levelSelectItemPrefab, listRoot);
+            levelSelectItem.gameObject.SetActive(true);
+            levelSelectItem.Setup(file, OnItemSelected);
         }
     }
 
