@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9198319860567685208}
   - component: {fileID: 6720820331181618166}
   - component: {fileID: 6906949138085598846}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 8647240956997461323}
   - component: {fileID: 7810538368886210128}
   - component: {fileID: 5128391364421431765}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Template
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 5738675022769344063}
   - component: {fileID: 431671169829735248}
   - component: {fileID: 5702524192259359291}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 7262465613860688701}
   - component: {fileID: 347538898685855401}
   - component: {fileID: 6198328449797979428}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Item Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -513,71 +513,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1015119947442985979
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4058992301428585058}
-  - component: {fileID: 4801195510143256633}
-  m_Layer: 0
-  m_Name: SettingsMenuController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &4058992301428585058
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1015119947442985979}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2369545498597790748}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4801195510143256633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1015119947442985979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daf5a23b80c6b1b4381c7192973c61c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
-  tabsButtonsContainer: {fileID: 2463537596246209646}
-  tabButtonPrefab: {fileID: 7310059484980507223}
-  tabsContainer: {fileID: 1395171511155475407}
-  settingsContextTabs:
-  - context: 0
-    tabIds:
-    - language
-    - audio
-    - video
-  - context: 1
-    tabIds:
-    - audio
-    - language
-  - context: 2
-    tabIds:
-    - video
-    - language
 --- !u!1 &1368101850041987525
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,7 +523,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1010123698582886108}
   - component: {fileID: 9212308254383611481}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: VideoTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -638,7 +573,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6128768731651819829}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5092569274311396065}
   - component: {fileID: 1729349099014613488}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LanguageTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -727,7 +662,7 @@ GameObject:
   - component: {fileID: 2817512388566807781}
   - component: {fileID: 5483989546297915999}
   - component: {fileID: 3638377196826208318}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -803,7 +738,7 @@ GameObject:
   - component: {fileID: 2173536328347386451}
   - component: {fileID: 7280693108092009869}
   - component: {fileID: 3797268650338746944}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -981,7 +916,7 @@ GameObject:
   - component: {fileID: 5123787098430322064}
   - component: {fileID: 2385987491754831938}
   - component: {fileID: 7628312106010516079}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Scrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1106,7 +1041,7 @@ GameObject:
   - component: {fileID: 7470237490443482061}
   - component: {fileID: 4205878834692966172}
   - component: {fileID: 958919776053686283}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1183,7 +1118,7 @@ GameObject:
   - component: {fileID: 6057662769931446652}
   - component: {fileID: 7043537861079290944}
   - component: {fileID: 6101941052819029754}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TabsButtonsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1284,7 +1219,7 @@ GameObject:
   - component: {fileID: 3256667339387238793}
   - component: {fileID: 5848784464593641309}
   - component: {fileID: 5111565862535778804}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Item Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1358,7 +1293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5842647799639668923}
   - component: {fileID: 550297121714982647}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MasterVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1449,7 +1384,7 @@ GameObject:
   - component: {fileID: 3263525348987159072}
   - component: {fileID: 6327557928001994343}
   - component: {fileID: 6741342645231029048}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1531,7 +1466,7 @@ GameObject:
   - component: {fileID: 7634090261451910037}
   - component: {fileID: 132533008410460236}
   - component: {fileID: 4873269283255853045}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LanguageDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1672,7 +1607,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7043979411501143520}
   - component: {fileID: 4319127773207002088}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: VSyncToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1759,7 +1694,7 @@ GameObject:
   - component: {fileID: 1033684528987500587}
   - component: {fileID: 4093916950756955691}
   - component: {fileID: 8705597413539927328}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1833,7 +1768,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6911663598878258705}
   - component: {fileID: 1787794498637683837}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AudioTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1883,13 +1818,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2809944382108909174}
-  m_Layer: 0
+  - component: {fileID: 945289994520315285}
+  m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2809944382108909174
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1902,7 +1838,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2369545498597790748}
   - {fileID: 6850373291232503673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1911,6 +1846,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &945289994520315285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447996306722436264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf5a23b80c6b1b4381c7192973c61c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
+  tabsButtonsContainer: {fileID: 2463537596246209646}
+  tabButtonPrefab: {fileID: 7310059484980507223}
+  tabsContainer: {fileID: 1395171511155475407}
+  settingsContextTabs:
+  - context: 0
+    tabIds:
+    - language
+    - audio
+    - video
+  - context: 1
+    tabIds:
+    - audio
+    - language
+  - context: 2
+    tabIds:
+    - video
+    - language
 --- !u!1 &4739886516925452591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,8 +1886,8 @@ GameObject:
   - component: {fileID: 6850373291232503673}
   - component: {fileID: 5777218473910036116}
   - component: {fileID: 1995065632427020028}
-  m_Layer: 0
-  m_Name: BackgroundImage
+  m_Layer: 5
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2002,7 +1966,7 @@ GameObject:
   - component: {fileID: 8514764909359993603}
   - component: {fileID: 4057092569131210292}
   - component: {fileID: 1825438672624852975}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2075,7 +2039,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5658977186812180509}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2113,7 +2077,7 @@ GameObject:
   - component: {fileID: 1395171511155475407}
   - component: {fileID: 8201245681974253068}
   - component: {fileID: 1425982778735560389}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TabsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2191,7 +2155,7 @@ GameObject:
   - component: {fileID: 8864385519259130831}
   - component: {fileID: 9115112838593551797}
   - component: {fileID: 8097100697204495112}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Item Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2266,7 +2230,7 @@ GameObject:
   - component: {fileID: 7205854773042225265}
   - component: {fileID: 2532969188982052790}
   - component: {fileID: 5051843291807965103}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2342,7 +2306,7 @@ GameObject:
   - component: {fileID: 2778955799207983483}
   - component: {fileID: 1155711094918520680}
   - component: {fileID: 4288814176534859183}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2462,7 +2426,7 @@ GameObject:
   - component: {fileID: 4381660934311989052}
   - component: {fileID: 75220572867954037}
   - component: {fileID: 3411473764113772841}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2599,7 +2563,7 @@ GameObject:
   - component: {fileID: 329650792053725591}
   - component: {fileID: 6856199841169475789}
   - component: {fileID: 1462737781915604540}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2675,7 +2639,7 @@ GameObject:
   - component: {fileID: 945295258825911898}
   - component: {fileID: 2342407738609062102}
   - component: {fileID: 6198883142028765282}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2851,7 +2815,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544128760460299219}
   - component: {fileID: 7906154978320913388}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2942,13 +2906,13 @@ GameObject:
   - component: {fileID: 643231784174409942}
   - component: {fileID: 5185583270131131625}
   - component: {fileID: 6999243394786770712}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TabButtonPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5357806748999035547
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2966,7 +2930,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1413, y: 0}
+  m_AnchoredPosition: {x: -750, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &10784664732476545
@@ -3085,7 +3049,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 116953626721853450}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3121,7 +3085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 286495925562608417}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3148,42 +3112,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
---- !u!1 &8577749344280543382
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2369545498597790748}
-  m_Layer: 0
-  m_Name: System
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2369545498597790748
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8577749344280543382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4058992301428585058}
-  m_Father: {fileID: 2809944382108909174}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8600233368612531294
 GameObject:
   m_ObjectHideFlags: 0
@@ -3195,7 +3123,7 @@ GameObject:
   - component: {fileID: 6215584003436222193}
   - component: {fileID: 1316112704978003202}
   - component: {fileID: 9193981372160166213}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

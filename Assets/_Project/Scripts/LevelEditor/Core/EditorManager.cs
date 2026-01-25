@@ -177,17 +177,17 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Destroy(child.gameObject);
         }
 
-        foreach (CategoryData category in categoryDatabase.categories)
+        foreach (CategoryData categoryData in categoryDatabase.categories)
         {
-            var buttonObj = Instantiate(categoryButtonPrefab, categoryListContainer);
-            
-            if (!buttonObj.TryGetComponent<UICategoryButton>(out var categoryButton))
+            GameObject categoryButtonInstance = Instantiate(categoryButtonPrefab, categoryListContainer);
+            if (!categoryButtonInstance.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
                 Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton.");
                 continue;
             }
 
-            categoryButton.Setup(category, OnCategorySelected);
+            categoryButtonInstance.SetActive(true);
+            categoryButton.Setup(categoryData, OnCategorySelected);
         }
 
         // Auto–select first category
@@ -203,20 +203,20 @@ public class EditorManager : MonoBehaviour, IBackHandler
     /// Called when a category button is clicked.
     /// Updates UI and object list.
     /// </summary>
-    private void OnCategorySelected(CategoryData category, UICategoryButton button)
+    private void OnCategorySelected(CategoryData categoryData, UICategoryButton categoryButton)
     {
         if (currentSelectedButton != null)
         {
             currentSelectedButton.SetSelected(false);
         }
 
-        currentSelectedButton = button;
+        currentSelectedButton = categoryButton;
         currentSelectedButton.SetSelected(true);
 
-        currentCategory = category.type;
+        currentCategory = categoryData.type;
         if (currentCategoryLocalizeEvent != null)
         {
-            currentCategoryLocalizeEvent.StringReference = category.localizationKey;
+            currentCategoryLocalizeEvent.StringReference = categoryData.localizationKey;
             currentCategoryLocalizeEvent.RefreshString();
         }
 
@@ -241,16 +241,17 @@ public class EditorManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        foreach (PlaceableObjectData objData in filteredObjects)
+        foreach (PlaceableObjectData placeableObjectData in filteredObjects)
         {
-            GameObject buttonObj = Instantiate(placeableObjectButtonPrefab, objectListContainer);
-            if (!buttonObj.TryGetComponent<UIPlaceableObjectButton>(out var button))
+            GameObject placeableObjectButtonInstance = Instantiate(placeableObjectButtonPrefab, objectListContainer);
+            if (!placeableObjectButtonInstance.TryGetComponent<UIPlaceableObjectButton>(out var placeableObjectButton))
             {
                 Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
                 continue;
             }
 
-            button.Setup(objData);
+            placeableObjectButtonInstance.SetActive(true);
+            placeableObjectButton.Setup(placeableObjectData);
         }
     }
 
