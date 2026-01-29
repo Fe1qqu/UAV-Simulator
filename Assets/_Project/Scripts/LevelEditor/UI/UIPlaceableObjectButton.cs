@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// UI button that represents a single placeable object.
@@ -64,7 +64,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        Debug.Log($"[UIPlaceableObjectButton] Begin drag {linkedObjectData.localizationKey}");
+        Debug.Log($"[UIPlaceableObjectButton] Begin drag '{linkedObjectData.objectId}'.");
 
         TooltipManager.Instance.EnterDragMode();
         DragPlacementHandler.Instance.BeginDrag(linkedObjectData);

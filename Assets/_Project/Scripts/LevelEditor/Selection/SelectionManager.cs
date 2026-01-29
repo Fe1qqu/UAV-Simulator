@@ -14,7 +14,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private float rayLength = 100000f;
 
     // Currently selected object
-    public SelectableObject Current { get; private set; }
+    public SelectableObject CurrentSelectedObject { get; private set; }
 
     private void Awake()
     {
@@ -56,38 +56,38 @@ public class SelectionManager : MonoBehaviour
             SelectableObject selectableObject = hit.collider.GetComponentInParent<SelectableObject>();
             if (selectableObject != null)
             {
-                Select(selectableObject);
+                SelectObject(selectableObject);
             }
             return;
         }
 
-        DeselectCurrent();
+        DeselectCurrentObject();
     }
 
-    public void Select(SelectableObject selectableObject)
+    public void SelectObject(SelectableObject selectableObject)
     {
-        if (Current == selectableObject)
+        if (CurrentSelectedObject == selectableObject)
         {
             return;
         }
 
-        DeselectCurrent();
+        DeselectCurrentObject();
 
-        Current = selectableObject;
-        Current.Select();
+        CurrentSelectedObject = selectableObject;
+        CurrentSelectedObject.Select();
 
-        OnSelectionChanged?.Invoke(Current);
+        OnSelectionChanged?.Invoke(CurrentSelectedObject);
     }
 
-    public void DeselectCurrent()
+    public void DeselectCurrentObject()
     {
-        if (Current == null)
+        if (CurrentSelectedObject == null)
         {
             return;
         }
 
-        Current.Deselect();
-        Current = null;
+        CurrentSelectedObject.Deselect();
+        CurrentSelectedObject = null;
 
         OnSelectionChanged?.Invoke(null);
     }

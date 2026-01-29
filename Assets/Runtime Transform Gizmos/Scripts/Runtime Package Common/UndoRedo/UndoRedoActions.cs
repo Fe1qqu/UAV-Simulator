@@ -5,7 +5,6 @@ namespace RTG
 {
     public class PostObjectSpawnAction : IUndoRedoAction
     {
-        private bool _cleanupOnRemovedFromStack;
         private List<GameObject> _spawnedParents = new List<GameObject>();
 
         // MODIFIED: Parallel list to remember whether a spawned parent (or one of its children)
@@ -28,34 +27,41 @@ namespace RTG
             if (_spawnedParents == null) return;
 
             // Сheck if our custom SelectionManager is present in the scene
-            var selMgr = SelectionManager.Instance;
+            SelectionManager selectionManager = SelectionManager.Instance;
 
             _wasSelectedFlags.Clear();
 
-            foreach (var parent in _spawnedParents)
+            foreach (GameObject parentGameObject in _spawnedParents)
             {
                 bool wasSelected = false;
 
-                if (parent != null)
+                if (parentGameObject != null)
                 {
-                    if (selMgr != null && selMgr.Current != null)
+                    // Check selection
+                    if (selectionManager != null && selectionManager.CurrentSelectedObject != null)
                     {
-                        GameObject currentGO = selMgr.Current.gameObject;
+                        GameObject currentGameObject = selectionManager.CurrentSelectedObject.gameObject;
 
-                        if (currentGO == parent || currentGO.transform.IsChildOf(parent.transform))
+                        if (currentGameObject == parentGameObject || currentGameObject.transform.IsChildOf(parentGameObject.transform))
                         {
                             wasSelected = true;
-                            selMgr.DeselectCurrent();
+                            selectionManager.DeselectCurrentObject();
                         }
                     }
 
-                    parent.SetActive(false);
+                    // Soft-delete if LevelObject, else normal deactivate
+                    if (parentGameObject.TryGetComponent<LevelObject>(out var levelObject))
+                    {
+                        levelObject.SoftDelete();
+                    }
+                    else
+                    {
+                        parentGameObject.SetActive(false);
+                    }
                 }
 
                 _wasSelectedFlags.Add(wasSelected);
             }
-
-            _cleanupOnRemovedFromStack = true;
         }
 
         // MODIFIED
@@ -63,39 +69,38 @@ namespace RTG
         {
             if (_spawnedParents == null) return;
 
-            var selMgr = SelectionManager.Instance;
+            SelectionManager selectionManager = SelectionManager.Instance;
 
             for (int i = 0; i < _spawnedParents.Count; i++)
             {
-                var parent = _spawnedParents[i];
-                if (parent != null)
+                GameObject parentGameObject = _spawnedParents[i];
+                if (parentGameObject != null)
                 {
-                    parent.SetActive(true);
+                    // Restore if LevelObject, else normal activate
+                    if (parentGameObject.TryGetComponent<LevelObject>(out var levelObject))
+                    {
+                        levelObject.Restore();
+                    }
+                    else
+                    {
+                        parentGameObject.SetActive(true);
+                    }
 
                     // Restore the selection only if there is a custom SelectionManager
-                    if (selMgr != null && _wasSelectedFlags[i])
+                    if (selectionManager != null && _wasSelectedFlags[i])
                     {
-                        var selectable = parent.GetComponentInChildren<SelectableObject>();
-                        if (selectable != null)
+                        SelectableObject selectableObject = parentGameObject.GetComponentInChildren<SelectableObject>();
+                        if (selectableObject != null)
                         {
-                            selMgr.Select(selectable);
+                            selectionManager.SelectObject(selectableObject);
                         }
                     }
                 }
             }
-
-            _cleanupOnRemovedFromStack = false;
         }
 
-        // MODIFIED
         public void OnRemovedFromUndoRedoStack()
         {
-            if (_cleanupOnRemovedFromStack && _spawnedParents.Count != 0)
-            {
-                foreach (var parent in _spawnedParents) GameObject.Destroy(parent);
-                _spawnedParents.Clear();
-                _wasSelectedFlags.Clear();
-            }
         }
     }
 

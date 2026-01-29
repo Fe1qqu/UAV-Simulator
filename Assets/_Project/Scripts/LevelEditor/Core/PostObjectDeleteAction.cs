@@ -1,13 +1,12 @@
-using UnityEngine;
 using RTG;
 
-public class PostObjectDeleteAction : IUndoRedoAction
+public class PostLevelObjectDeleteAction : IUndoRedoAction
 {
-    private GameObject _target;
+    private readonly LevelObject levelObject;
 
-    public PostObjectDeleteAction(GameObject target)
+    public PostLevelObjectDeleteAction(LevelObject levelObject)
     {
-        _target = target;
+        this.levelObject = levelObject;
     }
 
     public void Execute()
@@ -17,25 +16,39 @@ public class PostObjectDeleteAction : IUndoRedoAction
 
     public void Undo()
     {
-        if (_target != null)
+        if (levelObject == null)
         {
-            _target.SetActive(true);
+            return;
         }
+
+        levelObject.Restore();
+
+        SelectionManager selectionManager = SelectionManager.Instance;
+        if (selectionManager == null)
+        {
+            return;
+        }
+
+        SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
+        if (selectableObject == null)
+        {
+            return;
+        }
+
+        selectionManager.SelectObject(selectableObject);
     }
 
     public void Redo()
     {
-        if (_target != null)
+        if (levelObject == null)
         {
-            _target.SetActive(false);
+            return;
         }
+
+        levelObject.SoftDelete();
     }
 
     public void OnRemovedFromUndoRedoStack()
     {
-        if (_target != null)
-        {
-            GameObject.Destroy(_target);
-        }
     }
 }

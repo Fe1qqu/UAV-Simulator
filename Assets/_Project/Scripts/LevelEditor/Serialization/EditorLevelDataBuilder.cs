@@ -3,12 +3,18 @@ using UnityEngine;
 public class EditorLevelDataBuilder : MonoBehaviour
 {
     [SerializeField] private Transform levelRoot;
+    [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
 
     private void Awake()
     {
         if (levelRoot == null)
         {
-            Debug.LogError("[EditorLevelDataBuilder] LevelRoot not assigned.");
+            Debug.LogError("[EditorLevelDataBuilder] LevelRoot is not assigned.");
+        }
+
+        if (levelRuntimeRegistry == null)
+        {
+            Debug.LogError("[EditorLevelDataBuilder] LevelRuntimeRegistry is not assigned.");
         }
     }
 
@@ -22,15 +28,10 @@ public class EditorLevelDataBuilder : MonoBehaviour
             locationId = editorSession.SelectedLocationId
         };
 
-        foreach (Transform child in levelRoot)
+        foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
         {
-            // Ignore inactive objects (deleted / undone)
-            if (!child.gameObject.activeInHierarchy)
-            {
-                continue;
-            }
-
-            if (!child.TryGetComponent<LevelObject>(out var levelObject))
+            // Ignore inactive objects (deleted / hidden)
+            if (!levelObject.IsAlive)
             {
                 continue;
             }
