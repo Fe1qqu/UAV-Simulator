@@ -5,7 +5,6 @@ public class EditorDeleteController : MonoBehaviour
     [SerializeField] private EditorInput editorInput;
     [SerializeField] private SelectionManager selectionManager;
 
-
     private void Awake()
     {
         if (editorInput == null)
@@ -44,7 +43,7 @@ public class EditorDeleteController : MonoBehaviour
             return;
         }
 
-        DeleteObject(levelObject);
+        DeleteObjectInternal(levelObject, selectedObject);
     }
 
     public void DeleteObject(LevelObject levelObject)
@@ -55,11 +54,28 @@ public class EditorDeleteController : MonoBehaviour
             return;
         }
 
-        selectionManager.DeselectCurrentObject();
+        if (!levelObject.TryGetComponent(out SelectableObject selectableObject))
+        {
+            Debug.LogError("[EditorDeleteController] LevelObject has no SelectableObject ñomponent.");
+            return;
+        }
+
+        DeleteObjectInternal(levelObject, selectableObject);
+    }
+
+    private void DeleteObjectInternal(LevelObject levelObject, SelectableObject selectableObject)
+    {
+        bool wasSelected = selectionManager.CurrentSelectedObject == selectableObject;
+
+        if (wasSelected)
+        {
+            selectionManager.DeselectCurrentObject();
+        }
+
         levelObject.SoftDelete();
 
         // Create an undo/redo delete action
-        PostLevelObjectDeleteAction deleteAction = new PostLevelObjectDeleteAction(levelObject);
+        PostLevelObjectDeleteAction deleteAction = new PostLevelObjectDeleteAction(levelObject, wasSelected);
         deleteAction.Execute();
 
         Debug.Log($"[EditorDeleteController] Deleted object '{levelObject.name}'.");

@@ -4,9 +4,12 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
 {
     private readonly LevelObject levelObject;
 
-    public PostLevelObjectDeleteAction(LevelObject levelObject)
+    private bool wasSelected;
+
+    public PostLevelObjectDeleteAction(LevelObject levelObject, bool wasSelected)
     {
         this.levelObject = levelObject;
+        this.wasSelected = wasSelected;
     }
 
     public void Execute()
@@ -23,19 +26,18 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
 
         levelObject.Restore();
 
-        SelectionManager selectionManager = SelectionManager.Instance;
-        if (selectionManager == null)
+        if (wasSelected)
         {
-            return;
+            SelectionManager selectionManager = SelectionManager.Instance;
+            if (selectionManager != null)
+            {
+                SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
+                if (selectableObject != null)
+                {
+                    selectionManager.SelectObject(selectableObject);
+                }
+            }
         }
-
-        SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
-        if (selectableObject == null)
-        {
-            return;
-        }
-
-        selectionManager.SelectObject(selectableObject);
     }
 
     public void Redo()
@@ -45,10 +47,21 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
             return;
         }
 
+        SelectionManager selectionManager = SelectionManager.Instance;
+        if (selectionManager != null)
+        {
+            SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
+            if (selectableObject != null && selectionManager.CurrentSelectedObject == selectableObject)
+            {
+                selectionManager.DeselectCurrentObject();
+            }
+        }
+
         levelObject.SoftDelete();
     }
 
     public void OnRemovedFromUndoRedoStack()
     {
+        // Intentionally empty: soft delete only
     }
 }
