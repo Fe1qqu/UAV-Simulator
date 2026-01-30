@@ -24,7 +24,12 @@ public class ObjectHierarchyList : MonoBehaviour
     [SerializeField] private EditorDeleteController editorDeleteController;
     [SerializeField] private SelectionManager selectionManager;
 
-    private readonly Dictionary<LevelObject, UIObjectHierarchyItem> itemsMap = new();
+    // UI items
+    private readonly Dictionary<LevelObject, UIObjectHierarchyItem> levelObjectToItemMap = new();
+    private UIObjectHierarchyItem currentSelectedItem;
+
+    // Optimization: SourceData cache → object list
+    private readonly Dictionary<PlaceableObjectData, List<LevelObject>> sourceDataToObjectsMap = new();
 
     private void Awake()
     {
@@ -57,91 +62,120 @@ public class ObjectHierarchyList : MonoBehaviour
     private void OnEnable()
     {
         levelRuntimeRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
+        selectionManager.OnSelectionChanged += OnSelectionChanged;
     }
 
     private void OnDisable()
     {
-        if (levelRuntimeRegistry == null)
+        if (levelRuntimeRegistry != null)
         {
-            return;
+            levelRuntimeRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
         }
 
-        levelRuntimeRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
+        if (selectionManager != null)
+        {
+            selectionManager.OnSelectionChanged -= OnSelectionChanged;
+        }
     }
 
     private void Start()
     {
-        RefreshAll();
-    }
-
-    private void RefreshAll()
-    {
-        foreach (UIObjectHierarchyItem item in itemsMap.Values)
-        {
-            Destroy(item.gameObject);
-        }
-        itemsMap.Clear();
-
         foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
         {
-            OnLifecycleChanged(levelObject);
+            GetOrCreateItem(levelObject);
+            AddToSourceGroup(levelObject);
         }
     }
 
     private void OnLifecycleChanged(LevelObject levelObject)
     {
+        if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+        {
+            // Create UI only for Alive or SoftDeleted
+            if (levelObject.LifecycleState != LevelObjectLifecycleState.HardDeleted)
+            {
+                item = GetOrCreateItem(levelObject);
+            }
+            else
+            {
+                // HardDeleted - do not create anything
+                return;
+            }
+        }
+
         switch (levelObject.LifecycleState)
         {
             case LevelObjectLifecycleState.Alive:
-                AddItem(levelObject);
+                item.SetVisible(true);
                 break;
 
             case LevelObjectLifecycleState.SoftDeleted:
-                RemoveItem(levelObject);
+                item.SetVisible(false);
                 break;
 
             case LevelObjectLifecycleState.HardDeleted:
-                RemoveItem(levelObject);
-                break;
+                if (item != null)
+                {
+                    levelObjectToItemMap.Remove(levelObject);
+                    RemoveFromSourceGroup(levelObject);
+                    Destroy(item.gameObject);
+                }
+                return; // There is no need to update displayName further
         }
+
+        UpdateDisplayNamesForSourceGroup(levelObject.SourceData);
     }
 
-    private void AddItem(LevelObject levelObject)
+    private void OnSelectionChanged(SelectableObject selectableObject)
     {
-        if (itemsMap.ContainsKey(levelObject))
+        if (currentSelectedItem != null)
+        {
+            currentSelectedItem.SetSelected(false);
+            currentSelectedItem = null;
+        }
+
+        if (selectableObject == null)
         {
             return;
         }
 
-        GameObject itemGameObject = Instantiate(itemPrefab, contentRoot);
-        if (!itemGameObject.TryGetComponent<UIObjectHierarchyItem>(out var item))
+        if (!selectableObject.TryGetComponent<LevelObject>(out var levelObject))
+        {
+            return;
+        }
+
+        if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+        {
+            return;
+        }
+
+        item.SetSelected(true);
+        currentSelectedItem = item;
+    }
+
+    private UIObjectHierarchyItem GetOrCreateItem(LevelObject levelObject)
+    {
+        if (levelObjectToItemMap.TryGetValue(levelObject, out var existingItem))
+        {
+            return existingItem;
+        }
+
+        GameObject gameObject = Instantiate(itemPrefab, contentRoot);
+        if (!gameObject.TryGetComponent(out UIObjectHierarchyItem item))
         {
             Debug.LogError("[ObjectHierarchyList] ItemPrefab missing UIObjectHierarchyItem component.");
-            return;
+            return null;
         }
 
-        itemGameObject.SetActive(true);
         item.Bind(levelObject);
         item.OnDeleteRequested += OnDeleteRequested;
         item.OnSelectRequested += OnSelectRequested;
 
-        itemsMap[levelObject] = item;
-    }
+        levelObjectToItemMap[levelObject] = item;
 
-    private void RemoveItem(LevelObject levelObject)
-    {
-        if (!itemsMap.TryGetValue(levelObject, out var item))
-        {
-            return;
-        }
+        AddToSourceGroup(levelObject);
 
-        if (item != null)
-        {
-            item.Unbind();
-            Destroy(item.gameObject);
-        }
-
-        itemsMap.Remove(levelObject);
+        return item;
     }
 
     private void OnDeleteRequested(LevelObject levelObject)
@@ -152,5 +186,70 @@ public class ObjectHierarchyList : MonoBehaviour
     private void OnSelectRequested(LevelObject levelObject)
     {
         selectionManager.SelectObject(levelObject.GetComponent<SelectableObject>());
+    }
+
+    private void AddToSourceGroup(LevelObject levelObject)
+    {
+        if (levelObject.SourceData == null)
+        {
+            return;
+        }
+
+        if (!sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        {
+            levelObjectsList = new List<LevelObject>();
+            sourceDataToObjectsMap[levelObject.SourceData] = levelObjectsList;
+        }
+
+        if (!levelObjectsList.Contains(levelObject))
+        {
+            levelObjectsList.Add(levelObject);
+        }
+    }
+
+    private void RemoveFromSourceGroup(LevelObject levelObject)
+    {
+        if (levelObject.SourceData == null)
+        {
+            return;
+        }
+
+        if (sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        {
+            levelObjectsList.Remove(levelObject);
+            if (levelObjectsList.Count == 0)
+            {
+                sourceDataToObjectsMap.Remove(levelObject.SourceData);
+            }
+        }
+    }
+
+    private void UpdateDisplayNamesForSourceGroup(PlaceableObjectData sourceData)
+    {
+        if (sourceData == null || !sourceDataToObjectsMap.TryGetValue(sourceData, out var group))
+        {
+            return;
+        }
+
+        int index = 1;
+
+        foreach (LevelObject levelObject in group)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+            {
+                continue;
+            }
+
+            string baseName = levelObject.SourceData.localizationKey.GetLocalizedString();
+            string displayName = index == 1 ? baseName : $"{baseName} ({index})";
+            item.SetDisplayName(displayName);
+
+            index++;
+        }
     }
 }

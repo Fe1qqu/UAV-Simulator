@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Localization.Components;
+using TMPro;
 
 public class UIObjectHierarchyItem : MonoBehaviour
 {
@@ -9,7 +9,10 @@ public class UIObjectHierarchyItem : MonoBehaviour
 
     [SerializeField] private Button selectButton;
     [SerializeField] private Button deleteButton;
-    [SerializeField] private LocalizeStringEvent nameLocalizeStringEvent;
+    [SerializeField] private TMP_Text nameText;
+
+    [Header("Selection")]
+    [SerializeField] private GameObject selectionHighlight;
 
     private LevelObject boundLevelObject;
 
@@ -25,10 +28,27 @@ public class UIObjectHierarchyItem : MonoBehaviour
             Debug.LogError("[UIObjectHierarchyItem] DeleteButton is not assigned.");
         }
 
-        if (nameLocalizeStringEvent == null)
+        if (nameText == null)
         {
-            Debug.LogError("[UIObjectHierarchyItem] NameLocalizeStringEvent is not assigned.");
+            Debug.LogError("[UIObjectHierarchyItem] NameText is not assigned.");
         }
+
+        if (selectionHighlight == null)
+        {
+            Debug.LogError("[UIObjectHierarchyItem] SelectionHighlight is not assigned.");
+        }
+    }
+
+    private void OnEnable()
+    {
+        selectButton.onClick.AddListener(OnSelectClicked);
+        deleteButton.onClick.AddListener(OnDeleteClicked);
+    }
+
+    private void OnDisable()
+    {
+        selectButton.onClick.RemoveListener(OnSelectClicked);
+        deleteButton.onClick.RemoveListener(OnDeleteClicked);
     }
 
     public void Bind(LevelObject levelObject)
@@ -40,26 +60,6 @@ public class UIObjectHierarchyItem : MonoBehaviour
         }
 
         boundLevelObject = levelObject;
-
-        if (levelObject.SourceData != null)
-        {
-            nameLocalizeStringEvent.StringReference = levelObject.SourceData.localizationKey;
-            nameLocalizeStringEvent.RefreshString();
-        }
-        else
-        {
-            Debug.LogWarning($"[UIObjectHierarchyItem] LevelObject '{levelObject.name}' has no SourceData.");
-        }
-
-        selectButton.onClick.AddListener(OnSelectClicked);
-        deleteButton.onClick.AddListener(OnDeleteClicked);
-    }
-
-    public void Unbind()
-    {
-        selectButton.onClick.RemoveAllListeners();
-        deleteButton.onClick.RemoveAllListeners();
-        boundLevelObject = null;
     }
 
     private void OnSelectClicked()
@@ -84,8 +84,21 @@ public class UIObjectHierarchyItem : MonoBehaviour
         OnDeleteRequested?.Invoke(boundLevelObject);
     }
 
+    public void SetDisplayName(string displayName)
+    {
+        nameText.text = displayName;
+    }
+
     public void SetSelected(bool selected)
     {
-        //nameLabel.color = selected ? Color.yellow : Color.white;
+        if (selectionHighlight != null)
+        {
+            selectionHighlight.SetActive(selected);
+        }
+    }
+
+    public void SetVisible(bool visible)
+    {
+        gameObject.SetActive(visible);
     }
 }
