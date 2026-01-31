@@ -13,11 +13,13 @@ Because of this:
 */
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class ObjectHierarchyList : MonoBehaviour
 {
-    [SerializeField] private Transform contentRoot;
+    [SerializeField] private RectTransform contentPanel;
+    [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private GameObject itemPrefab;
 
     [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
@@ -33,9 +35,14 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void Awake()
     {
-        if (contentRoot == null)
+        if (contentPanel == null)
         {
-            Debug.LogError("[ObjectHierarchyList] ContentRoot is not assigned.");
+            Debug.LogError("[ObjectHierarchyList] ContentPanel is not assigned.");
+        }
+
+        if (scrollRect == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] ScrollRect is not assigned.");
         }
 
         if (itemPrefab == null)
@@ -151,6 +158,9 @@ public class ObjectHierarchyList : MonoBehaviour
 
         item.SetSelected(true);
         currentSelectedItem = item;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(scrollRect.content);
+        StartCoroutine(scrollRect.FocusOnItemCoroutine(item.GetComponent<RectTransform>(), 10f));
     }
 
     private UIObjectHierarchyItem GetOrCreateItem(LevelObject levelObject)
@@ -160,7 +170,7 @@ public class ObjectHierarchyList : MonoBehaviour
             return existingItem;
         }
 
-        GameObject gameObject = Instantiate(itemPrefab, contentRoot);
+        GameObject gameObject = Instantiate(itemPrefab, contentPanel);
         if (!gameObject.TryGetComponent(out UIObjectHierarchyItem item))
         {
             Debug.LogError("[ObjectHierarchyList] ItemPrefab missing UIObjectHierarchyItem component.");

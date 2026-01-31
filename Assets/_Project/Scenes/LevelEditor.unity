@@ -1696,7 +1696,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820032608}
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5479,7 +5479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f6452bfdb55f542a6ba13429bb0426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectHierarchyList
-  contentRoot: {fileID: 976954855}
+  contentPanel: {fileID: 976954855}
+  scrollRect: {fileID: 1349913557}
   itemPrefab: {fileID: 2128374757}
   levelRuntimeRegistry: {fileID: 627597777}
   editorDeleteController: {fileID: 2027232544}
@@ -6920,7 +6921,7 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
@@ -9695,7 +9696,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2128374758}
-  - component: {fileID: 2128374759}
   - component: {fileID: 2128374760}
   - component: {fileID: 2128374762}
   - component: {fileID: 2128374761}
@@ -9728,14 +9728,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1200, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2128374759
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2128374757}
-  m_CullTransparentMesh: 1
 --- !u!114 &2128374760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9759,8 +9751,8 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
-  m_ChildScaleWidth: 1
-  m_ChildScaleHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
 --- !u!114 &2128374761
 MonoBehaviour:
