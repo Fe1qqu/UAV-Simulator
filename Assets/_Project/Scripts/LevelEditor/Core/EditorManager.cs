@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Localization.Components;
+using System.IO;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
@@ -182,7 +181,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
             GameObject categoryButtonInstance = Instantiate(categoryButtonPrefab, categoryListContainer);
             if (!categoryButtonInstance.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
-                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton.");
+                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton component.");
                 continue;
             }
 

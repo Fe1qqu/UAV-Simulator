@@ -1,0 +1,265 @@
+﻿/*
+NOTE:
+LevelObjects in editor are SOFT-DELETED, not destroyed.
+
+- SoftDelete → LifecycleState.SoftDeleted + SetActive(false)
+- Restore   → LifecycleState.Alive + SetActive(true)
+- HardDelete happens ONLY on scene unload or cleanup
+
+Because of this:
+- Unregister is NOT called on editor delete
+- ObjectHierarchyList MUST react to LifecycleChanged
+- LevelRuntimeRegistry always contains ALL objects (including deleted ones)
+*/
+
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
+public class ObjectHierarchyList : MonoBehaviour
+{
+    [SerializeField] private RectTransform contentPanel;
+    [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private GameObject itemPrefab;
+
+    [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
+    [SerializeField] private EditorDeleteController editorDeleteController;
+    [SerializeField] private SelectionManager selectionManager;
+
+    // UI items
+    private readonly Dictionary<LevelObject, UIObjectHierarchyItem> levelObjectToItemMap = new();
+    private UIObjectHierarchyItem currentSelectedItem;
+
+    // Optimization: SourceData cache → object list
+    private readonly Dictionary<PlaceableObjectData, List<LevelObject>> sourceDataToObjectsMap = new();
+
+    private void Awake()
+    {
+        if (contentPanel == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] ContentPanel is not assigned.");
+        }
+
+        if (scrollRect == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] ScrollRect is not assigned.");
+        }
+
+        if (itemPrefab == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] ItemPrefab is not assigned.");
+        }
+
+        if (levelRuntimeRegistry == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] LevelRuntimeRegistry is not assigned.");
+        }
+
+        if (editorDeleteController == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] EditorDeleteController is not assigned.");
+        }
+
+        if (selectionManager == null)
+        {
+            Debug.LogError("[ObjectHierarchyList] SelectionManager is not assigned.");
+        }
+    }
+
+    private void OnEnable()
+    {
+        levelRuntimeRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
+        selectionManager.OnSelectionChanged += OnSelectionChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (levelRuntimeRegistry != null)
+        {
+            levelRuntimeRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
+        }
+
+        if (selectionManager != null)
+        {
+            selectionManager.OnSelectionChanged -= OnSelectionChanged;
+        }
+    }
+
+    private void Start()
+    {
+        foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
+        {
+            GetOrCreateItem(levelObject);
+            AddToSourceGroup(levelObject);
+        }
+    }
+
+    private void OnLifecycleChanged(LevelObject levelObject)
+    {
+        if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+        {
+            // Create UI only for Alive or SoftDeleted
+            if (levelObject.LifecycleState != LevelObjectLifecycleState.HardDeleted)
+            {
+                item = GetOrCreateItem(levelObject);
+            }
+            else
+            {
+                // HardDeleted - do not create anything
+                return;
+            }
+        }
+
+        switch (levelObject.LifecycleState)
+        {
+            case LevelObjectLifecycleState.Alive:
+                item.SetVisible(true);
+                break;
+
+            case LevelObjectLifecycleState.SoftDeleted:
+                item.SetVisible(false);
+                break;
+
+            case LevelObjectLifecycleState.HardDeleted:
+                if (item != null)
+                {
+                    levelObjectToItemMap.Remove(levelObject);
+                    RemoveFromSourceGroup(levelObject);
+                    Destroy(item.gameObject);
+                }
+                return; // There is no need to update displayName further
+        }
+
+        UpdateDisplayNamesForSourceGroup(levelObject.SourceData);
+    }
+
+    private void OnSelectionChanged(SelectableObject selectableObject)
+    {
+        if (currentSelectedItem != null)
+        {
+            currentSelectedItem.SetSelected(false);
+            currentSelectedItem = null;
+        }
+
+        if (selectableObject == null)
+        {
+            return;
+        }
+
+        if (!selectableObject.TryGetComponent<LevelObject>(out var levelObject))
+        {
+            return;
+        }
+
+        if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+        {
+            return;
+        }
+
+        item.SetSelected(true);
+        currentSelectedItem = item;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(scrollRect.content);
+        StartCoroutine(scrollRect.FocusOnItemCoroutine(item.GetComponent<RectTransform>(), 10f));
+    }
+
+    private UIObjectHierarchyItem GetOrCreateItem(LevelObject levelObject)
+    {
+        if (levelObjectToItemMap.TryGetValue(levelObject, out var existingItem))
+        {
+            return existingItem;
+        }
+
+        GameObject gameObject = Instantiate(itemPrefab, contentPanel);
+        if (!gameObject.TryGetComponent(out UIObjectHierarchyItem item))
+        {
+            Debug.LogError("[ObjectHierarchyList] ItemPrefab missing UIObjectHierarchyItem component.");
+            return null;
+        }
+
+        item.Bind(levelObject);
+        item.OnDeleteRequested += OnDeleteRequested;
+        item.OnSelectRequested += OnSelectRequested;
+
+        levelObjectToItemMap[levelObject] = item;
+
+        AddToSourceGroup(levelObject);
+
+        return item;
+    }
+
+    private void OnDeleteRequested(LevelObject levelObject)
+    {
+        editorDeleteController.DeleteObject(levelObject);
+    }
+
+    private void OnSelectRequested(LevelObject levelObject)
+    {
+        selectionManager.SelectObject(levelObject.GetComponent<SelectableObject>());
+    }
+
+    private void AddToSourceGroup(LevelObject levelObject)
+    {
+        if (levelObject.SourceData == null)
+        {
+            return;
+        }
+
+        if (!sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        {
+            levelObjectsList = new List<LevelObject>();
+            sourceDataToObjectsMap[levelObject.SourceData] = levelObjectsList;
+        }
+
+        if (!levelObjectsList.Contains(levelObject))
+        {
+            levelObjectsList.Add(levelObject);
+        }
+    }
+
+    private void RemoveFromSourceGroup(LevelObject levelObject)
+    {
+        if (levelObject.SourceData == null)
+        {
+            return;
+        }
+
+        if (sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        {
+            levelObjectsList.Remove(levelObject);
+            if (levelObjectsList.Count == 0)
+            {
+                sourceDataToObjectsMap.Remove(levelObject.SourceData);
+            }
+        }
+    }
+
+    private void UpdateDisplayNamesForSourceGroup(PlaceableObjectData sourceData)
+    {
+        if (sourceData == null || !sourceDataToObjectsMap.TryGetValue(sourceData, out var group))
+        {
+            return;
+        }
+
+        int index = 1;
+
+        foreach (LevelObject levelObject in group)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (!levelObjectToItemMap.TryGetValue(levelObject, out var item))
+            {
+                continue;
+            }
+
+            string baseName = levelObject.SourceData.localizationKey.GetLocalizedString();
+            string displayName = index == 1 ? baseName : $"{baseName} ({index})";
+            item.SetDisplayName(displayName);
+
+            index++;
+        }
+    }
+}

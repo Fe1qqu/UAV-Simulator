@@ -1,13 +1,15 @@
-using UnityEngine;
 using RTG;
 
-public class PostObjectDeleteAction : IUndoRedoAction
+public class PostLevelObjectDeleteAction : IUndoRedoAction
 {
-    private GameObject _target;
+    private readonly LevelObject levelObject;
 
-    public PostObjectDeleteAction(GameObject target)
+    private bool wasSelected;
+
+    public PostLevelObjectDeleteAction(LevelObject levelObject, bool wasSelected)
     {
-        _target = target;
+        this.levelObject = levelObject;
+        this.wasSelected = wasSelected;
     }
 
     public void Execute()
@@ -17,25 +19,49 @@ public class PostObjectDeleteAction : IUndoRedoAction
 
     public void Undo()
     {
-        if (_target != null)
+        if (levelObject == null)
         {
-            _target.SetActive(true);
+            return;
+        }
+
+        levelObject.Restore();
+
+        if (wasSelected)
+        {
+            SelectionManager selectionManager = SelectionManager.Instance;
+            if (selectionManager != null)
+            {
+                SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
+                if (selectableObject != null)
+                {
+                    selectionManager.SelectObject(selectableObject);
+                }
+            }
         }
     }
 
     public void Redo()
     {
-        if (_target != null)
+        if (levelObject == null)
         {
-            _target.SetActive(false);
+            return;
         }
+
+        SelectionManager selectionManager = SelectionManager.Instance;
+        if (selectionManager != null)
+        {
+            SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
+            if (selectableObject != null && selectionManager.CurrentSelectedObject == selectableObject)
+            {
+                selectionManager.DeselectCurrentObject();
+            }
+        }
+
+        levelObject.SoftDelete();
     }
 
     public void OnRemovedFromUndoRedoStack()
     {
-        if (_target != null)
-        {
-            GameObject.Destroy(_target);
-        }
+        // Intentionally empty: soft delete only
     }
 }

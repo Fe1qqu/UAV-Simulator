@@ -140,22 +140,22 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             {
                 Debug.LogError($"[DragPlacementHandler] {instance.name} has no LevelObject component.");
             }
-            levelObject.Initialize(placeableData.objectId);
+            levelObject.Initialize(placeableData);
 
             // Create an undo/redo action
             RTG.PostObjectSpawnAction spawnAction = new RTG.PostObjectSpawnAction(new List<GameObject> { instance });
             spawnAction.Execute();
 
             // Automatically select the installed object
-            if (instance.TryGetComponent<SelectableObject>(out var selectable))
+            if (instance.TryGetComponent<SelectableObject>(out var selectableObject))
             {
-                SelectionManager.Instance.Select(selectable);
+                SelectionManager.Instance.SelectObject(selectableObject);
             }
             else
             {
                 Debug.Log("[DragPlacementHandler] Failed to automatically select the installed object.");
             }
-
+            
             Debug.Log($"[DragPlacementHandler] Placed '{placeableData.prefab.name}' at world pos {hit.point}.");
         }
         else

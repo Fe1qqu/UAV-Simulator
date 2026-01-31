@@ -61,26 +61,26 @@ public class LevelLoader : MonoBehaviour
 
             Debug.LogWarning($"[LevelLoader] Location '{locationId}' not found. Falling back to default location '{location.locationId}'.");
         }
-
+        
         Instantiate(location.prefab, Vector3.zero, Quaternion.identity, levelRoot);
     }
 
     private void LoadObjects(LevelData data)
     {
-        foreach (LevelObjectData obj in data.objects)
+        foreach (LevelObjectData levelObjectData in data.objects)
         {
-            PlaceableObjectData placeableObjectData = placeableObjectDatabase.GetById(obj.objectId);
+            PlaceableObjectData placeableObjectData = placeableObjectDatabase.GetById(levelObjectData.objectId);
             if (placeableObjectData == null)
             {
-                Debug.LogError($"[LevelLoader] Missing object: {obj.objectId}.");
+                Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");
                 continue;
             }
 
             GameObject instance = Instantiate(placeableObjectData.prefab, levelRoot);
-            LevelObject levelObj = instance.GetComponent<LevelObject>();
+            LevelObject levelObject = instance.GetComponent<LevelObject>();
 
-            levelObj.Initialize(placeableObjectData.objectId);
-            levelObj.FromData(obj);
+            levelObject.Initialize(placeableObjectData);
+            levelObject.FromData(levelObjectData);
         }
     }
 }
