@@ -1463,7 +1463,7 @@ Rigidbody:
     serializedVersion: 2
     m_Bits: 0
   m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitTensor: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -1499,7 +1499,7 @@ MonoBehaviour:
     CurrentRPM: 0
   liftCoefficient: 0.000001
   dragCoefficient: 0.000001
-  maxRotorRPM: 8000
+  maxRotorRPM: 4000
   rotorRPMChangeRate: 0.5
 --- !u!114 &6672731654940039107
 MonoBehaviour:

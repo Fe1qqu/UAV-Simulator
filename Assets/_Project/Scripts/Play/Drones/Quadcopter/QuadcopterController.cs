@@ -30,7 +30,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
     [Header("Physics Settings")]
     [SerializeField] private float liftCoefficient = 1e-6f;
     [SerializeField] private float dragCoefficient = 1e-6f;
-    [SerializeField] private float maxRotorRPM = 8000f;
+    [SerializeField] private float maxRotorRPM = 4000f;
     [SerializeField] private float rotorRPMChangeRate = 0.5f;
 
     private Dictionary<RotorPosition, Rotor> rotors = new();
@@ -75,7 +75,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    void Update()
+    void Update() //визуальное изменение
     {
         foreach (var kvp in rotors)
         {
@@ -85,7 +85,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    void FixedUpdate()
+    void FixedUpdate() //фактическое изменение
     {
         UpdateMotorSpeeds();
         ApplyRotorForces();
@@ -98,30 +98,80 @@ public class QuadcopterController : DroneControllerBase, IControllable
             rpmDebugDict[kvp.Key.ToString()] = kvp.Value.CurrentRPM;
         }
     }
+ 
 
     private void UpdateMotorSpeeds()
     {
-        foreach (Rotor rotor in rotors.Values)
-        {
-            rotor.CurrentRPM = Mathf.Lerp(rotor.CurrentRPM, throttleInput * maxRotorRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
-        }
+        // Вычисляем целевые RPM для каждого ротора по формулам
+        float frontLeftTarget = throttleInput - 0.4f * yawInput - 0.2f * pitchInput + 0.3f * rollInput;
+        float frontRightTarget = throttleInput + 0.4f * yawInput - 0.2f * pitchInput - 0.3f * rollInput;
+        float rearLeftTarget = throttleInput + 0.4f * yawInput + 0.2f * pitchInput + 0.3f * rollInput;
+        float rearRightTarget = throttleInput - 0.4f * yawInput + 0.2f * pitchInput - 0.3f * rollInput;
 
-        // RPM limit
+        // Применяем целевые RPM к каждому ротору
+        frontLeft.CurrentRPM = Mathf.Lerp(
+            frontLeft.CurrentRPM,
+            frontLeftTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        frontRight.CurrentRPM = Mathf.Lerp(
+            frontRight.CurrentRPM,
+            frontRightTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        rearLeft.CurrentRPM = Mathf.Lerp(
+            rearLeft.CurrentRPM,
+            rearLeftTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        rearRight.CurrentRPM = Mathf.Lerp(
+            rearRight.CurrentRPM,
+            rearRightTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        // Ограничиваем RPM
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = Mathf.Clamp(rotor.CurrentRPM, 0, maxRotorRPM);
         }
     }
-
     private void ApplyRotorForces()
     {
+        // Переменная для суммарного крутящего момента
+        Vector3 totalTorque = Vector3.zero;
+
         foreach (Rotor rotor in rotors.Values)
         {
+            // 1. Подъемная сила (оставляем как было)
             float lift = liftCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
             Vector3 liftForce = transform.up * lift;
-
             rigidBody.AddForceAtPosition(liftForce, rotor.bone.position, ForceMode.Force);
+
+            // 2. Крутящий момент от ротор
+            float torqueCoefficient = liftCoefficient * 0.1f; // Например, 10% от подъемной силы
+            float torqueMagnitude = torqueCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
+
+            // Направление момента зависит от направления вращения
+            Vector3 torque = Vector3.zero;
+            if (rotor.clockwise)
+            {
+                torque = transform.up * torqueMagnitude; // По часовой = отрицательный момент
+            }
+            else
+            {
+                torque = -transform.up * torqueMagnitude; // Против часовой = положительный момент
+            }
+
+            // Добавляем к суммарному моменту
+            totalTorque += torque;
         }
+
+        // 3. Применяем суммарный крутящий момент к дрону
+        rigidBody.AddTorque(totalTorque, ForceMode.Force);
     }
 
     public void ApplyThrottle(float value) => throttleInput = value;
@@ -155,3 +205,4 @@ public class QuadcopterController : DroneControllerBase, IControllable
         rpmDebugDict.Clear();
     }
 }
+
