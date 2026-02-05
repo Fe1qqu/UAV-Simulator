@@ -68,7 +68,7 @@ public class PlaceableObjectData
 public class PlaceableObjectDatabase : ScriptableObject
 {
     [Tooltip("All placeable object entries. Used to spawn buttons and instantiate prefabs.")]
-    public List<PlaceableObjectData> objects = new List<PlaceableObjectData>();
+    public List<PlaceableObjectData> objects = new();
 
     /// <summary>
     /// Returns all objects filtered by type.

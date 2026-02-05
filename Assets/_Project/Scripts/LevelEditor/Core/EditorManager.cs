@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 /// </summary>
 public class EditorManager : MonoBehaviour, IBackHandler
 {
-    [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
 
     [Header("UI References")]
@@ -42,6 +42,8 @@ public class EditorManager : MonoBehaviour, IBackHandler
     [Tooltip("Database that stores object categories and their icons.")]
     [SerializeField] private CategoryDatabase categoryDatabase;
 
+    [SerializeField] private ScenarioDatabase scenarioDatabase;
+
     [Header("Scene Root")]
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
     [SerializeField] private Transform levelRoot;
@@ -54,13 +56,17 @@ public class EditorManager : MonoBehaviour, IBackHandler
 
     private FadeManager loadingScreenFader;
 
-    private EditorLocalizationPreloader localizationPreloader;
+    private LocalizationPreloader localizationPreloader;
+
+    public LevelFileManager LevelFileManager => levelFileManager;
+
+    public ScenarioDefinition CurrentScenario => scenarioDatabase.GetById(GameSettings.Instance.CurrentEditorSession.SelectedScenarioId);
 
     private void Awake()
     {
-        if (levelSaveManager == null)
+        if (levelFileManager == null)
         {
-            Debug.LogError("[EditorManager] LevelSaveManager is not assigned.");
+            Debug.LogError("[EditorManager] LevelFileManager is not assigned.");
         }
 
         if (levelLoader == null)
@@ -118,6 +124,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] CategoryDatabase is missing or empty.");
         }
 
+        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        {
+            Debug.LogError("[EditorManager] ScenarioDatabase is missing or empty.");
+        }
+
         if (levelRoot == null)
         {
             Debug.LogError("[EditorManager] LevelRoot is not assigned.");
@@ -129,10 +140,10 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
         }
 
-        localizationPreloader = GetComponent<EditorLocalizationPreloader>();
+        localizationPreloader = GetComponent<LocalizationPreloader>();
         if (localizationPreloader == null)
         {
-            Debug.LogError("[EditorManager] EditorLocalizationPreloader not found on this GameObject.");
+            Debug.LogError("[EditorManager] LocalizationPreloader not found on this GameObject.");
         }
     }
 
@@ -245,7 +256,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
             GameObject placeableObjectButtonInstance = Instantiate(placeableObjectButtonPrefab, objectListContainer);
             if (!placeableObjectButtonInstance.TryGetComponent<UIPlaceableObjectButton>(out var placeableObjectButton))
             {
-                Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
+                Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton.");
                 continue;
             }
 
@@ -266,18 +277,18 @@ public class EditorManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        LevelData data = levelSaveManager.LoadByPath(editorSession.SelectedLevelFilePath);
-        levelLoader.Load(data);
+        LevelData levelData = levelFileManager.LoadByPath(editorSession.SelectedLevelFilePath);
+        levelLoader.Load(levelData);
 
-        editorSession.LevelName = data.levelName;
-        editorSession.SelectedLocationId = data.locationId;
+        editorSession.LevelName = levelData.levelName;
+        editorSession.SelectedLocationId = levelData.locationId;
     }
 
     private void LoadEmptyLevel()
     {
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
 
-        LevelData empty = new LevelData
+        LevelData empty = new()
         {
             levelName = editorSession.LevelName,
             locationId = editorSession.SelectedLocationId

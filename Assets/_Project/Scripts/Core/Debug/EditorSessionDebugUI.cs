@@ -1,16 +1,16 @@
 using UnityEngine;
 
-/// <summary>
-/// Отладочный UI для EditorSession. Показывает LevelName, SelectedLocationId и SelectedLevelFile.
-/// </summary>
 public class EditorSessionDebugUI : MonoBehaviour
 {
     private bool visible = true;
-    private Rect windowRect = new Rect(20, 20, 300, 150);
+    private Rect windowRect = new(20, 20, 300, 150);
 
     private void OnGUI()
     {
-        if (!visible) return;
+        if (!visible)
+        {
+            return;
+        }    
 
         windowRect = GUI.Window(12345, windowRect, DrawWindow, "EditorSession Debug");
     }
@@ -21,16 +21,16 @@ public class EditorSessionDebugUI : MonoBehaviour
 
         if (GameSettings.Instance == null || GameSettings.Instance.CurrentEditorSession == null)
         {
-            GUILayout.Label("EditorSession отсутствует!");
+            GUILayout.Label("EditorSession is null.");
         }
         else
         {
-            var session = GameSettings.Instance.CurrentEditorSession;
+            EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
 
-            GUILayout.Label("<b>EditorSession</b>");
-            GUILayout.Label($"LevelName: {session.LevelName ?? "null"}");
-            GUILayout.Label($"SelectedLocationId: {session.SelectedLocationId ?? "null"}");
-            GUILayout.Label($"SelectedLevelFilePath: {session.SelectedLevelFilePath ?? "null"}");
+            GUILayout.Label($"LevelName: {editorSession.LevelName ?? "null"}");
+            GUILayout.Label($"SelectedLocationId: {editorSession.SelectedLocationId ?? "null"}");
+            GUILayout.Label($"SelectedScenarioId: {editorSession.SelectedScenarioId ?? "null"}");
+            GUILayout.Label($"SelectedLevelFilePath: {editorSession.SelectedLevelFilePath ?? "null"}");
         }
 
         GUILayout.Space(5);
@@ -41,6 +41,13 @@ public class EditorSessionDebugUI : MonoBehaviour
         }
 
         GUILayout.EndVertical();
+
+        if (Event.current.type == EventType.Repaint)
+        {
+            Rect lastRect = GUILayoutUtility.GetLastRect();
+            windowRect.height = lastRect.yMax + 10f; // padding
+        }
+
         GUI.DragWindow();
     }
 

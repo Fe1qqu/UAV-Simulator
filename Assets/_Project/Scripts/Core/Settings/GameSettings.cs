@@ -17,12 +17,14 @@ public class EditorSession
 {
     public string LevelName;
     public string SelectedLocationId;
+    public string SelectedScenarioId;
     public string SelectedLevelFilePath;
 
     public void Clear()
     {
         LevelName = null;
         SelectedLocationId = null;
+        SelectedScenarioId = null;
         SelectedLevelFilePath = null;
     }
 }

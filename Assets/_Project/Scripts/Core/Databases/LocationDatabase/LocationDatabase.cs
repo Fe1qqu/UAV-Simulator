@@ -16,7 +16,7 @@ public class LocationData
     public LocalizedString localizationKey;
 
     [Tooltip("Preview thumbnail shown in the UI.")]
-    public Sprite preview;
+    public Sprite icon;
 
     [Header("Runtime")]
     [Tooltip("Prefab representing the location/scene root to instantiate.")]
@@ -30,5 +30,5 @@ public class LocationData
 public class LocationDatabase : ScriptableObject
 {
     [Tooltip("List of locations available to pick from in the level editor.")]
-    public List<LocationData> locations = new List<LocationData>();
+    public List<LocationData> locations = new();
 }

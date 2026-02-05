@@ -65,9 +65,9 @@ public class LevelLoader : MonoBehaviour
         Instantiate(location.prefab, Vector3.zero, Quaternion.identity, levelRoot);
     }
 
-    private void LoadObjects(LevelData data)
+    private void LoadObjects(LevelData levelData)
     {
-        foreach (LevelObjectData levelObjectData in data.objects)
+        foreach (LevelObjectData levelObjectData in levelData.objects)
         {
             PlaceableObjectData placeableObjectData = placeableObjectDatabase.GetById(levelObjectData.objectId);
             if (placeableObjectData == null)

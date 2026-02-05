@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayManager : MonoBehaviour, IBackHandler
 {
     [SerializeField] private PlayInput playInput;
-    [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
 
     [Header("UI References")]
@@ -21,9 +21,9 @@ public class PlayManager : MonoBehaviour, IBackHandler
             Debug.LogError("[PlayManager] PlayInput is not assigned.");
         }
 
-        if (levelSaveManager == null)
+        if (levelFileManager == null)
         {
-            Debug.LogError("[PlayManager] LevelSaveManager is not assigned.");
+            Debug.LogError("[PlayManager] LevelFileManager is not assigned.");
         }
 
         if (levelLoader == null)
@@ -62,8 +62,8 @@ public class PlayManager : MonoBehaviour, IBackHandler
     private void LoadLevel()
     {
         PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
-        LevelData data = levelSaveManager.LoadByPath(playSession.LevelFilePath);
-        levelLoader.Load(data);
+        LevelData levelData = levelFileManager.LoadByPath(playSession.LevelFilePath);
+        levelLoader.Load(levelData);
     }
 
     //private void ValidateLevel()
