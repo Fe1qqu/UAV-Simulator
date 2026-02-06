@@ -118,6 +118,10 @@ MonoBehaviour:
     m_Localized: Are you sure you want to exit?
     m_Metadata:
       m_Items: []
+  - m_Id: 29076917165645824
+    m_Localized: Select scenario
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

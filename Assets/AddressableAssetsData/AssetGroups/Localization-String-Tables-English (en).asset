@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a19ae3a0693d3e4289411fe496217ba
+    m_Address: Scenarios_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8bb89c5bf8d9b784089a9fb842921f5e
     m_Address: PlaceableObjects_en
     m_ReadOnly: 1

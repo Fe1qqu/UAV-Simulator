@@ -464,7 +464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 74317281}
   m_Layer: 0
-  m_Name: Sliding Area
+  m_Name: SlidingArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -754,7 +754,7 @@ GameObject:
   - component: {fileID: 211800469}
   - component: {fileID: 211800471}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: DirectionalLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1581,7 +1581,7 @@ GameObject:
   - component: {fileID: 511035850}
   - component: {fileID: 511035851}
   m_Layer: 0
-  m_Name: LevelSaveManager
+  m_Name: LevelFileManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1627,7 +1627,7 @@ GameObject:
   - component: {fileID: 555114810}
   - component: {fileID: 555114809}
   m_Layer: 0
-  m_Name: Scrollbar Vertical
+  m_Name: ScrollbarVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1697,7 +1697,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5238,10 +5238,10 @@ GameObject:
   m_Component:
   - component: {fileID: 614972947}
   - component: {fileID: 614972946}
-  - component: {fileID: 614972948}
+  - component: {fileID: 614972950}
   - component: {fileID: 614972949}
   m_Layer: 0
-  m_Name: LevelEditorManager
+  m_Name: EditorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5259,7 +5259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596301f5bbf1e624b8ed3f22466e51a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelEditorManager
-  levelSaveManager: {fileID: 511035851}
+  levelFileManager: {fileID: 511035851}
   levelLoader: {fileID: 362455427}
   loadingScreen: {fileID: 876399158}
   pauseMenu: {fileID: 702272468}
@@ -5271,6 +5271,7 @@ MonoBehaviour:
   locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
   placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
   categoryDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
+  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   levelRoot: {fileID: 1078942368}
 --- !u!4 &614972947
 Transform:
@@ -5287,20 +5288,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 905371459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &614972948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614972945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20321587d46727d48b17b58e82a595b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EditorLocalizationPreloader
-  categoriesTableName: Categories
-  objectsTableName: PlaceableObjects
 --- !u!114 &614972949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5313,6 +5300,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abacddf4cb8bee47b5608fb5431d49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackHandlerComponent
+--- !u!114 &614972950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614972945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084258437aa47534dbac97e7fe86c799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationPreloader
+  tableNames:
+  - Categories
+  - PlaceableObjects
 --- !u!1 &627597775
 GameObject:
   m_ObjectHideFlags: 0
@@ -5741,7 +5743,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EditorPauseMenu
   pauseMenuRoot: {fileID: 352434003}
   editorManager: {fileID: 614972946}
-  levelSaveManager: {fileID: 511035851}
   levelDataBuilder: {fileID: 480836487}
   continueButton: {fileID: 362032311}
   saveButton: {fileID: 1682855472}
@@ -5897,7 +5898,7 @@ GameObject:
   - component: {fileID: 742417184}
   - component: {fileID: 742417183}
   m_Layer: 0
-  m_Name: Scrollbar Vertical
+  m_Name: ScrollbarVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7959,7 +7960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1491414845}
   m_Layer: 0
-  m_Name: Sliding Area
+  m_Name: SlidingArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

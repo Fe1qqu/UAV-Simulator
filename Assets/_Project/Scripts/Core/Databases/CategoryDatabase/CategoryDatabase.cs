@@ -32,5 +32,5 @@ public class CategoryData
 public class CategoryDatabase : ScriptableObject
 {
     [Tooltip("List of available categories. Each entry defines a category type, name and icon.")]
-    public List<CategoryData> categories = new List<CategoryData>();
+    public List<CategoryData> categories = new();
 }

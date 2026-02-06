@@ -22,10 +22,11 @@ public class EditorLevelDataBuilder : MonoBehaviour
     {
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
 
-        LevelData data = new LevelData
+        LevelData data = new()
         {
             levelName = editorSession.LevelName,
-            locationId = editorSession.SelectedLocationId
+            locationId = editorSession.SelectedLocationId,
+            scenarioId = editorSession.SelectedScenarioId
         };
 
         foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
