@@ -26,7 +26,11 @@ MonoBehaviour:
   availableCategories:
   - category: 0
     accessMode: 0
-    allowedObjectIds: []
+    objectIds:
+    - hangar1
+  - category: 1
+    accessMode: 0
+    objectIds: []
   objectRules:
   - objectId: drone_spawn_point
     minCount: 1
