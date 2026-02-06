@@ -24,7 +24,7 @@ public class LocalizationPreloader : MonoBehaviour
     {
         get
         {
-            foreach (var name in tableNames)
+            foreach (string name in tableNames)
             {
                 if (!loadedFlags.TryGetValue(name, out bool loaded) || !loaded)
                 {

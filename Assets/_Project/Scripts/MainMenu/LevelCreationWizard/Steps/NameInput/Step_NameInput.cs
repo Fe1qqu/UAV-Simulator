@@ -23,12 +23,12 @@ public class Step_NameInput : BaseLevelCreationStep
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         nameInputField.onValueChanged.AddListener(OnNameChanged);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         nameInputField.onValueChanged.RemoveListener(OnNameChanged);
     }
@@ -36,12 +36,9 @@ public class Step_NameInput : BaseLevelCreationStep
     /// <summary>
     /// Called whenever the input field value changes. Updates the color if valid.
     /// </summary>
-    /// <param name="newText">New input text.</param>
-    private void OnNameChanged(string newText)
+    private void OnNameChanged(string newName)
     {
-        bool valid = !string.IsNullOrEmpty(name);
-
-        if (valid)
+        if (!string.IsNullOrEmpty(newName))
         {
             nameInputField.image.color = normalColor;
         }

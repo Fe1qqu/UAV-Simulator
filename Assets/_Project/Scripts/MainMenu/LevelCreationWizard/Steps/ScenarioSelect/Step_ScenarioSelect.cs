@@ -5,9 +5,19 @@ public class Step_ScenarioSelect : BaseLevelCreationStep
 {
     private ScenarioSelection scenarioSelection;
 
-    private void Awake()
+    protected override void OnInitialized()
     {
-        scenarioSelection = GetComponent<ScenarioSelection>();
+        if (scenarioSelection == null)
+        {
+            scenarioSelection = GetComponent<ScenarioSelection>();
+        }
+
+        scenarioSelection.SetDatabase(MainMenuContext.ScenarioDatabase);
+    }
+
+    public override void OnStepShown()
+    {
+        scenarioSelection.BuildIfNeeded();
     }
 
     public override bool ValidateStep()

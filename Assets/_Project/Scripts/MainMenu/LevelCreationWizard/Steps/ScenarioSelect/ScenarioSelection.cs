@@ -16,15 +16,14 @@ public class ScenarioSelection : MonoBehaviour
     [Tooltip("Prefab used for each scenario button.")]
     [SerializeField] private GameObject scenarioButtonPrefab;
 
-    [Header("Data")]
-    [Tooltip("Database containing all available scenarios.")]
-    [SerializeField] private ScenarioDatabase scenarioDatabase;
-
     // Currently selected scenario data
     private ScenarioDefinition selectedScenario;
 
     // List of created buttons and their checkmarks
     private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
+    
+    private ScenarioDatabase scenarioDatabase;
+    private bool isBuilt;
 
     private void Awake()
     {
@@ -37,16 +36,27 @@ public class ScenarioSelection : MonoBehaviour
         {
             Debug.LogError("[ScenarioSelection] ScenarioButtonPrefab is not assigned.");
         }
-
-        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
-        {
-            Debug.LogError("[ScenarioSelection] ScenarioDatabase is missing or empty.");
-        }
     }
 
-    private void Start()
+    public void SetDatabase(ScenarioDatabase scenarioDatabase)
     {
+        this.scenarioDatabase = scenarioDatabase;
+    }
+
+    public void BuildIfNeeded()
+    {
+        if (isBuilt)
+        {
+            return;
+        }
+
         PopulateList();
+        SelectDefault();
+        isBuilt = true;
+    }
+
+    private void SelectDefault()
+    {
         OnScenarioSelected(scenarioDatabase.scenarios[0], createdButtons[0].button);
     }
 

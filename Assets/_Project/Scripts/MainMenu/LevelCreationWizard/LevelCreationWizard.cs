@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.Localization.Components;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages the level creation wizard UI, navigation between steps, and starting the level editor.
@@ -25,6 +25,9 @@ public class LevelCreationWizard : MonoBehaviour
 
     [Tooltip("Button to return to the main menu.")]
     [SerializeField] private Button mainMenuButton;
+
+    [Header("Context")]
+    [SerializeField] private MainMenuContext mainMenuContext;
 
     private int currentStep = 0;
 
@@ -62,6 +65,11 @@ public class LevelCreationWizard : MonoBehaviour
             Debug.LogError("[LevelCreationWizard] MainMenuButton is not assigned.");
         }
 
+        if (mainMenuContext == null)
+        {
+            Debug.LogError("[LevelCreationWizard] MainMenuContext is not assigned.");
+        }
+
         nextButtonLocalization = nextButton.GetComponentInChildren<LocalizeStringEvent>();
         if (nextButtonLocalization == null)
         {
@@ -77,6 +85,11 @@ public class LevelCreationWizard : MonoBehaviour
 
     private void Start()
     {
+        foreach (BaseLevelCreationStep step in steps)
+        {
+            step.Initialize(mainMenuContext);
+        }
+
         nextButton.onClick.AddListener(OnNextClicked);
         backButton.onClick.AddListener(OnBackClicked);
         mainMenuButton.onClick.AddListener(OnMainMenuClicked);

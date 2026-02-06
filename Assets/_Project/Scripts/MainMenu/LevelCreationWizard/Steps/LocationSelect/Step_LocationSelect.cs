@@ -5,9 +5,19 @@ public class Step_LocationSelect : BaseLevelCreationStep
 {
     private LocationSelection locationSelection;
 
-    private void Awake()
+    protected override void OnInitialized()
     {
-        locationSelection = GetComponent<LocationSelection>();
+        if (locationSelection == null)
+        {
+            locationSelection = GetComponent<LocationSelection>();
+        }
+
+        locationSelection.SetDatabase(MainMenuContext.LocationDatabase);
+    }
+
+    public override void OnStepShown()
+    {
+        locationSelection.BuildIfNeeded();
     }
 
     /// <summary>

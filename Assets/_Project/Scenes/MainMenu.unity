@@ -693,7 +693,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioSelection
   contentParent: {fileID: 839849396}
   scenarioButtonPrefab: {fileID: 1074333733}
-  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
 --- !u!1 &187228807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1642,6 +1641,7 @@ MonoBehaviour:
   nextButton: {fileID: 1660007825}
   backButton: {fileID: 1593309479}
   mainMenuButton: {fileID: 1351660225}
+  mainMenuContext: {fileID: 1709345289}
 --- !u!114 &423472489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8156,6 +8156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuContext
   levelFileManager: {fileID: 652211447}
+  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
   scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
 --- !u!114 &1716438640 stripped
 MonoBehaviour:
@@ -8798,7 +8799,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LocationSelection
   contentParent: {fileID: 1889523431}
   locationButtonPrefab: {fileID: 2014283806}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
 --- !u!114 &1827507810
 MonoBehaviour:
   m_ObjectHideFlags: 0

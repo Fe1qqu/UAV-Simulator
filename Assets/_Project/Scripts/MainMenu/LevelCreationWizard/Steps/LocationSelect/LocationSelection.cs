@@ -16,15 +16,14 @@ public class LocationSelection : MonoBehaviour
     [Tooltip("Prefab used for each location button.")]
     [SerializeField] private GameObject locationButtonPrefab;
 
-    [Header("Data")]
-    [Tooltip("Database containing all available locations.")]
-    [SerializeField] private LocationDatabase locationDatabase;
-
     // Currently selected location data
     private LocationData selectedLocation;
 
     // List of created buttons and their checkmarks
     private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
+
+    private LocationDatabase locationDatabase;
+    private bool isBuilt;
 
     private void Awake()
     {
@@ -37,22 +36,30 @@ public class LocationSelection : MonoBehaviour
         {
             Debug.LogError("[LocationSelection] LocationButtonPrefab is not assigned.");
         }
-
-        if (locationDatabase == null || locationDatabase.locations.Count == 0)
-        {
-            Debug.LogError("[LocationSelection] LocationDatabase is missing or empty.");
-        }
     }
 
-    private void Start()
+    public void SetDatabase(LocationDatabase locationDatabase)
     {
+        this.locationDatabase = locationDatabase;
+    }
+
+    public void BuildIfNeeded()
+    {
+        if (isBuilt)
+        {
+            return;
+        }
+
         PopulateList();
+        SelectDefault();
+        isBuilt = true;
+    }
+
+    private void SelectDefault()
+    {
         OnLocationSelected(locationDatabase.locations[0], createdButtons[0].button);
     }
 
-    /// <summary>
-    /// Populates the UI list with buttons for each location in the database.
-    /// </summary>
     private void PopulateList()
     {
         foreach (Transform child in contentParent)

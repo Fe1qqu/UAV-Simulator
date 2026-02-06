@@ -12,9 +12,9 @@ public enum LevelSelectMode
 public class LevelSelectContext
 {
     public LevelSelectMode mode;
-    public System.Action onBack;
+    public Action onBack;
 
-    public LevelSelectContext(LevelSelectMode mode, System.Action onBack)
+    public LevelSelectContext(LevelSelectMode mode, Action onBack)
     {
         this.mode = mode;
         this.onBack = onBack;
