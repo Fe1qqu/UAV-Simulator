@@ -75,7 +75,7 @@ public class EditorDeleteController : MonoBehaviour
         levelObject.SoftDelete();
 
         // Create an undo/redo delete action
-        PostLevelObjectDeleteAction deleteAction = new PostLevelObjectDeleteAction(levelObject, wasSelected);
+        PostLevelObjectDeleteAction deleteAction = new(levelObject, wasSelected);
         deleteAction.Execute();
 
         Debug.Log($"[EditorDeleteController] Deleted object '{levelObject.name}'.");

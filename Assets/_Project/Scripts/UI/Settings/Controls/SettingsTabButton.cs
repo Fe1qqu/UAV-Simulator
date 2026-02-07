@@ -4,7 +4,7 @@ using UnityEngine.Localization.Components;
 
 [RequireComponent(typeof(Button))]
 [RequireComponent(typeof(CanvasGroup))]
-public class TabButton : MonoBehaviour
+public class SettingsTabButton : MonoBehaviour
 {
     [SerializeField] private LocalizeStringEvent labelLocalizationStringEvent;
 

@@ -319,8 +319,10 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{rule.category}' has accessMode '{rule.accessMode}' but objectIds list is empty.");
         }
 
+        bool usesObjectList = rule.accessMode != ScenarioCategoryAccessMode.All;
+
         // Check for invalid objectIds
-        if (rule.objectIds != null && rule.objectIds.Count > 0)
+        if (usesObjectList && rule.objectIds != null && rule.objectIds.Count > 0)
         {
             foreach (string objectId in rule.objectIds)
             {
