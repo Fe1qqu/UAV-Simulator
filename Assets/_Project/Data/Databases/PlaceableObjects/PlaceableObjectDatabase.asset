@@ -26,8 +26,11 @@ MonoBehaviour:
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
     type: 0
+    propertyDefinitions: []
     previewMaterialMode: 0
     previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   - objectId: plane
     localizationKey:
       m_TableReference:
@@ -41,8 +44,11 @@ MonoBehaviour:
     icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 1325102438002783170, guid: 1c13df92af5bdb64b9fba7b9e9e12ab5, type: 3}
     type: 1
+    propertyDefinitions: []
     previewMaterialMode: 0
     previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   - objectId: drone_spawn_point
     localizationKey:
       m_TableReference:
@@ -56,8 +62,13 @@ MonoBehaviour:
     icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
     prefab: {fileID: 4367814652480787245, guid: 75a8531a979f0bb4aa3b2da713a024b6, type: 3}
     type: 4
+    propertyDefinitions:
+    - key: "\u0445\u0443\u0439\u0447\u0451\u043A"
+      defaultValue: "\u0445\u0435\u0440\u043E\u0447\u0435\u043A"
     previewMaterialMode: 2
     previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   references:
     version: 2
     RefIds: []

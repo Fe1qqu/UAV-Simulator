@@ -11,5 +11,5 @@ public enum SettingsContext
 public class SettingsContextTabs
 {
     public SettingsContext context;
-    public List<string> tabIds = new List<string>();
+    public List<string> tabIds = new();
 }

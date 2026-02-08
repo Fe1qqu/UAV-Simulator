@@ -19,10 +19,10 @@ public class SettingsMenuController : MonoBehaviour
 
     [Header("Context -> tab ids mapping")]
     [Tooltip("Matches a context with a set of tabIds that should be shown in that context.")]
-    [SerializeField] private List<SettingsContextTabs> settingsContextTabs = new List<SettingsContextTabs>();
+    [SerializeField] private List<SettingsContextTabs> settingsContextTabs = new();
 
-    private Dictionary<string, SettingsTabBase> tabsById = new Dictionary<string, SettingsTabBase>();
-    private List<TabButton> createdTabButtons = new List<TabButton>();
+    private Dictionary<string, SettingsTabBase> tabsById = new();
+    private List<SettingsTabButton> createdTabButtons = new();
     private SettingsTabBase activeTab;
     private SettingsContext? currentContext = null;
 
@@ -94,7 +94,7 @@ public class SettingsMenuController : MonoBehaviour
     /// </summary>
     private void BuildTabsForContext(SettingsContext context)
     {
-        foreach (TabButton button in createdTabButtons)
+        foreach (SettingsTabButton button in createdTabButtons)
         {
             if (button != null)
             {
@@ -121,7 +121,7 @@ public class SettingsMenuController : MonoBehaviour
             }
 
             GameObject tabButtonInstance = Instantiate(tabButtonPrefab, tabsButtonsContainer, false);
-            if (!tabButtonInstance.TryGetComponent<TabButton>(out var tabButtonComponent))
+            if (!tabButtonInstance.TryGetComponent<SettingsTabButton>(out var tabButtonComponent))
             {
                 Debug.LogError("[SettingsMenuController] TabButtonPrefab missing TabButton component.");
                 Destroy(tabButtonInstance);
@@ -173,7 +173,7 @@ public class SettingsMenuController : MonoBehaviour
         activeTab.gameObject.SetActive(true);
         activeTab.OnTabSelected();
 
-        foreach (TabButton tabButton in createdTabButtons)
+        foreach (SettingsTabButton tabButton in createdTabButtons)
         {
             bool isSelected = tabButton.TabId == tabId;
             tabButton.SetSelected(isSelected);

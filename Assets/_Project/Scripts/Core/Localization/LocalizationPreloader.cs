@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.AddressableAssets;
+using UnityEditor.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,29 +12,12 @@ using System.Threading.Tasks;
 /// </summary>
 public class LocalizationPreloader : MonoBehaviour
 {
-    [Tooltip("List of table names to preload.")]
-    public string[] tableNames;
+    [Tooltip("Localization table collections to preload.")]
+    public StringTableCollection[] stringTableCollections;
 
-    private Dictionary<string, AsyncOperationHandle<StringTable>> handles = new();
-    private Dictionary<string, bool> loadedFlags = new();
+    private readonly Dictionary<StringTableCollection, AsyncOperationHandle<StringTable>> handles = new();
 
-    /// <summary>
-    /// True if all tables are successfully loaded.
-    /// </summary>
-    public bool IsLoaded
-    {
-        get
-        {
-            foreach (string name in tableNames)
-            {
-                if (!loadedFlags.TryGetValue(name, out bool loaded) || !loaded)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
+    public bool IsLoaded { get; private set; }
 
     /// <summary>
     /// Loads all tables in parallel.
@@ -48,15 +32,20 @@ public class LocalizationPreloader : MonoBehaviour
 
         List<Task> tasks = new();
 
-        foreach (string tableName in tableNames)
+        foreach (StringTableCollection stringTableCollection in stringTableCollections)
         {
-            if (loadedFlags.TryGetValue(tableName, out bool loaded) && loaded)
+            if (stringTableCollection == null)
             {
                 continue;
             }
 
-            var handle = LocalizationSettings.StringDatabase.GetTableAsync(tableName);
-            handles[tableName] = handle;
+            if (handles.ContainsKey(stringTableCollection))
+            {
+                continue;
+            }
+
+            var handle = LocalizationSettings.StringDatabase.GetTableAsync(stringTableCollection.TableCollectionName);
+            handles.Add(stringTableCollection, handle);
             tasks.Add(handle.Task);
         }
 
@@ -64,20 +53,21 @@ public class LocalizationPreloader : MonoBehaviour
 
         foreach (var kvp in handles)
         {
-            string name = kvp.Key;
+            var collection = kvp.Key;
             var handle = kvp.Value;
 
-            if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded)
+            if (!handle.IsValid() || handle.Status != AsyncOperationStatus.Succeeded)
             {
-                loadedFlags[name] = true;
-                Debug.Log($"[LocalizationPreloader] Loaded '{name}'.");
+                Debug.LogError($"[LocalizationPreloader] Failed to load table '{collection.TableCollectionName}'.");
+                IsLoaded = false;
+                return;
             }
-            else
-            {
-                loadedFlags[name] = false;
-                Debug.LogError($"[LocalizationPreloader] Failed to load '{name}'.");
-            }
+
+            //Debug.Log($"[LocalizationPreloader] Loaded '{collection.TableCollectionName}'.");
         }
+
+        IsLoaded = true;
+        Debug.Log("[LocalizationPreloader] All tables loaded.");
     }
 
     /// <summary>
@@ -94,8 +84,6 @@ public class LocalizationPreloader : MonoBehaviour
         }
 
         handles.Clear();
-        loadedFlags.Clear();
-
-        Debug.Log("[LocalizationPreloader] All tables unloaded.");
+        IsLoaded = false;
     }
 }

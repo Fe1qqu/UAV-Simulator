@@ -22,6 +22,13 @@ public enum PreviewMaterialMode
     None          // do not use the material at all
 }
 
+[System.Serializable]
+public class ObjectPropertyDefinition
+{
+    public string key;
+    public string defaultValue;
+}
+
 /// <summary>
 /// Serializable container for a single placeable object definition.
 /// </summary>
@@ -44,6 +51,9 @@ public class PlaceableObjectData
 
     [Tooltip("Category/type used for filtering in the editor UI.")]
     public PlaceableObjectType type = PlaceableObjectType.Generic;
+
+    [Tooltip("Predefined properties for this object. May be empty if the object has no properties.")]
+    public List<ObjectPropertyDefinition> propertyDefinitions = new();
 
     [Header("Preview")]
     public PreviewMaterialMode previewMaterialMode = PreviewMaterialMode.UseDefault;

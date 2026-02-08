@@ -1654,9 +1654,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084258437aa47534dbac97e7fe86c799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizationPreloader
-  tableNames:
-  - Scenarios
-  - Locations
+  stringTableCollections:
+  - {fileID: 11400000, guid: b3eacd5d303ff604183f65a8e587a18b, type: 2}
+  - {fileID: 11400000, guid: 1eebf277f7c693946a031eb5553f7372, type: 2}
 --- !u!1 &440120944
 GameObject:
   m_ObjectHideFlags: 0

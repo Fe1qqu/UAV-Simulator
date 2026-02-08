@@ -3028,7 +3028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1903b00e9e95e2b46b6911d18d70a008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelObject
-  data:
+  sourceData:
     objectId: 
     localizationKey:
       m_TableReference:
@@ -3042,6 +3042,12 @@ MonoBehaviour:
     icon: {fileID: 0}
     prefab: {fileID: 0}
     type: 0
+    propertyDefinitions: []
+    previewMaterialMode: 0
+    previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  properties: []
   references:
     version: 2
     RefIds: []

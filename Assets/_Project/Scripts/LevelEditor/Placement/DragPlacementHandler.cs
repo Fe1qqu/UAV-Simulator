@@ -143,7 +143,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
             levelObject.Initialize(placeableData);
 
             // Create an undo/redo action
-            RTG.PostObjectSpawnAction spawnAction = new RTG.PostObjectSpawnAction(new List<GameObject> { instance });
+            RTG.PostObjectSpawnAction spawnAction = new(new List<GameObject> { instance });
             spawnAction.Execute();
 
             // Automatically select the installed object

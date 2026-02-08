@@ -31,8 +31,7 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
             SelectionManager selectionManager = SelectionManager.Instance;
             if (selectionManager != null)
             {
-                SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
-                if (selectableObject != null)
+                if (levelObject.TryGetComponent<SelectableObject>(out var selectableObject))
                 {
                     selectionManager.SelectObject(selectableObject);
                 }

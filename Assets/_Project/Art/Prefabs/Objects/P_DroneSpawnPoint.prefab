@@ -116,7 +116,6 @@ GameObject:
   - component: {fileID: 2018176543861963524}
   - component: {fileID: 1127361367029480988}
   - component: {fileID: 383283259093924320}
-  - component: {fileID: 7487670733229770449}
   - component: {fileID: 6679147170532524795}
   - component: {fileID: 7346965178200374938}
   - component: {fileID: 4178369230820372451}
@@ -176,19 +175,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02d0ade5bc508c49869bc50c1fa34d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DroneSpawnPoint
-  objectId: 
---- !u!114 &7487670733229770449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4367814652480787245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71aa46c29bb47004e8e2f9765125c058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpriteBillboard
+  sourceData:
+    objectId: 
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 0}
+    prefab: {fileID: 0}
+    type: 0
+    propertyDefinitions: []
+    previewMaterialMode: 0
+    previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
+  properties: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &6679147170532524795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7238836584016618289}
+  - component: {fileID: 4583503588064282820}
   m_Layer: 7
   m_Name: Visual
   m_TagString: Untagged
@@ -257,3 +267,15 @@ Transform:
   - {fileID: 8132123401279963969}
   m_Father: {fileID: 2018176543861963524}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4583503588064282820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8912193853694025246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71aa46c29bb47004e8e2f9765125c058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteBillboard
