@@ -26,7 +26,7 @@ public class TooltipSettings : ScriptableObject
 
     [Header("Pointer Follow")]
     [ShowIf(nameof(IsFollowPointer))]
-    public Vector2 tooltipOffset = new Vector2(12f, -8f);
+    public Vector2 tooltipOffset = new(12f, -8f);
 
     [Header("Fixed Anchor")]
     [ShowIf(nameof(IsFixedAnchor))]
@@ -34,7 +34,7 @@ public class TooltipSettings : ScriptableObject
 
     [ShowIf(nameof(IsFixedAnchor))]
     [Tooltip("Additional offset to the object's TooltipAnchor.")]
-    public Vector2 fixedOffset = Vector3.zero;
+    public Vector2 fixedOffset = Vector2.zero;
 
     [Header("Timing")]
     public float delay = 0.1f;

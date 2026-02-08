@@ -22,6 +22,14 @@ MonoBehaviour:
     m_Localized: Cancel drag
     m_Metadata:
       m_Items: []
+  - m_Id: 30394850915540992
+    m_Localized: Properties
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30394783223668736
+    m_Localized: Transform
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
