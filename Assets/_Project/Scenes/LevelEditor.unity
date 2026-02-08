@@ -7770,7 +7770,6 @@ GameObject:
   m_Component:
   - component: {fileID: 614972947}
   - component: {fileID: 614972946}
-  - component: {fileID: 614972950}
   - component: {fileID: 614972949}
   m_Layer: 0
   m_Name: EditorManager
@@ -7805,6 +7804,7 @@ MonoBehaviour:
   categoryDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
   scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   levelRoot: {fileID: 1078942368}
+  localizationPreloader: {fileID: 1632345560}
 --- !u!4 &614972947
 Transform:
   m_ObjectHideFlags: 0
@@ -7832,21 +7832,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abacddf4cb8bee47b5608fb5431d49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackHandlerComponent
---- !u!114 &614972950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614972945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084258437aa47534dbac97e7fe86c799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationPreloader
-  tableNames:
-  - Categories
-  - PlaceableObjects
 --- !u!1 &627597775
 GameObject:
   m_ObjectHideFlags: 0
@@ -10781,6 +10766,7 @@ Transform:
   - {fileID: 863683307}
   - {fileID: 271739613}
   - {fileID: 1962120559}
+  - {fileID: 1632345559}
   - {fileID: 614972947}
   - {fileID: 1640637208}
   - {fileID: 627597776}
@@ -14311,6 +14297,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1619775653}
   m_CullTransparentMesh: 1
+--- !u!1 &1632345558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1632345559}
+  - component: {fileID: 1632345560}
+  m_Layer: 0
+  m_Name: LocalizationPreloader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1632345559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632345558}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 905371459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1632345560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632345558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084258437aa47534dbac97e7fe86c799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationPreloader
+  stringTableCollections:
+  - {fileID: 11400000, guid: 919e755d874376d4881afdf10ec32707, type: 2}
+  - {fileID: 11400000, guid: ac04bd3a49d636649b87234e644bd43b, type: 2}
+  - {fileID: 11400000, guid: 6f9c6e21145b88847bcad93ad4c552f8, type: 2}
 --- !u!1 &1635204782
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,6 +49,9 @@ public class EditorManager : MonoBehaviour, IBackHandler
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
     [SerializeField] private Transform levelRoot;
 
+    [Header("Localization")]
+    [SerializeField] private LocalizationPreloader localizationPreloader;
+
     // Currently selected category button
     private UICategoryButton currentSelectedButton;
 
@@ -56,8 +59,6 @@ public class EditorManager : MonoBehaviour, IBackHandler
     private PlaceableObjectType currentCategory;
 
     private FadeManager loadingScreenFader;
-
-    private LocalizationPreloader localizationPreloader;
 
     public LevelFileManager LevelFileManager => levelFileManager;
 
@@ -135,16 +136,15 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] LevelRoot is not assigned.");
         }
 
+        if (localizationPreloader == null)
+        {
+            Debug.LogError("[EditorManager] LocalizationPreloader is not assigned.");
+        }
+
         loadingScreenFader = loadingScreen.GetComponent<FadeManager>();
         if (loadingScreenFader == null)
         {
             Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
-        }
-
-        localizationPreloader = GetComponent<LocalizationPreloader>();
-        if (localizationPreloader == null)
-        {
-            Debug.LogError("[EditorManager] LocalizationPreloader not found on this GameObject.");
         }
     }
 
