@@ -12,7 +12,7 @@ public class UIDragContext : MonoBehaviour, ITooltipSource
 
     [Header("Drag Zones")]
     [Tooltip("List of UI zones that interact with dragging.")]
-    [SerializeField] private List<DragZoneContext> dragZoneContexts = new List<DragZoneContext>();
+    [SerializeField] private List<DragZoneContext> dragZoneContexts = new();
 
     /// <summary>
     /// True if the pointer is currently over a drag cancel zone.

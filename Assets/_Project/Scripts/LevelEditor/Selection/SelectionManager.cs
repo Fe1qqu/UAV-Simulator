@@ -79,21 +79,14 @@ public class SelectionManager : MonoBehaviour
         current?.OnDeselected();
 
         current = selectable;
-        current.OnSelected();
+
+        current?.OnSelected();
 
         OnSelectionChanged?.Invoke(current);
     }
 
     public void Deselect()
     {
-        if (current == null)
-        {
-            return;
-        }
-
-        current.OnDeselected();
-        current = null;
-
-        OnSelectionChanged?.Invoke(null);
+        Select(null);
     }
 }

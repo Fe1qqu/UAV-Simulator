@@ -57,7 +57,7 @@ public class GameSettings : MonoBehaviour
                 }
                 else
                 {
-                    GameObject obj = new GameObject("GameSettings");
+                    GameObject obj = new("GameSettings");
                     _instance = obj.AddComponent<GameSettings>();
                     DontDestroyOnLoad(obj);
                 }
@@ -70,8 +70,8 @@ public class GameSettings : MonoBehaviour
 
     #region Runtime Sessions (Not Persisted)
 
-    public PlaySession CurrentPlaySession { get; private set; } = new PlaySession();
-    public EditorSession CurrentEditorSession { get; private set; } = new EditorSession();
+    public PlaySession CurrentPlaySession { get; private set; } = new();
+    public EditorSession CurrentEditorSession { get; private set; } = new();
 
     public void ClearPlaySession() => CurrentPlaySession.Clear();
     public void ClearEditorSession() => CurrentEditorSession.Clear();
@@ -80,7 +80,7 @@ public class GameSettings : MonoBehaviour
 
     #region Localization
 
-    private TaskCompletionSource<bool> _localizationReadyTaskCompletionSource = new TaskCompletionSource<bool>();
+    private TaskCompletionSource<bool> _localizationReadyTaskCompletionSource = new();
     public Task LocalizationReadyTask => _localizationReadyTaskCompletionSource.Task;
 
     #endregion

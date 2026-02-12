@@ -11,7 +11,7 @@ public struct TooltipRequest
     public RectTransform fixedAnchor;
     public bool force;
 
-    public static readonly TooltipRequest Invalid = new TooltipRequest
+    public static readonly TooltipRequest Invalid = new()
     {
         isValid = false
     };

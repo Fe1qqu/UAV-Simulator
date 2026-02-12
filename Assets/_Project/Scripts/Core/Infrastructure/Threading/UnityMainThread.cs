@@ -5,7 +5,7 @@ public static class UnityMainThread
 {
     public static async Task RunAsync(Action action, int timeoutMs = 2000)
     {
-        TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+        TaskCompletionSource<bool> taskCompletionSource = new();
 
         UnityMainThreadDispatcher.Enqueue(() =>
         {
