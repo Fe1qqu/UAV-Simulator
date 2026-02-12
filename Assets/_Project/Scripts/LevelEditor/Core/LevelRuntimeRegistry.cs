@@ -65,4 +65,58 @@ public class LevelRuntimeRegistry : MonoBehaviour
     {
         LevelObjectLifecycleChanged?.Invoke(levelObject);
     }
+
+    public T FindFirstAlive<T>() where T : LevelObject
+    {
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                return typed;
+            }
+        }
+
+        return null;
+    }
+
+    public List<T> FindAllAlive<T>() where T : LevelObject
+    {
+        List<T> result = new();
+
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                result.Add(typed);
+            }
+        }
+
+        return result;
+    }
+
+    public IEnumerable<T> EnumerateAlive<T>() where T : LevelObject
+    {
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                yield return typed;
+            }    
+        }
+    }
 }

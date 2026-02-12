@@ -30,20 +30,20 @@ public class EditorDeleteController : MonoBehaviour
 
     public void DeleteSelectedObject()
     {
-        SelectableObject selectedObject = selectionManager.CurrentSelectedObject;
-        if (selectedObject == null)
+        ISelectable selected = selectionManager.Current;
+        if (selected == null)
         {
-            Debug.LogError("[EditorDeleteController] SelectedObject is null.");
+            Debug.LogError("[EditorDeleteController] Nothing selected.");
             return;
         }
 
-        if (!selectedObject.TryGetComponent<LevelObject>(out var levelObject))
+        if (selected is not Component component || !component.TryGetComponent<LevelObject>(out var levelObject))
         {
             Debug.LogError("[EditorDeleteController] Selected object has no LevelObject component.");
             return;
         }
 
-        DeleteObjectInternal(levelObject, selectedObject);
+        DeleteInternal(levelObject, selected);
     }
 
     public void DeleteObject(LevelObject levelObject)
@@ -60,16 +60,16 @@ public class EditorDeleteController : MonoBehaviour
             return;
         }
 
-        DeleteObjectInternal(levelObject, selectableObject);
+        DeleteInternal(levelObject, selectableObject);
     }
 
-    private void DeleteObjectInternal(LevelObject levelObject, SelectableObject selectableObject)
+    private void DeleteInternal(LevelObject levelObject, ISelectable selectable)
     {
-        bool wasSelected = selectionManager.CurrentSelectedObject == selectableObject;
+        bool wasSelected = selectionManager.Current == selectable;
 
         if (wasSelected)
         {
-            selectionManager.DeselectCurrentObject();
+            selectionManager.Deselect();
         }
 
         levelObject.SoftDelete();

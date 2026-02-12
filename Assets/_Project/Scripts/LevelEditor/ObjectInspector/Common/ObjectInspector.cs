@@ -76,14 +76,20 @@ public class ObjectInspector : MonoBehaviour
         }
     }
 
-    private void OnSelectionChanged(SelectableObject selectableObject)
+    private void OnSelectionChanged(ISelectable selectable)
     {
-        if (selectableObject == null || !selectableObject.TryGetComponent(out LevelObject levelObject))
+        if (selectable == null || selectable is not Component component)
         {
             Clear();
             return;
         }
-        
+
+        if (!component.TryGetComponent<LevelObject>(out var levelObject))
+        {
+            Clear();
+            return;
+        }
+
         Bind(levelObject);
     }
 

@@ -41,24 +41,28 @@ public class TransformHandleController : MonoBehaviour
         }
     }
 
-    private void HandleSelectionChanged(SelectableObject selected)
+    private void HandleSelectionChanged(ISelectable selectable)
     {
         // Nothing selected → hide gizmo
-        if (selected == null)
+        if (selectable == null)
         {
             gizmo.Gizmo.SetEnabled(false);
             return;
         }
 
-        GameObject targetObject = selected.gameObject;
-
-        if (targetObject.GetComponent<TransformableObject>() == null)
+        if (selectable is not Component component)
         {
             gizmo.Gizmo.SetEnabled(false);
             return;
         }
 
-        gizmo.SetTargetObject(targetObject);
+        if (!component.TryGetComponent<TransformableObject>(out var _))
+        {
+            gizmo.Gizmo.SetEnabled(false);
+            return;
+        }
+
+        gizmo.SetTargetObject(component.gameObject);
         gizmo.Gizmo.SetEnabled(true);
     }
 }

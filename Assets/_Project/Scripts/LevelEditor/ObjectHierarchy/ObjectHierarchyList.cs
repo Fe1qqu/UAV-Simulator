@@ -133,7 +133,7 @@ public class ObjectHierarchyList : MonoBehaviour
         UpdateDisplayNamesForSourceGroup(levelObject.SourceData);
     }
 
-    private void OnSelectionChanged(SelectableObject selectableObject)
+    private void OnSelectionChanged(ISelectable selectable)
     {
         if (currentSelectedItem != null)
         {
@@ -141,12 +141,12 @@ public class ObjectHierarchyList : MonoBehaviour
             currentSelectedItem = null;
         }
 
-        if (selectableObject == null)
+        if (selectable == null || selectable is not Component component)
         {
             return;
         }
 
-        if (!selectableObject.TryGetComponent<LevelObject>(out var levelObject))
+        if (!component.TryGetComponent<LevelObject>(out var levelObject))
         {
             return;
         }
@@ -195,7 +195,10 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void OnSelectRequested(LevelObject levelObject)
     {
-        selectionManager.SelectObject(levelObject.GetComponent<SelectableObject>());
+        if (levelObject.TryGetComponent<ISelectable>(out var selectable))
+        {
+            selectionManager.Select(selectable);
+        }
     }
 
     private void AddToSourceGroup(LevelObject levelObject)

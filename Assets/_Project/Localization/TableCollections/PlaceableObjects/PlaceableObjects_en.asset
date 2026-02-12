@@ -30,6 +30,10 @@ MonoBehaviour:
     m_Localized: Drone Spawn Point
     m_Metadata:
       m_Items: []
+  - m_Id: 31214180272070656
+    m_Localized: Checkpoint
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

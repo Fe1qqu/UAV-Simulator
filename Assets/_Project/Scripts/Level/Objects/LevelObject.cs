@@ -1,8 +1,7 @@
+using UnityEngine;
 using RTG;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Splines;
 
 public enum LevelObjectLifecycleState
 {

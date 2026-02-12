@@ -241,6 +241,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 765827369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &579260912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 579260913}
+  - component: {fileID: 579260914}
+  m_Layer: 0
+  m_Name: LevelRuntimeRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &579260913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579260912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 765827369}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &579260914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579260912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74d5356868182641a49d6113b3abc3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelRuntimeRegistry
 --- !u!1 &638742489
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,6 +442,7 @@ Transform:
   - {fileID: 420632229}
   - {fileID: 1941914557}
   - {fileID: 932106417}
+  - {fileID: 579260913}
   - {fileID: 1496094640}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1349,6 +1394,8 @@ MonoBehaviour:
   playInput: {fileID: 420632228}
   levelFileManager: {fileID: 932106418}
   levelLoader: {fileID: 1496094641}
+  levelRuntimeRegistry: {fileID: 579260914}
+  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   pauseMenu: {fileID: 1941914558}
   dronePrefab: {fileID: 7172981785634349113, guid: 7f1073f2a522afc418fdeb004be4cf24, type: 3}
 --- !u!114 &1698216414

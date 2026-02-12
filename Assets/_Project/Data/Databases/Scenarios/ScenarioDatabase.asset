@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioDatabase
   scenarios:
   - {fileID: 11400000, guid: f806aaf9ee96ab947add27766233f086, type: 2}
+  - {fileID: 11400000, guid: 9ee6a754f04150b459d4ea204b86a18a, type: 2}
