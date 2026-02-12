@@ -31,8 +31,9 @@ MonoBehaviour:
     accessMode: 0
     objectIds: []
   - category: 4
-    accessMode: 0
-    objectIds: []
+    accessMode: 1
+    objectIds:
+    - drone_spawn_point
   objectRules:
   - objectId: drone_spawn_point
     minCount: 1

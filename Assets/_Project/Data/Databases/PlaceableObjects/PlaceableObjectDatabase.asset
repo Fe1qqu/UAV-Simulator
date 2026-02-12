@@ -87,6 +87,24 @@ MonoBehaviour:
     previewMaterialOverride: {fileID: 0}
     useTooltipSettingsOverride: 0
     tooltipSettingsOverride: {fileID: 0}
+  - objectId: target_area
+    localizationKey:
+      m_TableReference:
+        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+      m_TableEntryReference:
+        m_KeyId: 31872608980066304
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    icon: {fileID: 21300000, guid: 8580a6747bd53b54a9b044a50248df8a, type: 3}
+    prefab: {fileID: 4697070777710424619, guid: c0cb3a51a5e5dfa4fb2debe5a92d5faf, type: 3}
+    type: 4
+    propertyDefinitions: []
+    previewMaterialMode: 2
+    previewMaterialOverride: {fileID: 0}
+    useTooltipSettingsOverride: 0
+    tooltipSettingsOverride: {fileID: 0}
   references:
     version: 2
     RefIds: []

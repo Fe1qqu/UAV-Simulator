@@ -34,6 +34,10 @@ MonoBehaviour:
     m_Localized: Checkpoint
     m_Metadata:
       m_Items: []
+  - m_Id: 31872608980066304
+    m_Localized: Target area
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -31,8 +31,11 @@ MonoBehaviour:
     accessMode: 0
     objectIds: []
   - category: 4
-    accessMode: 0
-    objectIds: []
+    accessMode: 1
+    objectIds:
+    - drone_spawn_point
+    - checkpoint
+    - target_area
   objectRules:
   - objectId: drone_spawn_point
     minCount: 1
@@ -40,6 +43,9 @@ MonoBehaviour:
   - objectId: checkpoint
     minCount: 0
     maxCount: -1
+  - objectId: target_area
+    minCount: 1
+    maxCount: 1
   references:
     version: 2
     RefIds: []

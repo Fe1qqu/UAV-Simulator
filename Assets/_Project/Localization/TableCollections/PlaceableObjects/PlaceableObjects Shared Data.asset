@@ -31,6 +31,10 @@ MonoBehaviour:
     m_Key: checkpoint
     m_Metadata:
       m_Items: []
+  - m_Id: 31872608980066304
+    m_Key: target_area
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
