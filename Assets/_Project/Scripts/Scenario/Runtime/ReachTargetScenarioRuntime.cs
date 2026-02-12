@@ -14,12 +14,12 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 
     public override void StartScenario()
     {
-        checkpoints = registry
+        checkpoints = levelObjectRegistry
             .EnumerateAlive<Checkpoint>()
             .OrderBy(checkpoint => checkpoint.GetInt("index"))
             .ToList();
 
-        targetArea = registry.FindFirstAlive<TriggerArea>();
+        targetArea = levelObjectRegistry.FindFirstAlive<TriggerArea>();
         if (targetArea == null)
         {
             Debug.LogError("[ReachTargetScenarioRuntime] TriggerArea not found.");

@@ -22,7 +22,7 @@ public class ObjectHierarchyList : MonoBehaviour
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private GameObject itemPrefab;
 
-    [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
+    [SerializeField] private LevelObjectRegistry levelObjectRegistry;
     [SerializeField] private EditorDeleteController editorDeleteController;
     [SerializeField] private SelectionManager selectionManager;
 
@@ -50,9 +50,9 @@ public class ObjectHierarchyList : MonoBehaviour
             Debug.LogError("[ObjectHierarchyList] ItemPrefab is not assigned.");
         }
 
-        if (levelRuntimeRegistry == null)
+        if (levelObjectRegistry == null)
         {
-            Debug.LogError("[ObjectHierarchyList] LevelRuntimeRegistry is not assigned.");
+            Debug.LogError("[ObjectHierarchyList] LevelObjectRegistry is not assigned.");
         }
 
         if (editorDeleteController == null)
@@ -68,15 +68,15 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void OnEnable()
     {
-        levelRuntimeRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
+        levelObjectRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
         selectionManager.OnSelectionChanged += OnSelectionChanged;
     }
 
     private void OnDisable()
     {
-        if (levelRuntimeRegistry != null)
+        if (levelObjectRegistry != null)
         {
-            levelRuntimeRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
+            levelObjectRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
         }
 
         if (selectionManager != null)
@@ -87,7 +87,7 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void Start()
     {
-        foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
+        foreach (LevelObject levelObject in levelObjectRegistry.LevelObjects)
         {
             GetOrCreateItem(levelObject);
             AddToSourceGroup(levelObject);

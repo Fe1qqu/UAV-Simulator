@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 579260913}
   - component: {fileID: 579260914}
   m_Layer: 0
-  m_Name: LevelRuntimeRegistry
+  m_Name: LevelObjectRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1394,7 +1394,7 @@ MonoBehaviour:
   playInput: {fileID: 420632228}
   levelFileManager: {fileID: 932106418}
   levelLoader: {fileID: 1496094641}
-  levelRuntimeRegistry: {fileID: 579260914}
+  levelObjectRegistry: {fileID: 579260914}
   scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   pauseMenu: {fileID: 1941914558}
   dronePrefab: {fileID: 7172981785634349113, guid: 7f1073f2a522afc418fdeb004be4cf24, type: 3}

@@ -27,10 +27,10 @@ public class LevelObject : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
             // Hard delete (scene unload, cleanup, purge)
-            LevelRuntimeRegistry.Instance.Unregister(this);
+            LevelObjectRegistry.Instance.Unregister(this);
         }
     }
 
@@ -55,10 +55,10 @@ public class LevelObject : MonoBehaviour
             });
         }
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.Register(this);
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.Register(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -72,9 +72,9 @@ public class LevelObject : MonoBehaviour
         LifecycleState = LevelObjectLifecycleState.SoftDeleted;
         gameObject.SetActive(false);
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -88,9 +88,9 @@ public class LevelObject : MonoBehaviour
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -103,9 +103,9 @@ public class LevelObject : MonoBehaviour
 
         LifecycleState = LevelObjectLifecycleState.HardDeleted;
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
 
         Destroy(gameObject);

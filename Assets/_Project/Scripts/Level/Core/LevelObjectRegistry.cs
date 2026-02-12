@@ -17,9 +17,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class LevelRuntimeRegistry : MonoBehaviour
+public class LevelObjectRegistry : MonoBehaviour
 {
-    public static LevelRuntimeRegistry Instance { get; private set; }
+    public static LevelObjectRegistry Instance { get; private set; }
 
     public event Action<LevelObject> LevelObjectRegistered;
     public event Action<LevelObject> LevelObjectUnregistered;
@@ -32,7 +32,7 @@ public class LevelRuntimeRegistry : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("[LevelRuntimeRegistry] Duplicate instance detected. Only one instance is allowed in the scene.");
+            Debug.LogError("[LevelObjectRegistry] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }

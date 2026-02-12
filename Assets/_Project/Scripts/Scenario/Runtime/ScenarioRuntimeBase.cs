@@ -2,16 +2,16 @@ using System;
 
 public abstract class ScenarioRuntimeBase : IScenarioRuntime
 {
-    protected LevelRuntimeRegistry registry;
+    protected LevelObjectRegistry levelObjectRegistry;
     protected DroneControllerBase droneController;
 
     public event Action<IScenarioRuntime> ScenarioCompleted;
 
     private bool isCompleted;
 
-    public virtual void Initialize(LevelRuntimeRegistry registry, DroneControllerBase droneController)
+    public virtual void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController)
     {
-        this.registry = registry;
+        this.levelObjectRegistry = levelObjectRegistry;
         this.droneController = droneController;
         isCompleted = false;
     }

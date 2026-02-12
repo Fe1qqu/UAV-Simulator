@@ -6,7 +6,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
     [SerializeField] private PlayInput playInput;
     [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
-    [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
+    [SerializeField] private LevelObjectRegistry levelObjectRegistry;
     [SerializeField] private ScenarioDatabase scenarioDatabase;
 
     [Header("UI")]
@@ -36,9 +36,9 @@ public class PlayManager : MonoBehaviour, IBackHandler
             Debug.LogError("[PlayManager] LevelLoader is not assigned.");
         }
 
-        if (levelRuntimeRegistry == null)
+        if (levelObjectRegistry == null)
         {
-            Debug.LogError("[PlayManager] LevelRuntimeRegistry is not assigned.");
+            Debug.LogError("[PlayManager] LevelObjectRegistry is not assigned.");
         }
 
         if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
@@ -95,7 +95,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
 
     private void SpawnDrone()
     {
-        DroneSpawnPoint droneSpawnPoint = levelRuntimeRegistry.FindFirstAlive<DroneSpawnPoint>();
+        DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
         if (droneSpawnPoint == null)
         {
             Debug.LogError("[PlayManager] DroneSpawnPoint not found.");
@@ -127,7 +127,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        scenarioRuntime.Initialize(levelRuntimeRegistry, spawnedDrone);
+        scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;
         scenarioRuntime.StartScenario();
     }

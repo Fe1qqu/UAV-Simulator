@@ -64,7 +64,7 @@ public class EditorPauseMenu : BasePauseMenu
 
     public void OnSaveClicked()
     {
-        ScenarioValidationResult result = ScenarioValidator.Validate(editorManager.CurrentScenario, LevelRuntimeRegistry.Instance);
+        ScenarioValidationResult result = ScenarioValidator.Validate(editorManager.CurrentScenario, LevelObjectRegistry.Instance);
         if (!result.IsValid)
         {
             Debug.LogError($"[EditorPauseMenu] {result.ErrorType}: {result.Message}.");
