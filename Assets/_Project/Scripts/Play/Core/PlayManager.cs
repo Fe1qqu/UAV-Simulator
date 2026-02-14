@@ -119,13 +119,13 @@ public class PlayManager : MonoBehaviour, IBackHandler
             Debug.LogError($"[PlayManager] Scenario '{loadedLevelData.scenarioId}' not found in database.");
             return;
         }
-        
-        scenarioRuntime = ScenarioRuntimeFactory.Create(scenarioDefinition);
-        if (scenarioRuntime == null)
+
+        if (scenarioDefinition.runtime == null)
         {
             Debug.LogError($"[PlayManager] No runtime bound for scenario '{scenarioDefinition.scenarioId}'.");
             return;
         }
+        scenarioRuntime = Instantiate(scenarioDefinition.runtime);
 
         scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;

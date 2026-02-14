@@ -38,6 +38,8 @@ MonoBehaviour:
   - objectId: drone_spawn_point
     minCount: 1
     maxCount: 1
+  specificValidator: {fileID: 0}
+  runtime: {fileID: 11400000, guid: bd11b8b6252fcf04eb452103d6fa0171, type: 2}
   references:
     version: 2
     RefIds: []

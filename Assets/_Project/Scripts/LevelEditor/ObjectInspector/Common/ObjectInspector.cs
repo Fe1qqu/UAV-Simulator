@@ -98,6 +98,8 @@ public class ObjectInspector : MonoBehaviour
         currentObject = levelObject;
         root.SetActive(true);
 
+        propertiesInspectorTabButton.gameObject.SetActive(levelObject.HasProperties);
+
         transformInspectorTab.Bind(levelObject);
         propertiesInspectorTab.Bind(levelObject);
 

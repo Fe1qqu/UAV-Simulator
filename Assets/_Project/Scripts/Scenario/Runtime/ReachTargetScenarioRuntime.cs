@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+[CreateAssetMenu(menuName = "Game Data/Scenario Runtime/Reach Target")]
 public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 {
     private List<Checkpoint> checkpoints;

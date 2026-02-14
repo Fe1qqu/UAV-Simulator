@@ -46,6 +46,8 @@ MonoBehaviour:
   - objectId: target_area
     minCount: 1
     maxCount: 1
+  specificValidator: {fileID: 11400000, guid: f701b8dc7a475fe42a2364e8017a94f1, type: 2}
+  runtime: {fileID: 11400000, guid: 4e9e31f88925f614985890da1f111434, type: 2}
   references:
     version: 2
     RefIds: []

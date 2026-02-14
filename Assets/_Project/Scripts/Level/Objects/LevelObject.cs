@@ -16,10 +16,11 @@ public class LevelObject : MonoBehaviour
     [SerializeField, HideInInspector] private List<LevelObjectProperty> properties = new();
 
     public PlaceableObjectData SourceData => sourceData;
+
     public IReadOnlyList<LevelObjectProperty> Properties => properties;
+    public bool HasProperties => Properties != null && Properties.Count > 0;
 
     public LevelObjectLifecycleState LifecycleState { get; private set; }
-
     public bool IsAlive => LifecycleState == LevelObjectLifecycleState.Alive;
 
     public event Action<LevelObject> TransformChanged;

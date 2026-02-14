@@ -1,6 +1,7 @@
+using UnityEngine;
 using System;
 
-public abstract class ScenarioRuntimeBase : IScenarioRuntime
+public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
 {
     protected LevelObjectRegistry levelObjectRegistry;
     protected DroneControllerBase droneController;

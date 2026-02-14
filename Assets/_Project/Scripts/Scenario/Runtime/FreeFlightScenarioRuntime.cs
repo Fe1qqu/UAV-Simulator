@@ -1,4 +1,6 @@
+using UnityEngine;
 
+[CreateAssetMenu(menuName = "Game Data/Scenario Runtime/Free Flight")]
 public class FreeFlightScenarioRuntime : ScenarioRuntimeBase
 {
     public override void StartScenario()

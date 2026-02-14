@@ -35,11 +35,17 @@ public static class ScenarioValidator
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "LevelObjectRegistry is missing");
         }
 
-        // Validating scenario data
-        string scenarioError = ValidateScenarioDefinition(scenario);
-        if (scenarioError != null)
+        // Validating scenario definition
+        string scenarioErrorMessage = ValidateScenarioDefinition(scenario);
+        if (scenarioErrorMessage != null)
         {
-            return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioError);
+            return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioErrorMessage);
+        }
+
+        // Validating scenario specific data
+        if (scenario.specificValidator != null)
+        {
+            return scenario.specificValidator.Validate(levelObjectRegistry);
         }
 
         // Validating level
