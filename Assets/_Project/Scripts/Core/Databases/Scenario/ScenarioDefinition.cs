@@ -15,7 +15,8 @@ public class ScenarioDefinition : ScriptableObject
 
     [Header("Editor Validation")]
     public List<ScenarioObjectRule> objectRules = new();
+    public ScenarioSpecificValidator specificValidator;
 
-    //[Header("Runtime")]
-    //public string runtimeControllerId; // for Play Mode
+    [Header("Runtime")]
+    public ScenarioRuntimeBase runtime;
 }

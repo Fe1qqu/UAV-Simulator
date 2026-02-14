@@ -22,7 +22,7 @@ public class ObjectHierarchyList : MonoBehaviour
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private GameObject itemPrefab;
 
-    [SerializeField] private LevelRuntimeRegistry levelRuntimeRegistry;
+    [SerializeField] private LevelObjectRegistry levelObjectRegistry;
     [SerializeField] private EditorDeleteController editorDeleteController;
     [SerializeField] private SelectionManager selectionManager;
 
@@ -50,9 +50,9 @@ public class ObjectHierarchyList : MonoBehaviour
             Debug.LogError("[ObjectHierarchyList] ItemPrefab is not assigned.");
         }
 
-        if (levelRuntimeRegistry == null)
+        if (levelObjectRegistry == null)
         {
-            Debug.LogError("[ObjectHierarchyList] LevelRuntimeRegistry is not assigned.");
+            Debug.LogError("[ObjectHierarchyList] LevelObjectRegistry is not assigned.");
         }
 
         if (editorDeleteController == null)
@@ -68,15 +68,15 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void OnEnable()
     {
-        levelRuntimeRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
+        levelObjectRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
         selectionManager.OnSelectionChanged += OnSelectionChanged;
     }
 
     private void OnDisable()
     {
-        if (levelRuntimeRegistry != null)
+        if (levelObjectRegistry != null)
         {
-            levelRuntimeRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
+            levelObjectRegistry.LevelObjectLifecycleChanged -= OnLifecycleChanged;
         }
 
         if (selectionManager != null)
@@ -87,7 +87,7 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void Start()
     {
-        foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
+        foreach (LevelObject levelObject in levelObjectRegistry.LevelObjects)
         {
             GetOrCreateItem(levelObject);
             AddToSourceGroup(levelObject);
@@ -133,7 +133,7 @@ public class ObjectHierarchyList : MonoBehaviour
         UpdateDisplayNamesForSourceGroup(levelObject.SourceData);
     }
 
-    private void OnSelectionChanged(SelectableObject selectableObject)
+    private void OnSelectionChanged(ISelectable selectable)
     {
         if (currentSelectedItem != null)
         {
@@ -141,12 +141,12 @@ public class ObjectHierarchyList : MonoBehaviour
             currentSelectedItem = null;
         }
 
-        if (selectableObject == null)
+        if (selectable == null || selectable is not Component component)
         {
             return;
         }
 
-        if (!selectableObject.TryGetComponent<LevelObject>(out var levelObject))
+        if (!component.TryGetComponent<LevelObject>(out var levelObject))
         {
             return;
         }
@@ -195,7 +195,10 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void OnSelectRequested(LevelObject levelObject)
     {
-        selectionManager.SelectObject(levelObject.GetComponent<SelectableObject>());
+        if (levelObject.TryGetComponent<ISelectable>(out var selectable))
+        {
+            selectionManager.Select(selectable);
+        }
     }
 
     private void AddToSourceGroup(LevelObject levelObject)

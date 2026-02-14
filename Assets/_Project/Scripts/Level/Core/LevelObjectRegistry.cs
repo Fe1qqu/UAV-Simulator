@@ -17,9 +17,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class LevelRuntimeRegistry : MonoBehaviour
+public class LevelObjectRegistry : MonoBehaviour
 {
-    public static LevelRuntimeRegistry Instance { get; private set; }
+    public static LevelObjectRegistry Instance { get; private set; }
 
     public event Action<LevelObject> LevelObjectRegistered;
     public event Action<LevelObject> LevelObjectUnregistered;
@@ -32,7 +32,7 @@ public class LevelRuntimeRegistry : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("[LevelRuntimeRegistry] Duplicate instance detected. Only one instance is allowed in the scene.");
+            Debug.LogError("[LevelObjectRegistry] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }
@@ -64,5 +64,59 @@ public class LevelRuntimeRegistry : MonoBehaviour
     public void NotifyLifecycleChanged(LevelObject levelObject)
     {
         LevelObjectLifecycleChanged?.Invoke(levelObject);
+    }
+
+    public T FindFirstAlive<T>() where T : LevelObject
+    {
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                return typed;
+            }
+        }
+
+        return null;
+    }
+
+    public List<T> FindAllAlive<T>() where T : LevelObject
+    {
+        List<T> result = new();
+
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                result.Add(typed);
+            }
+        }
+
+        return result;
+    }
+
+    public IEnumerable<T> EnumerateAlive<T>() where T : LevelObject
+    {
+        foreach (LevelObject levelObject in levelObjects)
+        {
+            if (!levelObject.IsAlive)
+            {
+                continue;
+            }
+
+            if (levelObject is T typed)
+            {
+                yield return typed;
+            }    
+        }
     }
 }

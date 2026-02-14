@@ -17,7 +17,7 @@ public class TransformableObject : MonoBehaviour, IRTTransformGizmoListener
         levelObject = GetComponent<LevelObject>();
         if (levelObject == null)
         {
-            Debug.LogError("[TransformableObject] LevelObject is missing!");
+            Debug.LogError("[TransformableObject] LevelObject is missing.");
         }
     }
 
@@ -62,7 +62,6 @@ public class TransformableObject : MonoBehaviour, IRTTransformGizmoListener
             return;
         }
 
-        // сохраняем старые значения для Undo
         _preTransformPosition = levelObject.transform.position;
         _preTransformRotation = levelObject.transform.rotation.eulerAngles;
         _preTransformScale = levelObject.transform.localScale;

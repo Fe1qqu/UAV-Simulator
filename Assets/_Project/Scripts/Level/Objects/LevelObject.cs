@@ -1,8 +1,7 @@
+using UnityEngine;
 using RTG;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Splines;
 
 public enum LevelObjectLifecycleState
 {
@@ -17,10 +16,11 @@ public class LevelObject : MonoBehaviour
     [SerializeField, HideInInspector] private List<LevelObjectProperty> properties = new();
 
     public PlaceableObjectData SourceData => sourceData;
+
     public IReadOnlyList<LevelObjectProperty> Properties => properties;
+    public bool HasProperties => Properties != null && Properties.Count > 0;
 
     public LevelObjectLifecycleState LifecycleState { get; private set; }
-
     public bool IsAlive => LifecycleState == LevelObjectLifecycleState.Alive;
 
     public event Action<LevelObject> TransformChanged;
@@ -28,10 +28,10 @@ public class LevelObject : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
             // Hard delete (scene unload, cleanup, purge)
-            LevelRuntimeRegistry.Instance.Unregister(this);
+            LevelObjectRegistry.Instance.Unregister(this);
         }
     }
 
@@ -56,10 +56,10 @@ public class LevelObject : MonoBehaviour
             });
         }
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.Register(this);
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.Register(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -73,9 +73,9 @@ public class LevelObject : MonoBehaviour
         LifecycleState = LevelObjectLifecycleState.SoftDeleted;
         gameObject.SetActive(false);
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -89,9 +89,9 @@ public class LevelObject : MonoBehaviour
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
     }
 
@@ -104,9 +104,9 @@ public class LevelObject : MonoBehaviour
 
         LifecycleState = LevelObjectLifecycleState.HardDeleted;
 
-        if (LevelRuntimeRegistry.Instance != null)
+        if (LevelObjectRegistry.Instance != null)
         {
-            LevelRuntimeRegistry.Instance.NotifyLifecycleChanged(this);
+            LevelObjectRegistry.Instance.NotifyLifecycleChanged(this);
         }
 
         Destroy(gameObject);

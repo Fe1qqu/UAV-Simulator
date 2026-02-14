@@ -38,14 +38,14 @@ namespace RTG
                 if (parentGameObject != null)
                 {
                     // Check selection
-                    if (selectionManager != null && selectionManager.CurrentSelectedObject != null)
+                    if (selectionManager != null && selectionManager.Current is Component selectedComponent)
                     {
-                        GameObject currentGameObject = selectionManager.CurrentSelectedObject.gameObject;
+                        Transform selectedTransform = selectedComponent.transform;
 
-                        if (currentGameObject == parentGameObject || currentGameObject.transform.IsChildOf(parentGameObject.transform))
+                        if (selectedTransform == parentGameObject.transform || selectedTransform.IsChildOf(parentGameObject.transform))
                         {
                             wasSelected = true;
-                            selectionManager.DeselectCurrentObject();
+                            selectionManager.Deselect();
                         }
                     }
 
@@ -92,7 +92,7 @@ namespace RTG
                         SelectableObject selectableObject = parentGameObject.GetComponentInChildren<SelectableObject>();
                         if (selectableObject != null)
                         {
-                            selectionManager.SelectObject(selectableObject);
+                            selectionManager.Select(selectableObject);
                         }
                     }
                 }

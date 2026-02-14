@@ -4,7 +4,7 @@ public class DroneDebugUI : MonoBehaviour
 {
     private DroneControllerBase droneController;
     private bool visible = true;
-    private Rect windowRectangle = new Rect(20, 20, 250, 270);
+    private Rect windowRectangle = new(20, 20, 250, 270);
 
     private void Awake()
     {

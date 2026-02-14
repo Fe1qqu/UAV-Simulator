@@ -3350,7 +3350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorLevelDataBuilder
   levelRoot: {fileID: 1078942368}
-  levelRuntimeRegistry: {fileID: 627597777}
+  levelObjectRegistry: {fileID: 627597777}
 --- !u!1 &502282895
 GameObject:
   m_ObjectHideFlags: 0
@@ -8007,7 +8007,7 @@ GameObject:
   - component: {fileID: 627597776}
   - component: {fileID: 627597777}
   m_Layer: 0
-  m_Name: LevelRuntimeRegistry
+  m_Name: LevelObjectRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8364,7 +8364,7 @@ MonoBehaviour:
   contentPanel: {fileID: 976954855}
   scrollRect: {fileID: 1349913557}
   itemPrefab: {fileID: 2128374757}
-  levelRuntimeRegistry: {fileID: 627597777}
+  levelObjectRegistry: {fileID: 627597777}
   editorDeleteController: {fileID: 2027232544}
   selectionManager: {fileID: 1179576270}
 --- !u!1 &659072429

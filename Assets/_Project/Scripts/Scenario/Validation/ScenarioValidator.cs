@@ -23,29 +23,35 @@ public readonly struct ScenarioValidationResult
 
 public static class ScenarioValidator
 {
-    public static ScenarioValidationResult Validate(ScenarioDefinition scenario, LevelRuntimeRegistry levelRuntimeRegistry)
+    public static ScenarioValidationResult Validate(ScenarioDefinition scenario, LevelObjectRegistry levelObjectRegistry)
     {
         if (scenario == null)
         {
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, "Scenario is not selected");
         }
 
-        if (levelRuntimeRegistry == null)
+        if (levelObjectRegistry == null)
         {
-            return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "LevelRuntimeRegistry is missing");
+            return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "LevelObjectRegistry is missing");
         }
 
-        // Validating scenario data
-        string scenarioError = ValidateScenarioDefinition(scenario);
-        if (scenarioError != null)
+        // Validating scenario definition
+        string scenarioErrorMessage = ValidateScenarioDefinition(scenario);
+        if (scenarioErrorMessage != null)
         {
-            return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioError);
+            return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioErrorMessage);
+        }
+
+        // Validating scenario specific data
+        if (scenario.specificValidator != null)
+        {
+            return scenario.specificValidator.Validate(levelObjectRegistry);
         }
 
         // Validating level
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            int count = CountObjects(objectRule.objectId, levelRuntimeRegistry);
+            int count = CountObjects(objectRule.objectId, levelObjectRegistry);
 
             if (count < objectRule.minCount)
             {
@@ -91,11 +97,11 @@ public static class ScenarioValidator
         return null;
     }
 
-    private static int CountObjects(string objectId, LevelRuntimeRegistry levelRuntimeRegistry)
+    private static int CountObjects(string objectId, LevelObjectRegistry levelObjectRegistry)
     {
         int count = 0;
 
-        foreach (LevelObject levelObject in levelRuntimeRegistry.LevelObjects)
+        foreach (LevelObject levelObject in levelObjectRegistry.LevelObjects)
         {
             if (!levelObject.IsAlive)
             {

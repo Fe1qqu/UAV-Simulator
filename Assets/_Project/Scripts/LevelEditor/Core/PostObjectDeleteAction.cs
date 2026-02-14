@@ -1,3 +1,4 @@
+using UnityEngine;
 using RTG;
 
 public class PostLevelObjectDeleteAction : IUndoRedoAction
@@ -33,7 +34,7 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
             {
                 if (levelObject.TryGetComponent<SelectableObject>(out var selectableObject))
                 {
-                    selectionManager.SelectObject(selectableObject);
+                    selectionManager.Select(selectableObject);
                 }
             }
         }
@@ -49,10 +50,11 @@ public class PostLevelObjectDeleteAction : IUndoRedoAction
         SelectionManager selectionManager = SelectionManager.Instance;
         if (selectionManager != null)
         {
-            SelectableObject selectableObject = levelObject.GetComponent<SelectableObject>();
-            if (selectableObject != null && selectionManager.CurrentSelectedObject == selectableObject)
+            if (selectionManager.Current is Component currentComponent &&
+                currentComponent.TryGetComponent<LevelObject>(out var currentLevelObject) &&
+                currentLevelObject == levelObject)
             {
-                selectionManager.DeselectCurrentObject();
+                selectionManager.Deselect();
             }
         }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectableHighlight : MonoBehaviour
+public class LayerOutlineVisual : MonoBehaviour, ISelectionVisual
 {
     [Tooltip("Layer applied when this mesh is highlighted.")]
     [SerializeField] private int highlightLayer = 6;

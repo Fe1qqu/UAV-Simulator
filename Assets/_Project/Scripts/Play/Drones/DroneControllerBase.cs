@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class DroneControllerBase : MonoBehaviour
+public abstract class DroneControllerBase : MonoBehaviour, IDroneActor
 {
+    public DroneControllerBase Controller => this;
+
     public abstract float ThrottleInput { get; }
     public abstract float YawInput { get; }
     public abstract float PitchInput { get; }

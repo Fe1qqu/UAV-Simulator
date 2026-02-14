@@ -101,7 +101,7 @@ public class BackDispatcher : MonoBehaviour
             return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder(256);
+        StringBuilder stringBuilder = new(256);
 
         stringBuilder.Append("[BackDispatcher] Stack dump (").Append(reason).Append("): ");
 

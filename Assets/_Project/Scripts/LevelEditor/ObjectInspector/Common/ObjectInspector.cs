@@ -76,14 +76,20 @@ public class ObjectInspector : MonoBehaviour
         }
     }
 
-    private void OnSelectionChanged(SelectableObject selectableObject)
+    private void OnSelectionChanged(ISelectable selectable)
     {
-        if (selectableObject == null || !selectableObject.TryGetComponent(out LevelObject levelObject))
+        if (selectable == null || selectable is not Component component)
         {
             Clear();
             return;
         }
-        
+
+        if (!component.TryGetComponent<LevelObject>(out var levelObject))
+        {
+            Clear();
+            return;
+        }
+
         Bind(levelObject);
     }
 
@@ -91,6 +97,8 @@ public class ObjectInspector : MonoBehaviour
     {
         currentObject = levelObject;
         root.SetActive(true);
+
+        propertiesInspectorTabButton.gameObject.SetActive(levelObject.HasProperties);
 
         transformInspectorTab.Bind(levelObject);
         propertiesInspectorTab.Bind(levelObject);
