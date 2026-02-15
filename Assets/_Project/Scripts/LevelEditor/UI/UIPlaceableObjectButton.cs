@@ -10,8 +10,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(CanvasGroup))]
 public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, ITooltipSource
 {
-    [Tooltip("Object data that defines icon, prefab, and type.")]
-    [HideInInspector] public PlaceableObjectData linkedObjectData;
+    [HideInInspector] public PlaceableObjectDefinition linkedPlaceableObject;
 
     // Icon image used to represent the placeable object
     private Image icon;
@@ -30,21 +29,16 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    /// <summary>
-    /// Sets up this button with placeable object data.
-    /// Assigns icon and stores reference for dragging.
-    /// </summary>
-    /// <param name="data">Placeable object data.</param>
-    public void Setup(PlaceableObjectData data)
+    public void Setup(PlaceableObjectDefinition placeableObject)
     {
-        if (data == null)
+        if (placeableObject == null)
         {
-            Debug.LogError("[UIPlaceableObjectButton] Tried to setup with null PlaceableObjectData.");
+            Debug.LogError("[UIPlaceableObjectButton] Tried to setup with null PlaceableObject.");
             return;
         }
 
-        linkedObjectData = data;
-        icon.sprite = data.icon;
+        linkedPlaceableObject = placeableObject;
+        icon.sprite = placeableObject.icon;
     }
 
     /// <summary>
@@ -58,16 +52,16 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
             return;
         }
 
-        if (linkedObjectData == null || linkedObjectData.prefab == null)
+        if (linkedPlaceableObject == null || linkedPlaceableObject.prefab == null)
         {
-            Debug.LogError("[UIPlaceableObjectButton] linkedObjectData or its prefab is null. Drag cancelled.");
+            Debug.LogError("[UIPlaceableObjectButton] linkedPlaceableObject or its prefab is null. Drag cancelled.");
             return;
         }
 
-        Debug.Log($"[UIPlaceableObjectButton] Begin drag '{linkedObjectData.objectId}'.");
+        Debug.Log($"[UIPlaceableObjectButton] Begin drag '{linkedPlaceableObject.objectId}'.");
 
         TooltipManager.Instance.EnterDragMode();
-        DragPlacementHandler.Instance.BeginDrag(linkedObjectData);
+        DragPlacementHandler.Instance.BeginDrag(linkedPlaceableObject);
 
         ApplyDragVisual();
         DragPlacementHandler.Instance.OnDragCancelled += ResetDragVisual;
@@ -133,9 +127,9 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
     /// </summary>
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (linkedObjectData == null)
+        if (linkedPlaceableObject == null)
         {
-            Debug.LogWarning("[UIPlaceableObjectButton] Tried to show tooltip with null linkedObjectData.");
+            Debug.LogWarning("[UIPlaceableObjectButton] Tried to show tooltip with null PlaceableObject.");
             return;
         }
 
@@ -158,17 +152,17 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
 
     public TooltipRequest CreateTooltipRequest()
     {
-        if (linkedObjectData == null)
+        if (linkedPlaceableObject == null)
         {
-            Debug.LogWarning("[UIPlaceableObjectButton] Tried to create tooltip request with null linkedObjectData.");
+            Debug.LogWarning("[UIPlaceableObjectButton] Tried to create tooltip request with null PlaceableObject.");
             return TooltipRequest.Invalid;
         }
 
         return new TooltipRequest
         {
             isValid = true,
-            text = linkedObjectData.localizationKey,
-            explicitSettings = linkedObjectData.useTooltipSettingsOverride ? linkedObjectData.tooltipSettingsOverride : null,
+            text = linkedPlaceableObject.localizationKey,
+            explicitSettings = linkedPlaceableObject.useTooltipSettingsOverride ? linkedPlaceableObject.tooltipSettingsOverride : null,
             context = gameObject,
         };
     }

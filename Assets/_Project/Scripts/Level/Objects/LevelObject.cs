@@ -12,10 +12,10 @@ public enum LevelObjectLifecycleState
 
 public class LevelObject : MonoBehaviour
 {
-    [SerializeField, HideInInspector] private PlaceableObjectData sourceData;
+    [SerializeField, HideInInspector] private PlaceableObjectDefinition sourcePlaceableObject;
     [SerializeField, HideInInspector] private List<LevelObjectProperty> properties = new();
 
-    public PlaceableObjectData SourceData => sourceData;
+    public PlaceableObjectDefinition SourcePlaceableObject => sourcePlaceableObject;
 
     public IReadOnlyList<LevelObjectProperty> Properties => properties;
     public bool HasProperties => Properties != null && Properties.Count > 0;
@@ -35,19 +35,19 @@ public class LevelObject : MonoBehaviour
         }
     }
 
-    public void Initialize(PlaceableObjectData sourceData)
+    public void Initialize(PlaceableObjectDefinition placeableObject)
     {
-        if (sourceData == null)
+        if (placeableObject == null)
         {
-            Debug.LogError("[LevelObject] Initialize called with null PlaceableObjectData.");
+            Debug.LogError("[LevelObject] Initialize called with null PlaceableObject.");
             return;
         }
 
-        this.sourceData = sourceData;
+        this.sourcePlaceableObject = placeableObject;
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
-        foreach (ObjectPropertyDefinition propertyDefinition in sourceData.propertyDefinitions)
+        foreach (ObjectPropertyDefinition propertyDefinition in placeableObject.propertyDefinitions)
         {
             properties.Add(new LevelObjectProperty
             {
@@ -186,14 +186,14 @@ public class LevelObject : MonoBehaviour
 
     public LevelObjectData ToData()
     {
-        if (string.IsNullOrEmpty(sourceData.objectId))
+        if (string.IsNullOrEmpty(sourcePlaceableObject.objectId))
         {
-            Debug.LogError($"[LevelObject] ObjectId is empty during ToData on '{name}'.");
+            Debug.LogError($"[LevelObject] PlaceableObject.objectId is empty during ToData on '{name}'.");
         }
 
         return new LevelObjectData
         {
-            objectId = sourceData.objectId,
+            objectId = sourcePlaceableObject.objectId,
             position = transform.position,
             rotation = transform.rotation,
             scale = transform.localScale,
@@ -201,36 +201,36 @@ public class LevelObject : MonoBehaviour
         };
     }
 
-    public void FromData(LevelObjectData data)
+    public void FromData(LevelObjectData objectData)
     {
-        if (data == null)
+        if (objectData == null)
         {
-            Debug.LogError($"[LevelObject] FromData called with null data on '{name}'.");
+            Debug.LogError($"[LevelObject] FromData called with null LevelObjectData on '{name}'.");
             return;
         }
 
-        if (string.IsNullOrEmpty(data.objectId))
+        if (string.IsNullOrEmpty(objectData.objectId))
         {
             Debug.LogError($"[LevelObject] ObjectId is empty in LevelObjectData on '{name}'.");
         }
         else
         {
-            sourceData.objectId = data.objectId;
+            sourcePlaceableObject.objectId = objectData.objectId;
         }
 
-        transform.SetPositionAndRotation(data.position, data.rotation);
-        transform.localScale = data.scale;
+        transform.SetPositionAndRotation(objectData.position, objectData.rotation);
+        transform.localScale = objectData.scale;
 
         properties = new List<LevelObjectProperty>();
 
-        foreach (ObjectPropertyDefinition propertyDefinition in sourceData.propertyDefinitions)
+        foreach (ObjectPropertyDefinition propertyDefinition in sourcePlaceableObject.propertyDefinitions)
         {
-            LevelObjectProperty saved = data.properties?.Find(property => property.key == propertyDefinition.key);
+            LevelObjectProperty savedObjectProperty = objectData.properties?.Find(property => property.key == propertyDefinition.key);
 
             properties.Add(new LevelObjectProperty
             {
                 key = propertyDefinition.key,
-                value = saved != null ? saved.value : propertyDefinition.defaultValue
+                value = savedObjectProperty != null ? savedObjectProperty.value : propertyDefinition.defaultValue
             });
         }
     }

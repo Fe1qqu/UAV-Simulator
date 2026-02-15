@@ -47,7 +47,7 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLocation(string locationId)
     {
-        LocationData location = locationDatabase.locations.Find(location => location.locationId == locationId);
+        LocationDefinition location = locationDatabase.locations.Find(location => location.locationId == locationId);
 
         if (location == null)
         {
@@ -69,17 +69,17 @@ public class LevelLoader : MonoBehaviour
     {
         foreach (LevelObjectData levelObjectData in levelData.objects)
         {
-            PlaceableObjectData placeableObjectData = placeableObjectDatabase.GetById(levelObjectData.objectId);
-            if (placeableObjectData == null)
+            PlaceableObjectDefinition placeableObject = placeableObjectDatabase.GetById(levelObjectData.objectId);
+            if (placeableObject == null)
             {
-                Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");
+                Debug.LogError($"[LevelLoader] Missing object: {placeableObject.objectId}.");
                 continue;
             }
 
-            GameObject instance = Instantiate(placeableObjectData.prefab, levelRoot);
+            GameObject instance = Instantiate(placeableObject.prefab, levelRoot);
             LevelObject levelObject = instance.GetComponent<LevelObject>();
 
-            levelObject.Initialize(placeableObjectData);
+            levelObject.Initialize(placeableObject);
             levelObject.FromData(levelObjectData);
         }
     }

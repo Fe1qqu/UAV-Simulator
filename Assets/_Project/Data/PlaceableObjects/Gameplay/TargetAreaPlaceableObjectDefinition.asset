@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
+  m_Name: TargetAreaPlaceableObjectDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
+  objectId: target_area
+  localizationKey:
+    m_TableReference:
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+    m_TableEntryReference:
+      m_KeyId: 31872608980066304
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 21300000, guid: 402fb5eac9a13bd47a39ec82c0df4491, type: 3}
+  prefab: {fileID: 4697070777710424619, guid: c0cb3a51a5e5dfa4fb2debe5a92d5faf, type: 3}
+  category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
+  propertyDefinitions: []
+  previewMaterialMode: 2
+  previewMaterialOverride: {fileID: 0}
+  useTooltipSettingsOverride: 0
+  tooltipSettingsOverride: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

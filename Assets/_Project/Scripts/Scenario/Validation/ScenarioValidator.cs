@@ -42,12 +42,6 @@ public static class ScenarioValidator
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioErrorMessage);
         }
 
-        // Validating scenario specific data
-        if (scenario.specificValidator != null)
-        {
-            return scenario.specificValidator.Validate(levelObjectRegistry);
-        }
-
         // Validating level
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
@@ -64,6 +58,12 @@ public static class ScenarioValidator
                 return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid,
                     $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.objectId}'");
             }
+        }
+
+        // Validating scenario specific data
+        if (scenario.specificValidator != null)
+        {
+            return scenario.specificValidator.Validate(levelObjectRegistry);
         }
 
         return ScenarioValidationResult.Ok();
@@ -108,7 +108,7 @@ public static class ScenarioValidator
                 continue;
             }
 
-            if (levelObject.SourceData.objectId == objectId)
+            if (levelObject.SourcePlaceableObject.objectId == objectId)
             {
                 count++;
             }

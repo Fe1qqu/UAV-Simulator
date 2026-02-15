@@ -59,14 +59,14 @@ public class PropertyInspectorField : MonoBehaviour
     }
 
 
-    private void OnPropertyChanged(LevelObject obj, string changedKey)
+    private void OnPropertyChanged(LevelObject levelObject, string changedKey)
     {
         if (changedKey != propertyKey)
         {
             return;
         }
 
-        LevelObjectProperty property = obj.Properties.FirstOrDefault(property => property.key == propertyKey);
+        LevelObjectProperty property = levelObject.Properties.FirstOrDefault(property => property.key == propertyKey);
 
         suppressNotify = true;
         valueInputField.text = property.value;

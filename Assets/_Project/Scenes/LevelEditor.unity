@@ -713,28 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92a8d1cad7b13042aa21cc24cce1029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIObjectDraggableItem
-  linkedObjectData:
-    objectId: 
-    localizationKey:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    icon: {fileID: 0}
-    prefab: {fileID: 0}
-    type: 0
-    propertyDefinitions: []
-    previewMaterialMode: 0
-    previewMaterialOverride: {fileID: 0}
-    useTooltipSettingsOverride: 0
-    tooltipSettingsOverride: {fileID: 0}
-  references:
-    version: 2
-    RefIds: []
+  linkedPlaceableObject: {fileID: 0}
 --- !u!225 &74227648
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13548,6 +13527,7 @@ GameObject:
   - component: {fileID: 1453837040}
   - component: {fileID: 1453837043}
   - component: {fileID: 1453837042}
+  - component: {fileID: 1453837044}
   - component: {fileID: 1453837041}
   m_Layer: 0
   m_Name: KeyText
@@ -13695,6 +13675,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453837039}
   m_CullTransparentMesh: 1
+--- !u!114 &1453837044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453837039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1453837042}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1472664716
 GameObject:
   m_ObjectHideFlags: 0
@@ -14508,6 +14528,7 @@ MonoBehaviour:
   stringTableCollections:
   - {fileID: 11400000, guid: 919e755d874376d4881afdf10ec32707, type: 2}
   - {fileID: 11400000, guid: ac04bd3a49d636649b87234e644bd43b, type: 2}
+  - {fileID: 11400000, guid: 49779fc7c8f870543b50c752d4a631ac, type: 2}
   - {fileID: 11400000, guid: 6f9c6e21145b88847bcad93ad4c552f8, type: 2}
 --- !u!1 &1635204782
 GameObject:

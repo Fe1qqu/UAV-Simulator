@@ -27,7 +27,7 @@ public class Step_LocationSelect : BaseLevelCreationStep
     /// <returns>True if a location is selected, false otherwise.</returns>
     public override bool ValidateStep()
     {
-        LocationData location = locationSelection.GetSelectedLocation();
+        LocationDefinition location = locationSelection.GetSelectedLocation();
         if (location == null)
         {
             Debug.LogWarning("[Step_LocationSelect] No location selected.");

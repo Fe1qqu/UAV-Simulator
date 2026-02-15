@@ -24,13 +24,13 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 21300000, guid: c0f08c6961a8b164982cf40cf6043a74, type: 3}
   availableCategories:
-  - category: 0
+  - category: {fileID: 11400000, guid: ff0ab0850d667e84faf52e99ca338321, type: 2}
     accessMode: 0
     objectIds: []
-  - category: 1
+  - category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
     accessMode: 0
     objectIds: []
-  - category: 4
+  - category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
     accessMode: 1
     objectIds:
     - drone_spawn_point

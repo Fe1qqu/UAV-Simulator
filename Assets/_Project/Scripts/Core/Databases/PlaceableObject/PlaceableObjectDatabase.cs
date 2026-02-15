@@ -1,99 +1,17 @@
 using UnityEngine;
-using UnityEngine.Localization;
-using Alchemy.Inspector;
 using System.Collections.Generic;
 
-/// <summary>
-/// Types used to classify placeable objects in the editor.
-/// </summary>
-public enum PlaceableObjectType
-{
-    Generic,
-    Tree,
-    Building,
-    Light,
-    Gameplay
-}
-
-public enum PreviewMaterialMode
-{
-    UseDefault,   // use the general previewMaterial
-    Override,     // use previewMaterialOverride
-    None          // do not use the material at all
-}
-
-[System.Serializable]
-public class ObjectPropertyDefinition
-{
-    public string key;
-    public string defaultValue;
-}
-
-/// <summary>
-/// Serializable container for a single placeable object definition.
-/// </summary>
-[System.Serializable]
-public class PlaceableObjectData
-{
-    [Header("Identity")]
-    [Tooltip("Stable unique identifier used for saving/loading.")]
-    public string objectId;
-
-    [Header("Presentation")]
-    public LocalizedString localizationKey;
-    
-    [Tooltip("Icon shown on the placeable object's button.")]
-    public Sprite icon;
-
-    [Header("Runtime")]
-    [Tooltip("Prefab instantiated when the object is placed in the scene.")]
-    public GameObject prefab;
-
-    [Tooltip("Category/type used for filtering in the editor UI.")]
-    public PlaceableObjectType type = PlaceableObjectType.Generic;
-
-    [Tooltip("Predefined properties for this object. May be empty if the object has no properties.")]
-    public List<ObjectPropertyDefinition> propertyDefinitions = new();
-
-    [Header("Preview")]
-    public PreviewMaterialMode previewMaterialMode = PreviewMaterialMode.UseDefault;
-
-    private bool IsPreviewOverride => previewMaterialMode == PreviewMaterialMode.Override;
-
-    [ShowIf(nameof(IsPreviewOverride))]
-    public Material previewMaterialOverride;
-
-    [Header("Tooltip Override")]
-    public bool useTooltipSettingsOverride;
-
-    [ShowIf(nameof(useTooltipSettingsOverride))]
-    [Tooltip("Optional override. If set, these tooltip settings will be used instead of those resolved by the TooltipSettingsPipeline.")]
-    public TooltipSettings tooltipSettingsOverride;
-}
-
-/// <summary>
-/// ScriptableObject that stores all placeable objects available to the level editor.
-/// </summary>
-[CreateAssetMenu(fileName = "PlaceableObjectDatabase", menuName = "Game Data/Placeable Object Database")]
+[CreateAssetMenu(menuName = "Game Data/Placeable Object Database")]
 public class PlaceableObjectDatabase : ScriptableObject
 {
-    [Tooltip("All placeable object entries. Used to spawn buttons and instantiate prefabs.")]
-    public List<PlaceableObjectData> objects = new();
+    public List<PlaceableObjectDefinition> objects = new();
 
-    /// <summary>
-    /// Returns all objects filtered by type.
-    /// </summary>
-    public List<PlaceableObjectData> GetByType(PlaceableObjectType type)
+    public List<PlaceableObjectDefinition> GetByCategory(CategoryDefinition category)
     {
-        if (objects == null)
-        {
-            return new List<PlaceableObjectData>();
-        }
-
-        return objects.FindAll(obj => obj != null && obj.type == type);
+        return objects.FindAll(obj => obj.category == category);
     }
 
-    public PlaceableObjectData GetById(string id)
+    public PlaceableObjectDefinition GetById(string id)
     {
         return objects.Find(obj => obj.objectId == id);
     }
