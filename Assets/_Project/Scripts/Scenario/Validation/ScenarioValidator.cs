@@ -45,18 +45,18 @@ public static class ScenarioValidator
         // Validating level
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            int count = CountObjects(objectRule.objectId, levelObjectRegistry);
+            int count = CountObjects(objectRule.objectDefinition, levelObjectRegistry);
 
             if (count < objectRule.minCount)
             {
                 return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, 
-                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.objectId}'");
+                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.objectDefinition.name}'");
             }
 
             if (objectRule.maxCount >= 0 && count > objectRule.maxCount)
             {
                 return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid,
-                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.objectId}'");
+                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.objectDefinition.name}'");
             }
         }
 
@@ -83,21 +83,21 @@ public static class ScenarioValidator
 
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            if (string.IsNullOrEmpty(objectRule.objectId))
+            if (string.IsNullOrEmpty(objectRule.objectDefinition.objectId))
             {
                 return $"Scenario '{scenario.scenarioId}' contains rule with empty objectId";
             }
 
             if (objectRule.maxCount >= 0 && objectRule.maxCount < objectRule.minCount)
             {
-                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.objectId}': maxCount < minCount";
+                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.objectDefinition.name}': maxCount < minCount";
             }
         }
 
         return null;
     }
 
-    private static int CountObjects(string objectId, LevelObjectRegistry levelObjectRegistry)
+    private static int CountObjects(PlaceableObjectDefinition placeableObject, LevelObjectRegistry levelObjectRegistry)
     {
         int count = 0;
 
@@ -108,7 +108,7 @@ public static class ScenarioValidator
                 continue;
             }
 
-            if (levelObject.SourcePlaceableObject.objectId == objectId)
+            if (levelObject.SourcePlaceableObject == placeableObject)
             {
                 count++;
             }

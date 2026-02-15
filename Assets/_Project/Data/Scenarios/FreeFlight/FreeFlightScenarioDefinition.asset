@@ -35,7 +35,7 @@ MonoBehaviour:
     objectIds:
     - drone_spawn_point
   objectRules:
-  - objectId: drone_spawn_point
+  - objectDefinition: {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
     minCount: 1
     maxCount: 1
   specificValidator: {fileID: 0}
