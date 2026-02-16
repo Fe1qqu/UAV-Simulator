@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GenericCategoryDefinition
   m_EditorClassIdentifier: Assembly-CSharp::CategoryDefinition
   categoryId: generic
-  localizationKey:
+  localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
     m_TableEntryReference:

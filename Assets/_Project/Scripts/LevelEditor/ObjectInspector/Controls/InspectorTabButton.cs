@@ -11,7 +11,7 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     [Header("Tooltip")]
     [SerializeField] private RectTransform tooltipAnchor;
-    [SerializeField] private LocalizedString tooltipLocalizationString;
+    [SerializeField] private LocalizedString tooltipLocalizedString;
 
     private ObjectInspector objectInspector;
 
@@ -32,9 +32,9 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
             Debug.LogError("[InspectorTabButton] TooltipAnchor is not assigned.");
         }
 
-        if (tooltipLocalizationString == null)
+        if (tooltipLocalizedString == null)
         {
-            Debug.LogError("[InspectorTabButton] TooltipLocalizationString is not assigned.");
+            Debug.LogError("[InspectorTabButton] TooltipLocalizedString is not assigned.");
         }
     }
 
@@ -75,7 +75,7 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
         return new TooltipRequest
         {
             isValid = true,
-            text = tooltipLocalizationString,
+            text = tooltipLocalizedString,
             context = gameObject,
             fixedAnchor = tooltipAnchor
         };

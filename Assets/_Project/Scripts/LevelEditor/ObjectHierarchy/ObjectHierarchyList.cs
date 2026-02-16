@@ -258,7 +258,7 @@ public class ObjectHierarchyList : MonoBehaviour
                 continue;
             }
 
-            string baseName = levelObject.SourcePlaceableObject.localizationKey.GetLocalizedString();
+            string baseName = levelObject.SourcePlaceableObject.localizedString.GetLocalizedString();
             string displayName = index == 1 ? baseName : $"{baseName} ({index})";
             item.SetDisplayName(displayName);
 

@@ -9,7 +9,7 @@ public class CategoryDefinition : ScriptableObject
     public string categoryId;
 
     [Header("Presentation")]
-    public LocalizedString localizationKey;
+    public LocalizedString localizedString;
     public Sprite icon;
 
     [Header("Tooltip Override")]

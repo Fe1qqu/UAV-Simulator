@@ -7,7 +7,7 @@ public class ScenarioDefinition : ScriptableObject
 {
     [Header("Identity")]
     public string scenarioId;
-    public LocalizedString localizationKey;
+    public LocalizedString localizedString;
     public Sprite icon;
 
     [Header("Editor Availability")]

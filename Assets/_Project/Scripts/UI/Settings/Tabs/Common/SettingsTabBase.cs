@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 
 /// <summary>
@@ -7,15 +8,15 @@ using UnityEngine.Localization.Components;
 public abstract class SettingsTabBase : MonoBehaviour
 {
     [Header("Localization")]
-    [SerializeField] private string localizationKey;
+    [SerializeField] private string localizationTableEntryKey;
 
-    public string TabId => localizationKey;
+    public string TabId => localizationTableEntryKey;
 
     protected virtual void Awake()
     {
-        if (string.IsNullOrWhiteSpace(localizationKey))
+        if (string.IsNullOrWhiteSpace(localizationTableEntryKey))
         {
-            Debug.LogError($"[SettingsTabBase] LocalizationKey is empty on {name}.");
+            Debug.LogError($"[SettingsTabBase] LocalizationTableEntryKey is empty on {name}.");
         }
     }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DesertLandscapeLocationDefinition
   m_EditorClassIdentifier: Assembly-CSharp::LocationDefinition
   locationId: desert
-  localizationKey:
+  localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:101a2b14708cfba4ebb8f79eb4c0511b
     m_TableEntryReference:

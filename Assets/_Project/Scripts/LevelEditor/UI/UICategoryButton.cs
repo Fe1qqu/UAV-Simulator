@@ -106,7 +106,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         return new TooltipRequest
         {
             isValid = true,
-            text = linkedCategory.localizationKey,
+            text = linkedCategory.localizedString,
             explicitSettings = linkedCategory.useTooltipSettingsOverride ? linkedCategory.tooltipSettingsOverride : null,
             context = gameObject,
             fixedAnchor = tooltipAnchor

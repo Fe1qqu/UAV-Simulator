@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TreeCategoryDefinition
   m_EditorClassIdentifier: Assembly-CSharp::CategoryDefinition
   categoryId: tree
-  localizationKey:
+  localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
     m_TableEntryReference:

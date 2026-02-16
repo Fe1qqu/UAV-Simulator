@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022bc1aba29ccc04f942f59c634ab360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorSettingsPage
-  localizationKey: video
+  localizationTableEntryKey: video
   vSyncToggle: {fileID: 4319127773207002088}
 --- !u!1 &1389836217473017971
 GameObject:
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f76e9219db30e4fb45a0471e462188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsTab1
-  localizationKey: language
+  localizationTableEntryKey: language
   languageDropdown: {fileID: 4873269283255853045}
 --- !u!1 &1596133274742425181
 GameObject:
@@ -1807,7 +1807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0421ce478da4f459543dcaa2042d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsPage
-  localizationKey: audio
+  localizationTableEntryKey: audio
   masterVolumeSlider: {fileID: 550297121714982647}
 --- !u!1 &4447996306722436264
 GameObject:

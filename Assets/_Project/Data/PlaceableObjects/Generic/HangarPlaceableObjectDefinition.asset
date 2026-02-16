@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HangarPlaceableObjectDefinition
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
   objectId: hangar
-  localizationKey:
+  localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
     m_TableEntryReference:

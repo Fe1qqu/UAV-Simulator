@@ -52,6 +52,6 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
             return "—";
         }
 
-        return scenario.localizationKey.GetLocalizedString();
+        return scenario.localizedString.GetLocalizedString();
     }
 }

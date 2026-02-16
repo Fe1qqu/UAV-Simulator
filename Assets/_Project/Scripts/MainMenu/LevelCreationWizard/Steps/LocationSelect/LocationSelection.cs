@@ -88,7 +88,7 @@ public class LocationSelection : MonoBehaviour
             LocalizeStringEvent localizeStringEvent = locationButtonInstance.GetComponentInChildren<LocalizeStringEvent>();
             if (localizeStringEvent != null)
             {
-                localizeStringEvent.StringReference = location.localizationKey;
+                localizeStringEvent.StringReference = location.localizedString;
                 //localizeStringEvent.RefreshString();
             }
             else

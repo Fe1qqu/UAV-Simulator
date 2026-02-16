@@ -257,7 +257,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
         currentCategory = category;
         if (currentCategoryLocalizeEvent != null)
         {
-            currentCategoryLocalizeEvent.StringReference = category.localizationKey;
+            currentCategoryLocalizeEvent.StringReference = category.localizedString;
             //currentCategoryLocalizeEvent.RefreshString();
         }
 

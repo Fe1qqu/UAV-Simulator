@@ -8,7 +8,7 @@ public class LocationDefinition : ScriptableObject
     public string locationId;
 
     [Header("Presentation")]
-    public LocalizedString localizationKey;
+    public LocalizedString localizedString;
     public Sprite icon;
 
     [Header("Runtime")]

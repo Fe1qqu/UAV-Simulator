@@ -23,7 +23,7 @@ public class PlaceableObjectDefinition : ScriptableObject
     public string objectId;
 
     [Header("Presentation")]
-    public LocalizedString localizationKey;
+    public LocalizedString localizedString;
 
     [Tooltip("Icon shown on the placeable object's button.")]
     public Sprite icon;

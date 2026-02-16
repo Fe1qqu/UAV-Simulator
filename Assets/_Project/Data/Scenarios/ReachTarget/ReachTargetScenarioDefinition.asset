@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ReachTargetScenarioDefinition
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinition
   scenarioId: reach_target
-  localizationKey:
+  localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:a3aa967611b941544992f26420d0780c
     m_TableEntryReference:

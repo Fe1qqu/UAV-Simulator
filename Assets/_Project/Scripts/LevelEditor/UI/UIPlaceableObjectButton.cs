@@ -161,7 +161,7 @@ public class UIPlaceableObjectButton : MonoBehaviour, IPointerEnterHandler, IPoi
         return new TooltipRequest
         {
             isValid = true,
-            text = linkedPlaceableObject.localizationKey,
+            text = linkedPlaceableObject.localizedString,
             explicitSettings = linkedPlaceableObject.useTooltipSettingsOverride ? linkedPlaceableObject.tooltipSettingsOverride : null,
             context = gameObject,
         };
