@@ -165,6 +165,19 @@ public class LevelObject : MonoBehaviour
         TransformChanged?.Invoke(this);
     }
 
+    protected void RaiseAllPropertiesChanged()
+    {
+        if (properties == null)
+        {
+            return;
+        }
+
+        foreach (var property in properties)
+        {
+            PropertyChanged?.Invoke(this, property.key);
+        }
+    }
+
     public bool TrySetProperty(string key, string newValue)
     {
         LevelObjectProperty property = properties.Find(property => property.key == key);
@@ -213,10 +226,6 @@ public class LevelObject : MonoBehaviour
         {
             Debug.LogError($"[LevelObject] ObjectId is empty in LevelObjectData on '{name}'.");
         }
-        else
-        {
-            sourcePlaceableObject.objectId = objectData.objectId;
-        }
 
         transform.SetPositionAndRotation(objectData.position, objectData.rotation);
         transform.localScale = objectData.scale;
@@ -233,5 +242,7 @@ public class LevelObject : MonoBehaviour
                 value = savedObjectProperty != null ? savedObjectProperty.value : propertyDefinition.defaultValue
             });
         }
+
+        RaiseAllPropertiesChanged();
     }
 }

@@ -72,7 +72,7 @@ public class LevelLoader : MonoBehaviour
             PlaceableObjectDefinition placeableObject = placeableObjectDatabase.GetById(levelObjectData.objectId);
             if (placeableObject == null)
             {
-                Debug.LogError($"[LevelLoader] Missing object: {placeableObject.objectId}.");
+                Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");
                 continue;
             }
 

@@ -1,5 +1,7 @@
 using UnityEngine;
+using TMPro;
 using System;
+using System.Linq;
 
 public class Checkpoint : LevelObject, ITriggerReceiver
 {
@@ -9,7 +11,11 @@ public class Checkpoint : LevelObject, ITriggerReceiver
     [SerializeField] private Material unpassedMaterial;
     [SerializeField] private Material passedMaterial;
 
+    [SerializeField] private TMP_Text indexNumberText;
+
     private bool isPassed;
+
+    private const string IndexKey = "index";
 
     private void Awake()
     {
@@ -28,7 +34,46 @@ public class Checkpoint : LevelObject, ITriggerReceiver
             Debug.LogError("[Checkpoint] PassedMaterial is not assigned.");
         }
 
+        if (indexNumberText == null)
+        {
+            Debug.LogError("[Checkpoint] IndexNumberText is not assigned.");
+        }
+
         ResetState();
+    }
+
+    private void OnEnable()
+    {
+        PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnDisable()
+    {
+        PropertyChanged -= OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(LevelObject levelObject, string changedKey)
+    {
+        if (changedKey != IndexKey)
+        {
+            Debug.LogWarning($"[Checkpoint] Property key != 'index'. Checkpoint: {name}.");
+            return;
+        }
+
+        UpdateIndexVisual();
+    }
+
+    private void UpdateIndexVisual()
+    {
+        string value = Properties.FirstOrDefault(property => property.key == IndexKey)?.value;
+
+        if (string.IsNullOrEmpty(value))
+        {
+            indexNumberText.text = "?";
+            return;
+        }
+
+        indexNumberText.text = value;
     }
 
     public void MarkPassed()
