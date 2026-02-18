@@ -43,7 +43,9 @@ public class LevelObject : MonoBehaviour
             return;
         }
 
-        this.sourcePlaceableObject = placeableObject;
+        sourcePlaceableObject = placeableObject;
+        properties.Clear();
+
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
@@ -176,6 +178,18 @@ public class LevelObject : MonoBehaviour
         {
             PropertyChanged?.Invoke(this, property.key);
         }
+    }
+
+    public string GetPropertyValue(string key)
+    {
+        LevelObjectProperty property = properties.Find(property => property.key == key);
+        if (property == null)
+        {
+            Debug.LogWarning($"[LevelObject] Property '{key}' not found.");
+            return null;
+        }
+
+        return property?.value;
     }
 
     public bool TrySetProperty(string key, string newValue)

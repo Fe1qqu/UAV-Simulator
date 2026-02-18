@@ -7,7 +7,7 @@ public enum ObjectInspectorTab
     Properties
 }
 
-public class ObjectInspector : MonoBehaviour
+public class ObjectInspectorController : MonoBehaviour
 {
     [Header("Root")]
     [SerializeField] private GameObject root;
@@ -29,32 +29,32 @@ public class ObjectInspector : MonoBehaviour
     {
         if (root == null)
         {
-            Debug.LogError("[ObjectInspector] Root is not assigned.");
+            Debug.LogError("[ObjectInspectorController] Root is not assigned.");
         }
 
         if (transformInspectorTab == null)
         {
-            Debug.LogError("[ObjectInspector] TransformInspectorTab is not assigned.");
+            Debug.LogError("[ObjectInspectorController] TransformInspectorTab is not assigned.");
         }
 
         if (propertiesInspectorTab == null)
         {
-            Debug.LogError("[ObjectInspector] PropertiesInspectorTab is not assigned.");
+            Debug.LogError("[ObjectInspectorController] PropertiesInspectorTab is not assigned.");
         }
 
         if (transformInspectorTabButton == null)
         {
-            Debug.LogError("[ObjectInspector] TransformInspectorTabButton is not assigned.");
+            Debug.LogError("[ObjectInspectorController] TransformInspectorTabButton is not assigned.");
         }
 
         if (propertiesInspectorTabButton == null)
         {
-            Debug.LogError("[ObjectInspector] PropertiesInspectorTabButton is not assigned.");
+            Debug.LogError("[ObjectInspectorController] PropertiesInspectorTabButton is not assigned.");
         }
 
         if (selectionManager == null)
         {
-            Debug.LogError("[ObjectInspector] SelectionManager is not assigned.");
+            Debug.LogError("[ObjectInspectorController] SelectionManager is not assigned.");
         }
 
         transformInspectorTabButton.Initialize(this);

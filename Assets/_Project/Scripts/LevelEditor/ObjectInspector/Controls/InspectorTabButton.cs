@@ -13,7 +13,7 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] private RectTransform tooltipAnchor;
     [SerializeField] private LocalizedString tooltipLocalizedString;
 
-    private ObjectInspector objectInspector;
+    private ObjectInspectorController objectInspectorController;
 
     private void Awake()
     {
@@ -38,15 +38,15 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    public void Initialize(ObjectInspector objectInspector)
+    public void Initialize(ObjectInspectorController objectInspectorController)
     {
-        this.objectInspector = objectInspector;
+        this.objectInspectorController = objectInspectorController;
         button.onClick.AddListener(OnButtonClicked);
     }
 
     private void OnButtonClicked()
     {
-        objectInspector.SelectTab(tab);
+        objectInspectorController.SelectTab(tab);
     }
 
     public void SetSelected(bool selected)

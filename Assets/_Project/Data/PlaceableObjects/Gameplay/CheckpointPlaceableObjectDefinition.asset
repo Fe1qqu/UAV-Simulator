@@ -27,7 +27,22 @@ MonoBehaviour:
   category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
   propertyDefinitions:
   - key: index
+    localizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:3eec42838b004564b98f4d912ea37f7b
+      m_TableEntryReference:
+        m_KeyId: 23136985088
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    type: 0
     defaultValue: 0
+    useMin: 1
+    min: 0
+    useMax: 0
+    max: 0
+    enumOptions: []
   previewMaterialMode: 2
   previewMaterialOverride: {fileID: 0}
   useTooltipSettingsOverride: 0

@@ -3,12 +3,6 @@ using UnityEngine.Localization;
 using Alchemy.Inspector;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class ObjectPropertyDefinition
-{
-    public string key;
-    public string defaultValue;
-}
 public enum PreviewMaterialMode
 {
     UseDefault,   // use the general previewMaterial
@@ -35,6 +29,7 @@ public class PlaceableObjectDefinition : ScriptableObject
     [Header("Category")]
     public CategoryDefinition category;
 
+    [Header("Properties")]
     [Tooltip("Predefined properties for this object. May be empty if the object has no properties.")]
     public List<ObjectPropertyDefinition> propertyDefinitions = new();
 

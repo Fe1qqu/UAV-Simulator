@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
-using System.Collections.Generic;
 using System.Globalization;
+using System.Collections.Generic;
 
 public class TransformInspectorTab : MonoBehaviour
 {
@@ -27,8 +28,8 @@ public class TransformInspectorTab : MonoBehaviour
 
     private static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
 
-    private readonly Dictionary<TMP_InputField, UnityEngine.Events.UnityAction<string>> valueChangedHandlers = new();
-    private readonly Dictionary<TMP_InputField, UnityEngine.Events.UnityAction<string>> endEditHandlers = new();
+    private readonly Dictionary<TMP_InputField, UnityAction<string>> valueChangedHandlers = new();
+    private readonly Dictionary<TMP_InputField, UnityAction<string>> endEditHandlers = new();
 
     private void Awake()
     {
@@ -57,6 +58,11 @@ public class TransformInspectorTab : MonoBehaviour
 
     public void Bind(LevelObject levelObject)
     {
+        if (boundObject != null)
+        {
+            boundObject.TransformChanged -= OnTransformChanged;
+        }
+
         boundObject = levelObject;
         isDirty = true;
 
@@ -245,85 +251,25 @@ public class TransformInspectorTab : MonoBehaviour
         return angle;
     }
 
-    private string FilterNumericInput(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return input;
-        }    
-
-        bool hasDot = false;
-        bool hasMinus = false;
-
-        var result = new System.Text.StringBuilder(input.Length);
-
-        for (int i = 0; i < input.Length; i++)
-        {
-            char c = input[i];
-
-            if (char.IsDigit(c))
-            {
-                result.Append(c);
-            }
-            else if (c == '.' && !hasDot)
-            {
-                hasDot = true;
-                result.Append(c);
-            }
-            else if (c == '-' && i == 0 && !hasMinus)
-            {
-                hasMinus = true;
-                result.Append(c);
-            }
-        }
-
-        return result.ToString();
-    }
-
-    private string FilterNumericInput_NoNegative(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            return input;
-        }
-
-        bool hasDot = false;
-        var stringBuilder = new System.Text.StringBuilder(input.Length);
-
-        for (int i = 0; i < input.Length; i++)
-        {
-            char c = input[i];
-
-            if (char.IsDigit(c))
-            {
-                stringBuilder.Append(c);
-            }
-            else if (c == '.' && !hasDot)
-            {
-                hasDot = true;
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString();
-    }
+    private static string FilterFloatAllowNegative(string s) => NumericInputFilter.FilterFloat(s, true);
+    private static string FilterFloatNoNegative(string s) => NumericInputFilter.FilterFloat(s, false);
 
     private void RegisterCallbacks()
     {
-        RegisterNumericField(positionX, OnPositionEdited, FilterNumericInput);
-        RegisterNumericField(positionY, OnPositionEdited, FilterNumericInput);
-        RegisterNumericField(positionZ, OnPositionEdited, FilterNumericInput);
+        RegisterNumericField(positionX, OnPositionEdited, FilterFloatAllowNegative);
+        RegisterNumericField(positionY, OnPositionEdited, FilterFloatAllowNegative);
+        RegisterNumericField(positionZ, OnPositionEdited, FilterFloatAllowNegative);
 
-        RegisterNumericField(rotationX, OnRotationEdited, FilterNumericInput);
-        RegisterNumericField(rotationY, OnRotationEdited, FilterNumericInput);
-        RegisterNumericField(rotationZ, OnRotationEdited, FilterNumericInput);
+        RegisterNumericField(rotationX, OnRotationEdited, FilterFloatAllowNegative);
+        RegisterNumericField(rotationY, OnRotationEdited, FilterFloatAllowNegative);
+        RegisterNumericField(rotationZ, OnRotationEdited, FilterFloatAllowNegative);
 
-        RegisterNumericField(scaleX, OnScaleEdited, FilterNumericInput_NoNegative);
-        RegisterNumericField(scaleY, OnScaleEdited, FilterNumericInput_NoNegative);
-        RegisterNumericField(scaleZ, OnScaleEdited, FilterNumericInput_NoNegative);
+        RegisterNumericField(scaleX, OnScaleEdited, FilterFloatNoNegative);
+        RegisterNumericField(scaleY, OnScaleEdited, FilterFloatNoNegative);
+        RegisterNumericField(scaleZ, OnScaleEdited, FilterFloatNoNegative);
     }
 
-    private void RegisterNumericField(TMP_InputField field, UnityEngine.Events.UnityAction onEndEdit, System.Func<string, string> filter)
+    private void RegisterNumericField(TMP_InputField field, UnityAction onEndEdit, System.Func<string, string> filter)
     {
         void valueChanged(string value)
         {
