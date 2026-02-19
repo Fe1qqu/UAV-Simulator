@@ -33,6 +33,10 @@ public class QuadcopterController : DroneControllerBase, IControllable
     [SerializeField] private float maxRotorRPM = 4000f;
     [SerializeField] private float rotorRPMChangeRate = 0.5f;
 
+    [Header("Flight Controls")]
+    [SerializeField] private float rotationSpeed = 100f;
+    [SerializeField] private float throttleSpeed = 10f;
+
     private Dictionary<RotorPosition, Rotor> rotors = new();
 
     private Dictionary<string, float> rpmDebugDict = new();
@@ -75,8 +79,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    void Update() //визуальное изменение
+    void Update()
     {
+        // Rotor animation
         foreach (var kvp in rotors)
         {
             Rotor rotor = kvp.Value;
@@ -85,10 +90,13 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    void FixedUpdate() //фактическое изменение
+    void FixedUpdate()
     {
         UpdateMotorSpeeds();
         ApplyRotorForces();
+
+        // Apply direct rotation control
+        ApplyRotationControl();
     }
 
     private void LateUpdate()
@@ -98,7 +106,6 @@ public class QuadcopterController : DroneControllerBase, IControllable
             rpmDebugDict[kvp.Key.ToString()] = kvp.Value.CurrentRPM;
         }
     }
- 
 
     private void UpdateMotorSpeeds()
     {
@@ -139,45 +146,35 @@ public class QuadcopterController : DroneControllerBase, IControllable
             rotor.CurrentRPM = Mathf.Clamp(rotor.CurrentRPM, 0, maxRotorRPM);
         }
     }
+
     private void ApplyRotorForces()
     {
-        // Переменная для суммарного крутящего момента
-        Vector3 totalTorque = Vector3.zero;
-
+        // Применяем подъемную силу только для throttle
         foreach (Rotor rotor in rotors.Values)
         {
-            // 1. Подъемная сила (оставляем как было)
             float lift = liftCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
             Vector3 liftForce = transform.up * lift;
             rigidBody.AddForceAtPosition(liftForce, rotor.bone.position, ForceMode.Force);
-
-            // 2. Крутящий момент от ротор
-            float torqueCoefficient = liftCoefficient * 0.1f; // Например, 10% от подъемной силы
-            float torqueMagnitude = torqueCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
-
-            // Направление момента зависит от направления вращения
-            Vector3 torque = Vector3.zero;
-            if (rotor.clockwise)
-            {
-                torque = transform.up * torqueMagnitude; // По часовой = отрицательный момент
-            }
-            else
-            {
-                torque = -transform.up * torqueMagnitude; // Против часовой = положительный момент
-            }
-
-            // Добавляем к суммарному моменту
-            totalTorque += torque;
         }
-
-        // 3. Применяем суммарный крутящий момент к дрону
-        rigidBody.AddTorque(totalTorque, ForceMode.Force);
     }
 
-    public void ApplyThrottle(float value) => throttleInput = value;
-    public void ApplyYaw(float value) => yawInput = value;
-    public void ApplyPitch(float value) => pitchInput = value;
-    public void ApplyRoll(float value) => rollInput = value;
+    private void ApplyRotationControl()
+    {
+        // Прямое управление вращением через Transform
+        float yawRotation = yawInput * rotationSpeed * Time.fixedDeltaTime;
+        float pitchRotation = pitchInput * rotationSpeed * Time.fixedDeltaTime;
+        float rollRotation = rollInput * rotationSpeed * Time.fixedDeltaTime;
+
+        // Применяем вращение
+        transform.Rotate(Vector3.up, yawRotation, Space.World);
+        transform.Rotate(Vector3.right, pitchRotation, Space.Self);
+        transform.Rotate(Vector3.forward, -rollRotation, Space.Self);
+    }
+
+    public void ApplyThrottle(float value) => throttleInput = Mathf.Clamp01(value);
+    public void ApplyYaw(float value) => yawInput = Mathf.Clamp(value, -1f, 1f);
+    public void ApplyPitch(float value) => pitchInput = Mathf.Clamp(value, -1f, 1f);
+    public void ApplyRoll(float value) => rollInput = Mathf.Clamp(value, -1f, 1f);
 
     public override void ResetState()
     {
@@ -205,4 +202,3 @@ public class QuadcopterController : DroneControllerBase, IControllable
         rpmDebugDict.Clear();
     }
 }
-
