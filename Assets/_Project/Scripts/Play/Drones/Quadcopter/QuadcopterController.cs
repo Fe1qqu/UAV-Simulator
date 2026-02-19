@@ -20,6 +20,7 @@ public class Rotor
 public class QuadcopterController : DroneControllerBase, IControllable
 {
     private Rigidbody rigidBody;
+    private Quaternion targetRotation;
 
     [Header("Rotors")]
     [SerializeField] private Rotor frontLeft;
@@ -35,7 +36,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
     [Header("Flight Controls")]
     [SerializeField] private float rotationSpeed = 100f;
-    [SerializeField] private float throttleSpeed = 10f;
+    [SerializeField] private float rotationLerpSpeed = 10f;
 
     private Dictionary<RotorPosition, Rotor> rotors = new();
 
@@ -77,6 +78,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
                 return;
             }
         }
+
+        // Initialize target rotation
+        targetRotation = transform.rotation;
     }
 
     void Update()
@@ -95,7 +99,13 @@ public class QuadcopterController : DroneControllerBase, IControllable
         UpdateMotorSpeeds();
         ApplyRotorForces();
 
-        // Apply direct rotation control
+        // Apply rotation control only when there's input
+        if (HasRotationInput())
+        {
+            UpdateTargetRotation();
+        }
+
+        // Smoothly rotate towards target rotation
         ApplyRotationControl();
     }
 
@@ -105,6 +115,35 @@ public class QuadcopterController : DroneControllerBase, IControllable
         {
             rpmDebugDict[kvp.Key.ToString()] = kvp.Value.CurrentRPM;
         }
+    }
+
+    private bool HasRotationInput()
+    {
+        return Mathf.Abs(yawInput) > 0.01f ||
+               Mathf.Abs(pitchInput) > 0.01f ||
+               Mathf.Abs(rollInput) > 0.01f;
+    }
+
+    private void UpdateTargetRotation()
+    {
+        // Calculate rotation deltas based on input
+        float yawRotation = yawInput * rotationSpeed * Time.fixedDeltaTime;
+        float pitchRotation = pitchInput * rotationSpeed * Time.fixedDeltaTime;
+        float rollRotation = rollInput * rotationSpeed * Time.fixedDeltaTime;
+
+        // Apply rotations to target
+        targetRotation *= Quaternion.Euler(pitchRotation, 0f, -rollRotation);
+        targetRotation *= Quaternion.Euler(0f, yawRotation, 0f);
+    }
+
+    private void ApplyRotationControl()
+    {
+        // Smoothly interpolate to target rotation
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationLerpSpeed * Time.fixedDeltaTime
+        );
     }
 
     private void UpdateMotorSpeeds()
@@ -158,19 +197,6 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    private void ApplyRotationControl()
-    {
-        // Прямое управление вращением через Transform
-        float yawRotation = yawInput * rotationSpeed * Time.fixedDeltaTime;
-        float pitchRotation = pitchInput * rotationSpeed * Time.fixedDeltaTime;
-        float rollRotation = rollInput * rotationSpeed * Time.fixedDeltaTime;
-
-        // Применяем вращение
-        transform.Rotate(Vector3.up, yawRotation, Space.World);
-        transform.Rotate(Vector3.right, pitchRotation, Space.Self);
-        transform.Rotate(Vector3.forward, -rollRotation, Space.Self);
-    }
-
     public void ApplyThrottle(float value) => throttleInput = Mathf.Clamp01(value);
     public void ApplyYaw(float value) => yawInput = Mathf.Clamp(value, -1f, 1f);
     public void ApplyPitch(float value) => pitchInput = Mathf.Clamp(value, -1f, 1f);
@@ -183,6 +209,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
         yawInput = 0f;
         pitchInput = 0f;
         rollInput = 0f;
+
+        // Reset target rotation to current rotation
+        targetRotation = transform.rotation;
 
         // Resetting RPM of all rotors
         foreach (Rotor rotor in rotors.Values)
