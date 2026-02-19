@@ -19,7 +19,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase
         levelCreationWizard.OnExit = ExitToEditorMenu;
         levelCreationWizard.OnExitToMainMenu = ExitToMainMenu;
 
-        levelCreationWizard.StartWizard();
+        _ = levelCreationWizard.StartWizardAsync();
     }
 
     protected override void OnHideInternal()

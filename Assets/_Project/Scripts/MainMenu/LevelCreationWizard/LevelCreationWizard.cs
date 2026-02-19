@@ -1,7 +1,10 @@
 using UnityEngine;
-using UnityEngine.Localization.Components;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.Localization.Components;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Manages the level creation wizard UI, navigation between steps, and starting the level editor.
@@ -35,8 +38,10 @@ public class LevelCreationWizard : MonoBehaviour
 
     private LocalizationPreloader localizationPreloader;
 
-    public System.Action OnExit;
-    public System.Action OnExitToMainMenu;
+    private CancellationTokenSource cancellationTokenSource;
+
+    public Action OnExit;
+    public Action OnExitToMainMenu;
 
     private void Awake()
     {
@@ -102,12 +107,16 @@ public class LevelCreationWizard : MonoBehaviour
         mainMenuButton.onClick.RemoveListener(OnMainMenuClicked);
     }
 
-    /// <summary>
-    /// Starts the wizard and shows the first step.
-    /// </summary>
-    public async void StartWizard()
+    public async Task StartWizardAsync()
     {
-        await localizationPreloader.Load();
+        cancellationTokenSource = new CancellationTokenSource();
+
+        await localizationPreloader.Load(cancellationTokenSource.Token);
+
+        if (cancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
 
         ShowStep(0);
         wizardPanel.SetActive(true);
@@ -115,6 +124,13 @@ public class LevelCreationWizard : MonoBehaviour
 
     public void StopWizard()
     {
+        if (cancellationTokenSource != null)
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+            cancellationTokenSource = null;
+        }
+
         wizardPanel.SetActive(false);
         localizationPreloader.Unload();
     }

@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEditor.Localization;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEditor.Localization;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 /// <summary>
 /// Preloads multiple localization tables in parallel.
@@ -22,7 +23,7 @@ public class LocalizationPreloader : MonoBehaviour
     /// <summary>
     /// Loads all tables in parallel.
     /// </summary>
-    public async Task Load()
+    public async Task Load(CancellationToken cancellationToken = default)
     {
         if (IsLoaded)
         {
@@ -44,12 +45,22 @@ public class LocalizationPreloader : MonoBehaviour
                 continue;
             }
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var handle = LocalizationSettings.StringDatabase.GetTableAsync(stringTableCollection.TableCollectionName);
             handles.Add(stringTableCollection, handle);
             tasks.Add(handle.Task);
         }
 
         await Task.WhenAll(tasks);
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
 
         foreach (var kvp in handles)
         {
