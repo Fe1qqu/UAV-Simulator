@@ -93,16 +93,25 @@ public class PropertiesInspectorTab : MonoBehaviour
 
     private PropertyInspectorFieldBase CreateField(ObjectPropertyDefinition propertyDefinition)
     {
-        return propertyDefinition.type switch
+        switch (propertyDefinition.type)
         {
-            ObjectPropertyType.Int => Instantiate(inputFieldPrefab, listRoot),
-            ObjectPropertyType.Float => Instantiate(inputFieldPrefab, listRoot),
-            ObjectPropertyType.Bool => Instantiate(boolFieldPrefab, listRoot),
-            ObjectPropertyType.String => Instantiate(inputFieldPrefab, listRoot),
-            //ObjectPropertyType.Color => Instantiate(colorFieldPrefab, listRoot),
-            ObjectPropertyType.Enum => Instantiate(enumFieldPrefab, listRoot),
-            _ => Instantiate(inputFieldPrefab, listRoot)
-        };
+            case ObjectPropertyType.Int:
+            case ObjectPropertyType.Float:
+            case ObjectPropertyType.String:
+                return Instantiate(inputFieldPrefab, listRoot);
+
+            case ObjectPropertyType.Bool:
+                return Instantiate(boolFieldPrefab, listRoot);
+
+            case ObjectPropertyType.Enum:
+                return Instantiate(enumFieldPrefab, listRoot);
+
+            // case ObjectPropertyType.Color:
+            //     return Instantiate(colorFieldPrefab, listRoot);
+
+            default:
+                return Instantiate(inputFieldPrefab, listRoot);
+        }
     }
 
     private void ClearUI()
