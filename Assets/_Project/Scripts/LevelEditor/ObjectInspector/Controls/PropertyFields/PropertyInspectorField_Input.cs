@@ -28,8 +28,7 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
 
         base.Bind(levelObject, propertyDefinition);
 
-        keyText.text = propertyDefinition.localizedString.GetLocalizedString();
-        valueInputField.text = GetCurrentValue();
+        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
 
         valueInputField.onValueChanged.RemoveAllListeners();
         valueInputField.onEndEdit.RemoveAllListeners();
@@ -37,7 +36,12 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
         valueInputField.onValueChanged.AddListener(OnValueChanged);
         valueInputField.onEndEdit.AddListener(OnEndEdit);
 
-        boundObject.PropertyChanged += OnPropertyChanged;
+        RefreshFromModel();
+    }
+
+    protected override void ApplyValueToUI(string value)
+    {
+        valueInputField.text = value;
     }
 
     private void OnValueChanged(string newValue)
@@ -47,15 +51,15 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
             return;
         }
 
-        if (propertyDefinition.type == ObjectPropertyType.Int)
+        if (boundPropertyDefinition.type == ObjectPropertyType.Int)
         {
-            bool allowNegative = !propertyDefinition.useMin || propertyDefinition.min < 0f;
+            bool allowNegative = !boundPropertyDefinition.useMin || boundPropertyDefinition.min < 0f;
             string filteredValue = NumericInputFilter.FilterInt(newValue, allowNegative);
             ApplyFiltered(filteredValue);
         }
-        else if (propertyDefinition.type == ObjectPropertyType.Float)
+        else if (boundPropertyDefinition.type == ObjectPropertyType.Float)
         {
-            bool allowNegative = !propertyDefinition.useMin || propertyDefinition.min < 0f;
+            bool allowNegative = !boundPropertyDefinition.useMin || boundPropertyDefinition.min < 0f;
             string filteredValue = NumericInputFilter.FilterFloat(newValue, allowNegative);
             ApplyFiltered(filteredValue);
         }
@@ -69,7 +73,7 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
         }
 
         suppressNotify = true;
-        valueInputField.text = filteredValue;
+        ApplyValueToUI(filteredValue);
         suppressNotify = false;
     }
 
@@ -80,35 +84,11 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
             return;
         }
 
-        if (!validator.TryValidate(value, propertyDefinition, out string normalizedValue, out string _))
+        if (!validator.TryValidate(value, boundPropertyDefinition, out string normalizedValue, out string _))
         {
             return;
         }
 
         SetValue(normalizedValue);
-
-        suppressNotify = true;
-        valueInputField.text = normalizedValue;
-        suppressNotify = false;
-    }
-
-    private void OnPropertyChanged(LevelObject _, string changedKey)
-    {
-        if (changedKey != propertyDefinition.key)
-        {
-            return;
-        }
-
-        suppressNotify = true;
-        valueInputField.text = GetCurrentValue();
-        suppressNotify = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (boundObject != null)
-        {
-            boundObject.PropertyChanged -= OnPropertyChanged;
-        }
     }
 }

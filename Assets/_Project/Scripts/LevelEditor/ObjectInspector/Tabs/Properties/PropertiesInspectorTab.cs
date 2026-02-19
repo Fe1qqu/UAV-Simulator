@@ -88,7 +88,6 @@ public class PropertiesInspectorTab : MonoBehaviour
             PropertyInspectorFieldBase propertyFieldInstance = CreateField(propertyDefinition);
             propertyFieldInstance.Bind(boundObject, propertyDefinition);
             propertyFieldInstance.gameObject.SetActive(true);
-
         }
     }
 

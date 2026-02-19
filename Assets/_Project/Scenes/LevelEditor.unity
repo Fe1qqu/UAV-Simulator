@@ -1929,9 +1929,9 @@ MonoBehaviour:
   tooltipAnchor: {fileID: 340340769}
   tooltipLocalizedString:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:2ec303a8f3a42c9479b870808142144e
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 30394850915540992
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -16008,8 +16008,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1994954575}
   m_HandleRect: {fileID: 1994954574}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19521,9 +19521,9 @@ MonoBehaviour:
   tooltipAnchor: {fileID: 325148084}
   tooltipLocalizedString:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:2ec303a8f3a42c9479b870808142144e
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 30394783223668736
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

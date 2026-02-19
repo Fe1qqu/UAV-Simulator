@@ -24,7 +24,9 @@ public class LevelObject : MonoBehaviour
     public bool IsAlive => LifecycleState == LevelObjectLifecycleState.Alive;
 
     public event Action<LevelObject> TransformChanged;
-    public event Action<LevelObject, string> PropertyChanged;
+    public event Action<LevelObject, PropertyKey> PropertyChanged;
+
+    private Dictionary<string, LevelObjectProperty> _propertyCache;
 
     private void OnDestroy()
     {
@@ -44,11 +46,12 @@ public class LevelObject : MonoBehaviour
         }
 
         sourcePlaceableObject = placeableObject;
-        properties.Clear();
+        
 
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
+        properties.Clear();
         foreach (ObjectPropertyDefinition propertyDefinition in placeableObject.propertyDefinitions)
         {
             properties.Add(new LevelObjectProperty
@@ -57,6 +60,7 @@ public class LevelObject : MonoBehaviour
                 value = propertyDefinition.defaultValue
             });
         }
+        BuildPropertyCache();
 
         if (LevelObjectRegistry.Instance != null)
         {
@@ -169,44 +173,169 @@ public class LevelObject : MonoBehaviour
 
     protected void RaiseAllPropertiesChanged()
     {
-        if (properties == null)
+        if (_propertyCache == null)
         {
-            return;
+            BuildPropertyCache();
         }
 
-        foreach (var property in properties)
+        foreach (var kvp in _propertyCache)
         {
-            PropertyChanged?.Invoke(this, property.key);
+            if (PropertyKeyRegistry.TryGet(kvp.Key, out var key))
+            {
+                PropertyChanged?.Invoke(this, key);
+            }
         }
     }
 
-    public string GetPropertyValue(string key)
+    public bool HasProperty(PropertyKey key)
     {
-        LevelObjectProperty property = properties.Find(property => property.key == key);
-        if (property == null)
+        if (_propertyCache == null)
         {
-            Debug.LogWarning($"[LevelObject] Property '{key}' not found.");
+            BuildPropertyCache();
+        }
+
+        return _propertyCache.ContainsKey(key.Name);
+    }
+
+    private void BuildPropertyCache()
+    {
+        _propertyCache = new Dictionary<string, LevelObjectProperty>();
+
+        foreach (LevelObjectProperty property in properties)
+        {
+            _propertyCache[property.key] = property;
+        }
+    }
+
+    public bool TryGet<T>(PropertyKey<T> key, out T value)
+    {
+        value = default;
+
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
+            return false;
+        }
+
+        string raw = property.value;
+
+        try
+        {
+            if (typeof(T) == typeof(int))
+            {
+                if (int.TryParse(raw, System.Globalization.NumberStyles.Integer,
+                    System.Globalization.CultureInfo.InvariantCulture, out int i))
+                {
+                    value = (T)(object)i;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(float))
+            {
+                if (float.TryParse(raw, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out float f))
+                {
+                    value = (T)(object)f;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(bool))
+            {
+                if (bool.TryParse(raw, out bool b))
+                {
+                    value = (T)(object)b;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(string))
+            {
+                value = (T)(object)raw;
+                return true;
+            }
+            else if (typeof(T).IsEnum)
+            {
+                if (Enum.TryParse(typeof(T), raw, out object enumValue))
+                {
+                    value = (T)enumValue;
+                    return true;
+                }
+            }
+        }
+        catch { }
+
+        return false;
+    }
+
+    public T Get<T>(PropertyKey<T> key, T defaultValue = default)
+    {
+        return TryGet(key, out T value) ? value : defaultValue;
+    }
+
+    public string Get(PropertyKey key)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
             return null;
         }
 
-        return property?.value;
+        return property.value;
     }
 
-    public bool TrySetProperty(string key, string newValue)
+    public bool Set<T>(PropertyKey<T> key, T newValue)
     {
-        LevelObjectProperty property = properties.Find(property => property.key == key);
-        if (property == null)
+        if (_propertyCache == null)
         {
-            Debug.LogWarning($"[LevelObject] Property '{key}' not found.");
-            return false;
+            BuildPropertyCache();
         }
 
-        if (property.value == newValue)
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
         {
             return false;
         }
 
-        property.value = newValue;
+        string stringValue = newValue is IFormattable f
+                ? f.ToString(null, System.Globalization.CultureInfo.InvariantCulture)
+                : newValue.ToString();
+
+        if (property.value == stringValue)
+        {
+            return false;
+        }
+
+        property.value = stringValue;
+
+        PropertyChanged?.Invoke(this, key);
+        return true;
+    }
+
+    public bool Set(PropertyKey key, string rawValue)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
+            return false;
+        }
+
+        if (property.value == rawValue)
+        {
+            return false;
+        }
+
+        property.value = rawValue;
+
         PropertyChanged?.Invoke(this, key);
         return true;
     }
@@ -256,6 +385,8 @@ public class LevelObject : MonoBehaviour
                 value = savedObjectProperty != null ? savedObjectProperty.value : propertyDefinition.defaultValue
             });
         }
+
+        BuildPropertyCache();
 
         RaiseAllPropertiesChanged();
     }

@@ -16,7 +16,7 @@ public class ReachTargetScenarioValidator : ScenarioSpecificValidator
         }
 
         var indices = checkpoints
-            .Select(checkpoint => checkpoint.GetInt("index"))
+            .Select(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, -1))
             .OrderBy(i => i)
             .ToList();
 

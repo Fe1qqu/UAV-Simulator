@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using System;
-using System.Linq;
 
 public class Checkpoint : LevelObject, ITriggerReceiver
 {
@@ -14,8 +13,6 @@ public class Checkpoint : LevelObject, ITriggerReceiver
     [SerializeField] private TMP_Text indexNumberText;
 
     private bool isPassed;
-
-    private const string IndexKey = "index";
 
     private void Awake()
     {
@@ -52,28 +49,18 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         PropertyChanged -= OnPropertyChanged;
     }
 
-    private void OnPropertyChanged(LevelObject levelObject, string changedKey)
+    private void OnPropertyChanged(LevelObject levelObject, PropertyKey changedKey)
     {
-        if (changedKey != IndexKey)
+        if (changedKey == LevelPropertyKeys.Index)
         {
-            Debug.LogWarning($"[Checkpoint] Property key != 'index'. Checkpoint: {name}.");
-            return;
+            UpdateIndexVisual();
         }
-
-        UpdateIndexVisual();
     }
 
     private void UpdateIndexVisual()
     {
-        string value = Properties.FirstOrDefault(property => property.key == IndexKey)?.value;
-
-        if (string.IsNullOrEmpty(value))
-        {
-            indexNumberText.text = "?";
-            return;
-        }
-
-        indexNumberText.text = value;
+        int index = Get(LevelPropertyKeys.Index, -1);
+        indexNumberText.text = index >= 0 ? index.ToString() : "?";
     }
 
     public void MarkPassed()
@@ -84,7 +71,7 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         }
 
         isPassed = true;
-        meshRenderer.sharedMaterial = passedMaterial;
+        meshRenderer.material = passedMaterial;
     }
 
     public void ResetState()

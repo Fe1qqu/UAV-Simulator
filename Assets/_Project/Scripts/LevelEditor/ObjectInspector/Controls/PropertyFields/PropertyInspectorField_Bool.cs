@@ -1,6 +1,6 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PropertyInspectorField_Bool : PropertyInspectorFieldBase
 {
@@ -29,15 +29,18 @@ public class PropertyInspectorField_Bool : PropertyInspectorFieldBase
 
         base.Bind(levelObject, propertyDefinition);
 
-        keyText.text = propertyDefinition.localizedString.GetLocalizedString();
-
-        bool.TryParse(GetCurrentValue(), out bool value);
-        valueToggle.isOn = value;
+        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
 
         valueToggle.onValueChanged.RemoveAllListeners();
         valueToggle.onValueChanged.AddListener(OnValueChanged);
 
-        boundObject.PropertyChanged += OnPropertyChanged;
+        RefreshFromModel();
+    }
+
+    protected override void ApplyValueToUI(string value)
+    {
+        bool.TryParse(value, out bool parsed);
+        valueToggle.isOn = parsed;
     }
 
     private void OnValueChanged(bool newValue)
@@ -47,29 +50,6 @@ public class PropertyInspectorField_Bool : PropertyInspectorFieldBase
             return;
         }
 
-        SetValue(newValue ? "true" : "false");
-    }
-
-    private void OnPropertyChanged(LevelObject _, string changedKey)
-    {
-        if (changedKey != propertyDefinition.key)
-        {
-            return;
-        }
-
-        suppressNotify = true;
-
-        bool.TryParse(GetCurrentValue(), out bool value);
-        valueToggle.isOn = value;
-
-        suppressNotify = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (boundObject != null)
-        {
-            boundObject.PropertyChanged -= OnPropertyChanged;
-        }
+        SetValue(newValue.ToString());
     }
 }

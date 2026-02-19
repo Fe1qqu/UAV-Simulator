@@ -34,18 +34,21 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
 
         base.Bind(levelObject, propertyDefinition);
 
-        keyText.text = propertyDefinition.localizedString.GetLocalizedString();
+        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
 
         valueDropdown.ClearOptions();
-        valueDropdown.AddOptions(propertyDefinition.enumOptions);
-
-        int index = propertyDefinition.enumOptions.IndexOf(GetCurrentValue());
-        valueDropdown.value = index >= 0 ? index : 0;
+        valueDropdown.AddOptions(boundPropertyDefinition.enumOptions);
 
         valueDropdown.onValueChanged.RemoveAllListeners();
         valueDropdown.onValueChanged.AddListener(OnValueChanged);
 
-        boundObject.PropertyChanged += OnPropertyChanged;
+        RefreshFromModel();
+    }
+
+    protected override void ApplyValueToUI(string value)
+    {
+        int index = boundPropertyDefinition.enumOptions.IndexOf(value);
+        valueDropdown.value = index >= 0 ? index : 0;
     }
 
     private void OnValueChanged(int index)
@@ -55,29 +58,6 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
             return;
         }
 
-        SetValue(propertyDefinition.enumOptions[index]);
-    }
-
-    private void OnPropertyChanged(LevelObject _, string changedKey)
-    {
-        if (changedKey != propertyDefinition.key)
-        {
-            return;
-        }
-
-        suppressNotify = true;
-
-        int index = propertyDefinition.enumOptions.IndexOf(GetCurrentValue());
-        valueDropdown.value = index >= 0 ? index : 0;
-
-        suppressNotify = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (boundObject != null)
-        {
-            boundObject.PropertyChanged -= OnPropertyChanged;
-        }
+        SetValue(boundPropertyDefinition.enumOptions[index]);
     }
 }
