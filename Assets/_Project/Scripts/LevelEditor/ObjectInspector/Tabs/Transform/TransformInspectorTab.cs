@@ -298,19 +298,19 @@ public class TransformInspectorTab : MonoBehaviour
 
     private void UnregisterCallbacks()
     {
-        foreach (var kvp in valueChangedHandlers)
+        foreach (var keyValuePair in valueChangedHandlers)
         {
-            if (kvp.Key != null)
+            if (keyValuePair.Key != null)
             {
-                kvp.Key.onValueChanged.RemoveListener(kvp.Value);
+                keyValuePair.Key.onValueChanged.RemoveListener(keyValuePair.Value);
             }
         }
 
-        foreach (var kvp in endEditHandlers)
+        foreach (var keyValuePair in endEditHandlers)
         {
-            if (kvp.Key != null)
+            if (keyValuePair.Key != null)
             {
-                kvp.Key.onEndEdit.RemoveListener(kvp.Value);
+                keyValuePair.Key.onEndEdit.RemoveListener(keyValuePair.Value);
             }
         }
 

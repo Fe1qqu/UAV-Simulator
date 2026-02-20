@@ -62,10 +62,10 @@ public class LocalizationPreloader : MonoBehaviour
             return;
         }
 
-        foreach (var kvp in handles)
+        foreach (var keyValuePair in handles)
         {
-            var collection = kvp.Key;
-            var handle = kvp.Value;
+            var collection = keyValuePair.Key;
+            var handle = keyValuePair.Value;
 
             if (!handle.IsValid() || handle.Status != AsyncOperationStatus.Succeeded)
             {
@@ -86,11 +86,11 @@ public class LocalizationPreloader : MonoBehaviour
     /// </summary>
     public void Unload()
     {
-        foreach (var kvp in handles)
+        foreach (var keyValuePair in handles)
         {
-            if (kvp.Value.IsValid())
+            if (keyValuePair.Value.IsValid())
             {
-                Addressables.Release(kvp.Value);
+                Addressables.Release(keyValuePair.Value);
             }
         }
 

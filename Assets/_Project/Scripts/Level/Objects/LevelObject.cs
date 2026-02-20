@@ -178,9 +178,9 @@ public class LevelObject : MonoBehaviour
             BuildPropertyCache();
         }
 
-        foreach (var kvp in _propertyCache)
+        foreach (var keyValuePair in _propertyCache)
         {
-            if (PropertyKeyRegistry.TryGet(kvp.Key, out var key))
+            if (PropertyKeyRegistry.TryGet(keyValuePair.Key, out var key))
             {
                 PropertyChanged?.Invoke(this, key);
             }
