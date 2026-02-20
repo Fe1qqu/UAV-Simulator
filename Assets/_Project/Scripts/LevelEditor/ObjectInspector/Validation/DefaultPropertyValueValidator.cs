@@ -3,12 +3,12 @@ using System.Globalization;
 
 public class DefaultPropertyValueValidator : IPropertyValueValidator
 {
-    public bool TryValidate(string input, ObjectPropertyDefinition propertyDefinition, out string normalizedValue, out string errorMessage)
+    public bool TryValidate(string input, ObjectPropertyDefinition objectProperty, out string normalizedValue, out string errorMessage)
     {
         normalizedValue = input;
         errorMessage = null;
 
-        switch (propertyDefinition.type)
+        switch (objectProperty.type)
         {
             case ObjectPropertyType.Int:
                 if (!int.TryParse(input, out int intValue))
@@ -17,14 +17,14 @@ public class DefaultPropertyValueValidator : IPropertyValueValidator
                     return false;
                 }
 
-                if (propertyDefinition.useMin)
+                if (objectProperty.useMin)
                 {
-                    intValue = Mathf.Max(intValue, Mathf.RoundToInt(propertyDefinition.min));
+                    intValue = Mathf.Max(intValue, Mathf.RoundToInt(objectProperty.min));
                 }
 
-                if (propertyDefinition.useMax)
+                if (objectProperty.useMax)
                 {
-                    intValue = Mathf.Min(intValue, Mathf.RoundToInt(propertyDefinition.max));
+                    intValue = Mathf.Min(intValue, Mathf.RoundToInt(objectProperty.max));
                 }
 
                 normalizedValue = intValue.ToString();
@@ -37,14 +37,14 @@ public class DefaultPropertyValueValidator : IPropertyValueValidator
                     return false;
                 }
 
-                if (propertyDefinition.useMin)
+                if (objectProperty.useMin)
                 {
-                    floatValue = Mathf.Max(floatValue, propertyDefinition.min);
+                    floatValue = Mathf.Max(floatValue, objectProperty.min);
                 }
 
-                if (propertyDefinition.useMax)
+                if (objectProperty.useMax)
                 {
-                    floatValue = Mathf.Min(floatValue, propertyDefinition.max);
+                    floatValue = Mathf.Min(floatValue, objectProperty.max);
                 }
 
                 normalizedValue = floatValue.ToString(CultureInfo.InvariantCulture);
@@ -61,7 +61,7 @@ public class DefaultPropertyValueValidator : IPropertyValueValidator
                 return true;
 
             case ObjectPropertyType.Enum:
-                if (propertyDefinition.enumOptions == null || !propertyDefinition.enumOptions.Contains(input))
+                if (objectProperty.enumOptions == null || !objectProperty.enumOptions.Contains(input))
                 {
                     errorMessage = "Invalid enum value";
                     return false;

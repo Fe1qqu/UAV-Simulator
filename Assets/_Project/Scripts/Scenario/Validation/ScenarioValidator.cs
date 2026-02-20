@@ -35,8 +35,8 @@ public static class ScenarioValidator
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "LevelObjectRegistry is missing");
         }
 
-        // Validating scenario definition
-        string scenarioErrorMessage = ValidateScenarioDefinition(scenario);
+        // Validating scenario
+        string scenarioErrorMessage = ValidateScenario(scenario);
         if (scenarioErrorMessage != null)
         {
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioErrorMessage);
@@ -45,18 +45,18 @@ public static class ScenarioValidator
         // Validating level
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            int count = CountObjects(objectRule.objectDefinition, levelObjectRegistry);
+            int count = CountObjects(objectRule.placeableObject, levelObjectRegistry);
 
             if (count < objectRule.minCount)
             {
                 return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, 
-                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.objectDefinition.name}'");
+                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.placeableObject.name}'");
             }
 
             if (objectRule.maxCount >= 0 && count > objectRule.maxCount)
             {
                 return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid,
-                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.objectDefinition.name}'");
+                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.placeableObject.name}'");
             }
         }
 
@@ -69,7 +69,7 @@ public static class ScenarioValidator
         return ScenarioValidationResult.Ok();
     }
 
-    private static string ValidateScenarioDefinition(ScenarioDefinition scenario)
+    private static string ValidateScenario(ScenarioDefinition scenario)
     {
         if (string.IsNullOrEmpty(scenario.scenarioId))
         {
@@ -83,14 +83,14 @@ public static class ScenarioValidator
 
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            if (string.IsNullOrEmpty(objectRule.objectDefinition.objectId))
+            if (string.IsNullOrEmpty(objectRule.placeableObject.objectId))
             {
                 return $"Scenario '{scenario.scenarioId}' contains rule with empty objectId";
             }
 
             if (objectRule.maxCount >= 0 && objectRule.maxCount < objectRule.minCount)
             {
-                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.objectDefinition.name}': maxCount < minCount";
+                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.placeableObject.name}': maxCount < minCount";
             }
         }
 

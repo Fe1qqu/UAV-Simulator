@@ -31,7 +31,7 @@ public class PlaceableObjectDefinition : ScriptableObject
 
     [Header("Properties")]
     [Tooltip("Predefined properties for this object. May be empty if the object has no properties.")]
-    public List<ObjectPropertyDefinition> propertyDefinitions = new();
+    public List<ObjectPropertyDefinition> properties = new();
 
     [Header("Preview")]
     public PreviewMaterialMode previewMaterialMode = PreviewMaterialMode.UseDefault;

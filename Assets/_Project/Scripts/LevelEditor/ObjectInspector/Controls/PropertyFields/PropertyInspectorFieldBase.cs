@@ -3,22 +3,22 @@ using UnityEngine;
 public abstract class PropertyInspectorFieldBase : MonoBehaviour
 {
     protected LevelObject boundObject;
-    protected ObjectPropertyDefinition boundPropertyDefinition;
+    protected ObjectPropertyDefinition boundObjectProperty;
     protected PropertyKey propertyKey;
     protected bool suppressNotify;
 
     protected IPropertyValueValidator validator = new DefaultPropertyValueValidator();
 
-    public virtual void Bind(LevelObject levelObject, ObjectPropertyDefinition propertyDefinition)
+    public virtual void Bind(LevelObject levelObject, ObjectPropertyDefinition objectProperty)
     {
         boundObject = levelObject;
-        boundPropertyDefinition = propertyDefinition;
+        boundObjectProperty = objectProperty;
 
-        propertyKey = PropertyKeyRegistry.Get(boundPropertyDefinition.key);
+        propertyKey = PropertyKeyRegistry.Get(boundObjectProperty.key);
 
         if (propertyKey == null)
         {
-            Debug.LogError($"[PropertyInspectorFieldBase] PropertyKey '{boundPropertyDefinition.key}' is not registered.");
+            Debug.LogError($"[PropertyInspectorFieldBase] PropertyKey '{boundObjectProperty.key}' is not registered.");
             return;
         }
 
@@ -44,7 +44,7 @@ public abstract class PropertyInspectorFieldBase : MonoBehaviour
 
     protected string GetCurrentValue()
     {
-        return boundObject.Get(propertyKey) ?? boundPropertyDefinition.defaultValue;
+        return boundObject.Get(propertyKey) ?? boundObjectProperty.defaultValue;
     }
 
     protected void SetValue(string newValue)

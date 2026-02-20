@@ -47,17 +47,16 @@ public class LevelObject : MonoBehaviour
 
         sourcePlaceableObject = placeableObject;
         
-
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
         properties.Clear();
-        foreach (ObjectPropertyDefinition propertyDefinition in placeableObject.propertyDefinitions)
+        foreach (ObjectPropertyDefinition objectProperty in placeableObject.properties)
         {
             properties.Add(new LevelObjectProperty
             {
-                key = propertyDefinition.key,
-                value = propertyDefinition.defaultValue
+                key = objectProperty.key,
+                value = objectProperty.defaultValue
             });
         }
         BuildPropertyCache();
@@ -375,14 +374,14 @@ public class LevelObject : MonoBehaviour
 
         properties = new List<LevelObjectProperty>();
 
-        foreach (ObjectPropertyDefinition propertyDefinition in sourcePlaceableObject.propertyDefinitions)
+        foreach (ObjectPropertyDefinition objectProperty in sourcePlaceableObject.properties)
         {
-            LevelObjectProperty savedObjectProperty = objectData.properties?.Find(property => property.key == propertyDefinition.key);
+            LevelObjectProperty savedObjectProperty = objectData.properties?.Find(property => property.key == objectProperty.key);
 
             properties.Add(new LevelObjectProperty
             {
-                key = propertyDefinition.key,
-                value = savedObjectProperty != null ? savedObjectProperty.value : propertyDefinition.defaultValue
+                key = objectProperty.key,
+                value = savedObjectProperty != null ? savedObjectProperty.value : objectProperty.defaultValue
             });
         }
 

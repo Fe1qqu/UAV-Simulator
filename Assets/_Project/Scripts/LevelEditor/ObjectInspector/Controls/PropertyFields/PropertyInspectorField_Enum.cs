@@ -19,11 +19,11 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
         }
     }
 
-    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition propertyDefinition)
+    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition objectProperty)
     {
-        if (propertyDefinition.enumOptions == null || propertyDefinition.enumOptions.Count == 0)
+        if (objectProperty.enumOptions == null || objectProperty.enumOptions.Count == 0)
         {
-            Debug.LogError($"[PropertyInspectorField_Enum] No enum options defined for key '{propertyDefinition.key}'.");
+            Debug.LogError($"[PropertyInspectorField_Enum] No enum options defined for key '{objectProperty.key}'.");
             return;
         }
 
@@ -32,12 +32,12 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
             boundObject.PropertyChanged -= OnPropertyChanged;
         }
 
-        base.Bind(levelObject, propertyDefinition);
+        base.Bind(levelObject, objectProperty);
 
-        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
+        keyText.text = boundObjectProperty.localizedString.GetLocalizedString();
 
         valueDropdown.ClearOptions();
-        valueDropdown.AddOptions(boundPropertyDefinition.enumOptions);
+        valueDropdown.AddOptions(boundObjectProperty.enumOptions);
 
         valueDropdown.onValueChanged.RemoveAllListeners();
         valueDropdown.onValueChanged.AddListener(OnValueChanged);
@@ -47,7 +47,7 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
 
     protected override void ApplyValueToUI(string value)
     {
-        int index = boundPropertyDefinition.enumOptions.IndexOf(value);
+        int index = boundObjectProperty.enumOptions.IndexOf(value);
         valueDropdown.value = index >= 0 ? index : 0;
     }
 
@@ -58,6 +58,6 @@ public class PropertyInspectorField_Enum : PropertyInspectorFieldBase
             return;
         }
 
-        SetValue(boundPropertyDefinition.enumOptions[index]);
+        SetValue(boundObjectProperty.enumOptions[index]);
     }
 }

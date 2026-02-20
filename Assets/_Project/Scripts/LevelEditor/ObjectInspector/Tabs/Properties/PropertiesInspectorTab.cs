@@ -83,17 +83,17 @@ public class PropertiesInspectorTab : MonoBehaviour
             return;
         }
 
-        foreach (ObjectPropertyDefinition propertyDefinition in boundObject.SourcePlaceableObject.propertyDefinitions)
+        foreach (ObjectPropertyDefinition objectProperty in boundObject.SourcePlaceableObject.properties)
         {
-            PropertyInspectorFieldBase propertyFieldInstance = CreateField(propertyDefinition);
-            propertyFieldInstance.Bind(boundObject, propertyDefinition);
+            PropertyInspectorFieldBase propertyFieldInstance = CreateField(objectProperty);
+            propertyFieldInstance.Bind(boundObject, objectProperty);
             propertyFieldInstance.gameObject.SetActive(true);
         }
     }
 
-    private PropertyInspectorFieldBase CreateField(ObjectPropertyDefinition propertyDefinition)
+    private PropertyInspectorFieldBase CreateField(ObjectPropertyDefinition objectProperty)
     {
-        switch (propertyDefinition.type)
+        switch (objectProperty.type)
         {
             case ObjectPropertyType.Int:
             case ObjectPropertyType.Float:

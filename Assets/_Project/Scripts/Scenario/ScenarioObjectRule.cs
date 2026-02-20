@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class ScenarioObjectRule
 {
-    public PlaceableObjectDefinition objectDefinition;
+    public PlaceableObjectDefinition placeableObject;
 
     [Min(0)]
     public int minCount = 0;

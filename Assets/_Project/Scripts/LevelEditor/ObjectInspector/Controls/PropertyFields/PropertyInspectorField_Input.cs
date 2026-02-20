@@ -19,16 +19,16 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
         }
     }
 
-    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition propertyDefinition)
+    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition objectProperty)
     {
         if (boundObject != null)
         {
             boundObject.PropertyChanged -= OnPropertyChanged;
         }
 
-        base.Bind(levelObject, propertyDefinition);
+        base.Bind(levelObject, objectProperty);
 
-        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
+        keyText.text = boundObjectProperty.localizedString.GetLocalizedString();
 
         valueInputField.onValueChanged.RemoveAllListeners();
         valueInputField.onEndEdit.RemoveAllListeners();
@@ -51,15 +51,15 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
             return;
         }
 
-        if (boundPropertyDefinition.type == ObjectPropertyType.Int)
+        if (boundObjectProperty.type == ObjectPropertyType.Int)
         {
-            bool allowNegative = !boundPropertyDefinition.useMin || boundPropertyDefinition.min < 0f;
+            bool allowNegative = !boundObjectProperty.useMin || boundObjectProperty.min < 0f;
             string filteredValue = NumericInputFilter.FilterInt(newValue, allowNegative);
             ApplyFiltered(filteredValue);
         }
-        else if (boundPropertyDefinition.type == ObjectPropertyType.Float)
+        else if (boundObjectProperty.type == ObjectPropertyType.Float)
         {
-            bool allowNegative = !boundPropertyDefinition.useMin || boundPropertyDefinition.min < 0f;
+            bool allowNegative = !boundObjectProperty.useMin || boundObjectProperty.min < 0f;
             string filteredValue = NumericInputFilter.FilterFloat(newValue, allowNegative);
             ApplyFiltered(filteredValue);
         }
@@ -84,7 +84,7 @@ public class PropertyInspectorField_Input : PropertyInspectorFieldBase
             return;
         }
 
-        if (!validator.TryValidate(value, boundPropertyDefinition, out string normalizedValue, out string _))
+        if (!validator.TryValidate(value, boundObjectProperty, out string normalizedValue, out string _))
         {
             return;
         }

@@ -20,16 +20,16 @@ public class PropertyInspectorField_Bool : PropertyInspectorFieldBase
         }
     }
 
-    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition propertyDefinition)
+    public override void Bind(LevelObject levelObject, ObjectPropertyDefinition objectProperty)
     {
         if (boundObject != null)
         {
             boundObject.PropertyChanged -= OnPropertyChanged;
         }
 
-        base.Bind(levelObject, propertyDefinition);
+        base.Bind(levelObject, objectProperty);
 
-        keyText.text = boundPropertyDefinition.localizedString.GetLocalizedString();
+        keyText.text = boundObjectProperty.localizedString.GetLocalizedString();
 
         valueToggle.onValueChanged.RemoveAllListeners();
         valueToggle.onValueChanged.AddListener(OnValueChanged);

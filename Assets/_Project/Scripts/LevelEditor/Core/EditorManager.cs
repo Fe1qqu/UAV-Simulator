@@ -275,8 +275,8 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
 
         // Take all objects of the selected category
-        List<PlaceableObjectDefinition> filteredObjects = placeableObjectDatabase.GetByCategory(currentCategory);
-        if (filteredObjects == null || filteredObjects.Count == 0)
+        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectDatabase.GetByCategory(currentCategory);
+        if (filteredPlaceableObjects == null || filteredPlaceableObjects.Count == 0)
         {
             Debug.LogWarning($"[EditorManager] No objects found for category '{currentCategory}'.");
             return;
@@ -286,11 +286,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
         if (scenario != null)
         {
             ScenarioCategoryRule rule = scenario.availableCategories.Find(rule => rule.category == currentCategory);
-            filteredObjects = FilterObjectsByScenarioRule(filteredObjects, rule);
+            filteredPlaceableObjects = FilterObjectsByScenarioRule(filteredPlaceableObjects, rule);
         }
 
         // Create buttons for objects
-        foreach (PlaceableObjectDefinition placeableObject in filteredObjects)
+        foreach (PlaceableObjectDefinition placeableObject in filteredPlaceableObjects)
         {
             GameObject placeableObjectButtonInstance = Instantiate(placeableObjectButtonPrefab, objectListContainer);
             if (!placeableObjectButtonInstance.TryGetComponent<UIPlaceableObjectButton>(out var placeableObjectButton))
@@ -304,42 +304,42 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
     }
 
-    private List<PlaceableObjectDefinition> FilterObjectsByScenarioRule(List<PlaceableObjectDefinition> objects, ScenarioCategoryRule rule)
+    private List<PlaceableObjectDefinition> FilterObjectsByScenarioRule(List<PlaceableObjectDefinition> placeableObjects, ScenarioCategoryRule scenarioCategoryRule)
     {
-        if (rule == null || objects == null)
+        if (scenarioCategoryRule == null || placeableObjects == null)
         {
-            return objects;
+            return placeableObjects;
         }
 
         // Check for empty list in modes that require it
-        if ((rule.accessMode == ScenarioCategoryAccessMode.ListedOnly || rule.accessMode == ScenarioCategoryAccessMode.AllExceptListed)
-            && (rule.objectIds == null || rule.objectIds.Count == 0))
+        if ((scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.ListedOnly || scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.AllExceptListed)
+            && (scenarioCategoryRule.objectIds == null || scenarioCategoryRule.objectIds.Count == 0))
         {
-            Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{rule.category}' has accessMode '{rule.accessMode}' but objectIds list is empty.");
+            Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' has accessMode '{scenarioCategoryRule.accessMode}' but objectIds list is empty.");
         }
 
-        bool usesObjectList = rule.accessMode != ScenarioCategoryAccessMode.All;
+        bool usesObjectList = scenarioCategoryRule.accessMode != ScenarioCategoryAccessMode.All;
 
         // Check for invalid objectIds
-        if (usesObjectList && rule.objectIds != null && rule.objectIds.Count > 0)
+        if (usesObjectList && scenarioCategoryRule.objectIds != null && scenarioCategoryRule.objectIds.Count > 0)
         {
-            foreach (string objectId in rule.objectIds)
+            foreach (string objectId in scenarioCategoryRule.objectIds)
             {
-                bool exists = objects.Exists(obj => obj.objectId == objectId);
+                bool exists = placeableObjects.Exists(obj => obj.objectId == objectId);
                 if (!exists)
                 {
-                    Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{rule.category}' references objectId '{objectId}', but it was not found in the database.");
+                    Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' references objectId '{objectId}', but it was not found in the database.");
                 }
             }
         }
 
         // Filtering by accessMode
-        return rule.accessMode switch
+        return scenarioCategoryRule.accessMode switch
         {
-            ScenarioCategoryAccessMode.All => objects,
-            ScenarioCategoryAccessMode.ListedOnly => objects.FindAll(obj => rule.objectIds.Contains(obj.objectId)),
-            ScenarioCategoryAccessMode.AllExceptListed => objects.FindAll(obj => !rule.objectIds.Contains(obj.objectId)),
-            _ => objects
+            ScenarioCategoryAccessMode.All => placeableObjects,
+            ScenarioCategoryAccessMode.ListedOnly => placeableObjects.FindAll(obj => scenarioCategoryRule.objectIds.Contains(obj.objectId)),
+            ScenarioCategoryAccessMode.AllExceptListed => placeableObjects.FindAll(obj => !scenarioCategoryRule .objectIds.Contains(obj.objectId)),
+            _ => placeableObjects
         };
     }
 
