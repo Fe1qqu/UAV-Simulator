@@ -5,9 +5,8 @@ using System.IO;
 
 public class EditorPauseMenu : BasePauseMenu
 {
-    [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private EditorManager editorManager;
     [SerializeField] private EditorLevelDataBuilder levelDataBuilder;
-    //[SerializeField] private EditorManager editorManager;
 
     [Header("Buttons")]
     [SerializeField] private Button continueButton;
@@ -18,14 +17,14 @@ public class EditorPauseMenu : BasePauseMenu
     {
         base.Awake();
 
+        if (editorManager == null)
+        {
+            Debug.LogError("[EditorPauseMenu] EditorManager is not assigned.");
+        }
+
         if (levelDataBuilder == null)
         {
             Debug.LogError("[EditorPauseMenu] LevelDataBuilder is not assigned.");
-        }
-
-        if (levelSaveManager == null)
-        {
-            Debug.LogError("[EditorPauseMenu] LevelSaveManager is not assigned.");
         }
 
         if (continueButton == null)
@@ -42,11 +41,6 @@ public class EditorPauseMenu : BasePauseMenu
         {
             Debug.LogError("[EditorPauseMenu] ExitButton is not assigned.");
         }
-
-        //if (editorManager == null)
-        //{
-        //    Debug.LogError("[EditorPauseMenu] EditorManager is not assigned.");
-        //}
     }
 
     private void Start()
@@ -70,6 +64,13 @@ public class EditorPauseMenu : BasePauseMenu
 
     public void OnSaveClicked()
     {
+        ScenarioValidationResult result = ScenarioValidator.Validate(editorManager.CurrentScenario, LevelObjectRegistry.Instance);
+        if (!result.IsValid)
+        {
+            Debug.LogError($"[EditorPauseMenu] {result.ErrorType}: {result.Message}.");
+            return;
+        }
+
         Debug.Log("[EditorPauseMenu] Saving level...");
 
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
@@ -79,8 +80,8 @@ public class EditorPauseMenu : BasePauseMenu
             CreateNewLevelFilePath(editorSession);
         }
 
-        LevelData data = levelDataBuilder.CollectLevelData();
-        levelSaveManager.SaveByPath(editorSession.SelectedLevelFilePath, data);
+        LevelData levelData = levelDataBuilder.CollectLevelData();
+        editorManager.LevelFileManager.SaveByPath(editorSession.SelectedLevelFilePath, levelData);
     }
 
     private void CreateNewLevelFilePath(EditorSession editorSession)
@@ -103,10 +104,10 @@ public class EditorPauseMenu : BasePauseMenu
     {
         PauseManager.SetPaused(false);
 
-        //if (editorManager != null)
-        //{
-        //    editorManager.UnloadLocalization();
-        //}
+        if (editorManager != null)
+        {
+            editorManager.UnloadLocalization();
+        }
 
         SceneManager.LoadScene("MainMenu");
     }

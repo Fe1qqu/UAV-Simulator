@@ -1,31 +1,27 @@
 using UnityEngine;
 
-public class SelectableObject : MonoBehaviour
+public class SelectableObject : MonoBehaviour, ISelectable
 {
-    private SelectableHighlight[] highlightParts;
+    private ISelectionVisual[] visuals;
 
     private void Awake()
     {
-        highlightParts = GetComponentsInChildren<SelectableHighlight>();
-        if (highlightParts == null || highlightParts.Length == 0)
+        visuals = GetComponentsInChildren<ISelectionVisual>();
+    }
+
+    public void OnSelected()
+    {
+        foreach (var visual in visuals)
         {
-            Debug.LogWarning($"[SelectableObject] No SelectableHighlight components found in '{gameObject.name}' or its children.");
+            visual.Show();
         }
     }
 
-    public void Select()
+    public void OnDeselected()
     {
-        foreach (SelectableHighlight highlight in highlightParts)
+        foreach (var visual in visuals)
         {
-            highlight.Show();
-        }
-    }
-
-    public void Deselect()
-    {
-        foreach (SelectableHighlight highlight in highlightParts)
-        {
-            highlight.Hide();
+            visual.Hide();
         }
     }
 }

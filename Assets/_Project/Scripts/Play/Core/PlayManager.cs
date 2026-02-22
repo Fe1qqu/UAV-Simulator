@@ -2,17 +2,22 @@ using UnityEngine;
 
 public class PlayManager : MonoBehaviour, IBackHandler
 {
+    [Header("Core")]
     [SerializeField] private PlayInput playInput;
-    [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
+    [SerializeField] private LevelObjectRegistry levelObjectRegistry;
+    [SerializeField] private ScenarioDatabase scenarioDatabase;
 
-    [Header("UI References")]
+    [Header("UI")]
     [SerializeField] private PlayPauseMenu pauseMenu;
 
     [Header("Runtime")]
     [SerializeField] private DroneControllerBase dronePrefab;
 
     private DroneControllerBase spawnedDrone;
+    private IScenarioRuntime scenarioRuntime;
+    private LevelData loadedLevelData;
 
     private void Awake()
     {
@@ -21,14 +26,24 @@ public class PlayManager : MonoBehaviour, IBackHandler
             Debug.LogError("[PlayManager] PlayInput is not assigned.");
         }
 
-        if (levelSaveManager == null)
+        if (levelFileManager == null)
         {
-            Debug.LogError("[PlayManager] LevelSaveManager is not assigned.");
+            Debug.LogError("[PlayManager] LevelFileManager is not assigned.");
         }
 
         if (levelLoader == null)
         {
             Debug.LogError("[PlayManager] LevelLoader is not assigned.");
+        }
+
+        if (levelObjectRegistry == null)
+        {
+            Debug.LogError("[PlayManager] LevelObjectRegistry is not assigned.");
+        }
+
+        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        {
+            Debug.LogError("[PlayManager] ScenarioDatabase is missing or empty.");
         }
 
         if (pauseMenu == null)
@@ -42,13 +57,6 @@ public class PlayManager : MonoBehaviour, IBackHandler
         }
     }
 
-    private void Start()
-    {
-        LoadLevel();
-        //ValidateLevel();
-        SpawnDrone();
-    }
-
     private void OnEnable()
     {
         playInput.RestartRequested += OnRestartRequested;
@@ -59,40 +67,79 @@ public class PlayManager : MonoBehaviour, IBackHandler
         playInput.RestartRequested -= OnRestartRequested;
     }
 
+    private void Start()
+    {
+        LoadLevel();
+        SpawnDrone();
+        StartScenario();
+    }
+
+    private void Update()
+    {
+        scenarioRuntime?.TickScenario();
+    }
+
     private void LoadLevel()
     {
         PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
-        LevelData data = levelSaveManager.LoadByPath(playSession.LevelFilePath);
-        levelLoader.Load(data);
+
+        loadedLevelData = levelFileManager.LoadByPath(playSession.LevelFilePath);
+        if (loadedLevelData == null)
+        {
+            Debug.LogError("[PlayManager] Failed to load LevelData.");
+            return;
+        }
+
+        levelLoader.Load(loadedLevelData);
     }
-
-    //private void ValidateLevel()
-    //{
-    //    var required = FindObjectsOfType<MonoBehaviour>()
-    //        .OfType<IRequiredLevelObject>();
-
-    //    if (!required.Any())
-    //    {
-    //        Debug.LogError("[RuntimeLevelLoader] No required level objects found.");
-    //    }
-    //}
 
     private void SpawnDrone()
     {
-        DroneSpawnPoint spawnPoint = FindFirstObjectByType<DroneSpawnPoint>();
-        if (spawnPoint == null)
+        DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
+        if (droneSpawnPoint == null)
         {
             Debug.LogError("[PlayManager] DroneSpawnPoint not found.");
             return;
         }
 
-        if (dronePrefab == null)
+        spawnedDrone = Instantiate(dronePrefab, droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation);
+    }
+
+    private void StartScenario()
+    {
+        if (string.IsNullOrEmpty(loadedLevelData.scenarioId))
         {
-            Debug.LogError("[PlayManager] DronePrefab is not assigned.");
+            Debug.LogError("[PlayManager] LevelData.scenarioId is empty.");
             return;
         }
 
-        spawnedDrone = Instantiate(dronePrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        ScenarioDefinition scenario = scenarioDatabase.GetById(loadedLevelData.scenarioId);
+        if (scenario == null)
+        {
+            Debug.LogError($"[PlayManager] Scenario '{loadedLevelData.scenarioId}' not found in database.");
+            return;
+        }
+
+        if (scenario.runtime == null)
+        {
+            Debug.LogError($"[PlayManager] No runtime bound for scenario '{scenario.scenarioId}'.");
+            return;
+        }
+        scenarioRuntime = Instantiate(scenario.runtime);
+
+        scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
+        scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;
+        scenarioRuntime.StartScenario();
+    }
+
+    private void OnDestroy()
+    {
+        if (scenarioRuntime != null)
+        {
+            scenarioRuntime.ScenarioCompleted -= OnScenarioCompleted;
+            scenarioRuntime.DisposeScenario();
+            scenarioRuntime = null;
+        }
     }
 
     private void OnRestartRequested()
@@ -108,6 +155,8 @@ public class PlayManager : MonoBehaviour, IBackHandler
     public void RestartLevel()
     {
         ResetDrone();
+
+        scenarioRuntime?.ResetScenario();
 
         Debug.Log("[PlayManager] Level restarted.");
     }
@@ -134,9 +183,14 @@ public class PlayManager : MonoBehaviour, IBackHandler
         spawnedDrone.transform.SetPositionAndRotation(spawnPoint.transform.position, spawnPoint.transform.rotation);
     }
 
+    private void OnScenarioCompleted(IScenarioRuntime _)
+    {
+        Debug.Log("[PlayManager] Scenario completed!");
+    }
+
     public bool OnBack()
     {
-        Debug.Log("[PlayManager] OnBack.");
+        //Debug.Log("[PlayManager] OnBack.");
         pauseMenu.Open();
         return true;
     }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89005963d90be1f47acbf417517ec3a6, type: 3}
+  m_Name: GroupTooltipResolver_LevelEditorButtons
+  m_EditorClassIdentifier: Assembly-CSharp::GroupTooltipSettingsResolver
+  entries:
+  - tag: CategoryButton
+    settings: {fileID: 11400000, guid: 9c0aa57d7953ce54c835cb7a16ff181f, type: 2}
+  - tag: PlaceableObjectButton
+    settings: {fileID: 11400000, guid: ac26d5640239ba745abd9d6473731abb, type: 2}
+  - tag: InspectorTabButton
+    settings: {fileID: 11400000, guid: 3fb7afdae691987488f37548fc610da6, type: 2}

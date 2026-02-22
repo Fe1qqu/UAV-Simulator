@@ -3,6 +3,7 @@ using UnityEngine;
 public class EditorDeleteController : MonoBehaviour
 {
     [SerializeField] private EditorInput editorInput;
+    [SerializeField] private SelectionManager selectionManager;
 
     private void Awake()
     {
@@ -10,48 +11,73 @@ public class EditorDeleteController : MonoBehaviour
         {
             Debug.LogError("[EditorDeleteController] EditorInput is not assigned.");
         }
+
+        if (selectionManager == null)
+        {
+            Debug.LogError("[EditorDeleteController] SelectionManager is not assigned.");
+        }
     }
+
     private void OnEnable()
     {
-        editorInput.DeleteSelected += OnDeleteSelected;
+        editorInput.Delete += DeleteSelectedObject;
     }
 
     private void OnDisable()
     {
-        editorInput.DeleteSelected -= OnDeleteSelected;
+        editorInput.Delete -= DeleteSelectedObject;
     }
 
-    private void OnDeleteSelected()
+    public void DeleteSelectedObject()
     {
-        //if (DragPlacementHandler.Instance != null && DragPlacementHandler.Instance.IsDragging)
-        //{
-        //    Debug.Log("[EditorDeleteController] Delete ignored: drag in progress.");
-        //    return;
-        //}
-
-        SelectionManager selectionManager = SelectionManager.Instance;
-        if (selectionManager == null)
+        ISelectable selected = selectionManager.Current;
+        if (selected == null)
         {
-            Debug.Log("[EditorDeleteController] SelectionManager is null.");
+            Debug.LogError("[EditorDeleteController] Nothing selected.");
             return;
         }
 
-        SelectableObject selectedObject = selectionManager.Current;
-        if (selectedObject == null)
+        if (selected is not Component component || !component.TryGetComponent<LevelObject>(out var levelObject))
         {
-            Debug.LogWarning("[EditorDeleteController] SelectedObject is null.");
+            Debug.LogError("[EditorDeleteController] Selected object has no LevelObject component.");
             return;
         }
 
-        GameObject target = selectedObject.gameObject;
+        DeleteInternal(levelObject, selected);
+    }
 
-        selectionManager.DeselectCurrent();
-        target.SetActive(false);
+    public void DeleteObject(LevelObject levelObject)
+    {
+        if (levelObject == null)
+        {
+            Debug.LogError("[EditorDeleteController] LevelObject is null.");
+            return;
+        }
+
+        if (!levelObject.TryGetComponent(out SelectableObject selectableObject))
+        {
+            Debug.LogError("[EditorDeleteController] LevelObject has no SelectableObject ñomponent.");
+            return;
+        }
+
+        DeleteInternal(levelObject, selectableObject);
+    }
+
+    private void DeleteInternal(LevelObject levelObject, ISelectable selectable)
+    {
+        bool wasSelected = selectionManager.Current == selectable;
+
+        if (wasSelected)
+        {
+            selectionManager.Deselect();
+        }
+
+        levelObject.SoftDelete();
 
         // Create an undo/redo delete action
-        PostObjectDeleteAction deleteAction = new PostObjectDeleteAction(target);
+        PostLevelObjectDeleteAction deleteAction = new(levelObject, wasSelected);
         deleteAction.Execute();
 
-        Debug.Log($"[EditorDeleteController] Deleted object '{gameObject.name}'.");
+        Debug.Log($"[EditorDeleteController] Deleted object '{levelObject.name}'.");
     }
 }

@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.Localization.Components;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
 /// </summary>
 public class EditorManager : MonoBehaviour, IBackHandler
 {
-    [SerializeField] private LevelSaveManager levelSaveManager;
+    [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
 
     [Header("UI References")]
@@ -42,25 +43,31 @@ public class EditorManager : MonoBehaviour, IBackHandler
     [Tooltip("Database that stores object categories and their icons.")]
     [SerializeField] private CategoryDatabase categoryDatabase;
 
+    [SerializeField] private ScenarioDatabase scenarioDatabase;
+
     [Header("Scene Root")]
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
     [SerializeField] private Transform levelRoot;
 
+    [Header("Localization")]
+    [SerializeField] private LocalizationPreloader localizationPreloader;
+
     // Currently selected category button
     private UICategoryButton currentSelectedButton;
 
-    // Active category enum value
-    private PlaceableObjectType currentCategory;
+    private CategoryDefinition currentCategory;
 
-    private FadeManager loadingFader;
+    private FadeManager loadingScreenFader;
 
-    private EditorLocalizationPreloader localizationPreloader;
+    public LevelFileManager LevelFileManager => levelFileManager;
+
+    public ScenarioDefinition CurrentScenario => scenarioDatabase.GetById(GameSettings.Instance.CurrentEditorSession.SelectedScenarioId);
 
     private void Awake()
     {
-        if (levelSaveManager == null)
+        if (levelFileManager == null)
         {
-            Debug.LogError("[EditorManager] LevelSaveManager is not assigned.");
+            Debug.LogError("[EditorManager] LevelFileManager is not assigned.");
         }
 
         if (levelLoader == null)
@@ -118,32 +125,46 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] CategoryDatabase is missing or empty.");
         }
 
+        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        {
+            Debug.LogError("[EditorManager] ScenarioDatabase is missing or empty.");
+        }
+
         if (levelRoot == null)
         {
             Debug.LogError("[EditorManager] LevelRoot is not assigned.");
         }
 
-        loadingFader = loadingScreen.GetComponent<FadeManager>();
-        if (loadingFader == null)
+        if (localizationPreloader == null)
+        {
+            Debug.LogError("[EditorManager] LocalizationPreloader is not assigned.");
+        }
+
+        loadingScreenFader = loadingScreen.GetComponent<FadeManager>();
+        if (loadingScreenFader == null)
         {
             Debug.LogError("[EditorManager] FadeManager not found on loadingScreen.");
         }
-
-        localizationPreloader = GetComponent<EditorLocalizationPreloader>();
-        if (localizationPreloader == null)
-        {
-            Debug.LogError("[EditorManager] EditorLocalizationPreloader not found on this GameObject.");
-        }
     }
 
-    private async void Start()
+    private void Start()
+    {
+        _ = StartAsync();
+    }
+
+    private async Task StartAsync()
     {
         loadingScreen.SetActive(true);
 
-        await InitializeEditorAsync();
-
-        await loadingFader.FadeOutAsync(0.35f);
-        loadingScreen.SetActive(false);
+        try
+        {
+            await InitializeEditorAsync();
+            await loadingScreenFader.FadeOutAsync(0.35f, destroyCancellationToken);
+        }
+        finally
+        {
+            loadingScreen.SetActive(false);
+        }
     }
 
     private async Task InitializeEditorAsync()
@@ -157,7 +178,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     }
 
     /// <summary>
-    /// Creates UI buttons for each category from the database.
+    /// Creates UI buttons for each category from the database with scenario rules.
     /// </summary>
     private void SetupCategories()
     {
@@ -166,54 +187,85 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Destroy(child.gameObject);
         }
 
-        foreach (CategoryData category in categoryDatabase.categories)
+        ScenarioDefinition scenario = CurrentScenario;
+        if (scenario == null)
         {
-            var buttonObj = Instantiate(categoryButtonPrefab, categoryListContainer);
-            
-            if (!buttonObj.TryGetComponent<UICategoryButton>(out var categoryButton))
+            Debug.LogWarning("[EditorManager] No scenario selected. Showing all categories.");
+        }
+
+        List<CategoryDefinition> categoriesToShow = GetAvailableCategories(scenario);
+
+        // Create category buttons
+        foreach (CategoryDefinition category in categoriesToShow)
+        {
+            GameObject categoryButtonInstance = Instantiate(categoryButtonPrefab, categoryListContainer);
+            if (!categoryButtonInstance.TryGetComponent<UICategoryButton>(out var categoryButton))
             {
-                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton");
+                Debug.LogError("[EditorManager] CategoryButtonPrefab missing UICategoryButton component.");
                 continue;
             }
 
+            categoryButtonInstance.SetActive(true);
             categoryButton.Setup(category, OnCategorySelected);
         }
 
         // Auto–select first category
-        if (categoryDatabase.categories.Count > 0)
+        if (categoriesToShow.Count > 0)
         {
-            CategoryData firstCategory = categoryDatabase.categories[0];
-            UICategoryButton firstButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
-            OnCategorySelected(firstCategory, firstButton);
+            CategoryDefinition firstCategory = categoriesToShow[0];
+            UICategoryButton firstCategoryButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
+            OnCategorySelected(firstCategory, firstCategoryButton);
         }
+    }
+
+    private List<CategoryDefinition> GetAvailableCategories(ScenarioDefinition scenario)
+    {
+        List<CategoryDefinition> categoriesToShow = new();
+
+        foreach (CategoryDefinition category in categoryDatabase.categories)
+        {
+            // If the scenario is selected, check the rules
+            if (scenario != null)
+            {
+                bool categoryAllowed = scenario.availableCategories.Exists(rule => rule.category == category);
+                if (!categoryAllowed)
+                {
+                    continue;
+                }
+            }
+
+            categoriesToShow.Add(category);
+        }
+
+        return categoriesToShow;
     }
 
     /// <summary>
     /// Called when a category button is clicked.
     /// Updates UI and object list.
     /// </summary>
-    private void OnCategorySelected(CategoryData category, UICategoryButton button)
+    private void OnCategorySelected(CategoryDefinition category, UICategoryButton categoryButton)
     {
         if (currentSelectedButton != null)
         {
             currentSelectedButton.SetSelected(false);
         }
 
-        currentSelectedButton = button;
+        currentSelectedButton = categoryButton;
         currentSelectedButton.SetSelected(true);
 
-        currentCategory = category.type;
+        currentCategory = category;
         if (currentCategoryLocalizeEvent != null)
         {
-            currentCategoryLocalizeEvent.StringReference = category.localizationKey;
-            currentCategoryLocalizeEvent.RefreshString();
+            currentCategoryLocalizeEvent.StringReference = category.localizedString;
+            //currentCategoryLocalizeEvent.RefreshString();
         }
 
         RefreshObjectList();
     }
 
     /// <summary>
-    /// Rebuilds the list of buttons for objects of the selected category.
+    /// Rebuilds the list of buttons for objects of the selected category with scenario rules.
     /// </summary>
     void RefreshObjectList()
     {
@@ -222,25 +274,73 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Destroy(child.gameObject);
         }
 
-        var filteredObjects = placeableObjectDatabase.GetByType(currentCategory);
-
-        if (filteredObjects == null || filteredObjects.Count == 0)
+        // Take all objects of the selected category
+        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectDatabase.GetByCategory(currentCategory);
+        if (filteredPlaceableObjects == null || filteredPlaceableObjects.Count == 0)
         {
             Debug.LogWarning($"[EditorManager] No objects found for category '{currentCategory}'.");
             return;
         }
 
-        foreach (PlaceableObjectData objData in filteredObjects)
+        ScenarioDefinition scenario = CurrentScenario;
+        if (scenario != null)
         {
-            GameObject buttonObj = Instantiate(placeableObjectButtonPrefab, objectListContainer);
-            if (!buttonObj.TryGetComponent<UIPlaceableObjectButton>(out var button))
+            ScenarioCategoryRule rule = scenario.availableCategories.Find(rule => rule.category == currentCategory);
+            filteredPlaceableObjects = FilterObjectsByScenarioRule(filteredPlaceableObjects, rule);
+        }
+
+        // Create buttons for objects
+        foreach (PlaceableObjectDefinition placeableObject in filteredPlaceableObjects)
+        {
+            GameObject placeableObjectButtonInstance = Instantiate(placeableObjectButtonPrefab, objectListContainer);
+            if (!placeableObjectButtonInstance.TryGetComponent<UIPlaceableObjectButton>(out var placeableObjectButton))
             {
-                Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton!");
+                Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab missing UIPlaceableObjectButton.");
                 continue;
             }
 
-            button.Setup(objData);
+            placeableObjectButtonInstance.SetActive(true);
+            placeableObjectButton.Setup(placeableObject);
         }
+    }
+
+    private List<PlaceableObjectDefinition> FilterObjectsByScenarioRule(List<PlaceableObjectDefinition> placeableObjects, ScenarioCategoryRule scenarioCategoryRule)
+    {
+        if (scenarioCategoryRule == null || placeableObjects == null)
+        {
+            return placeableObjects;
+        }
+
+        // Check for empty list in modes that require it
+        if ((scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.ListedOnly || scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.AllExceptListed)
+            && (scenarioCategoryRule.objectIds == null || scenarioCategoryRule.objectIds.Count == 0))
+        {
+            Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' has accessMode '{scenarioCategoryRule.accessMode}' but objectIds list is empty.");
+        }
+
+        bool usesObjectList = scenarioCategoryRule.accessMode != ScenarioCategoryAccessMode.All;
+
+        // Check for invalid objectIds
+        if (usesObjectList && scenarioCategoryRule.objectIds != null && scenarioCategoryRule.objectIds.Count > 0)
+        {
+            foreach (string objectId in scenarioCategoryRule.objectIds)
+            {
+                bool exists = placeableObjects.Exists(obj => obj.objectId == objectId);
+                if (!exists)
+                {
+                    Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' references objectId '{objectId}', but it was not found in the database.");
+                }
+            }
+        }
+
+        // Filtering by accessMode
+        return scenarioCategoryRule.accessMode switch
+        {
+            ScenarioCategoryAccessMode.All => placeableObjects,
+            ScenarioCategoryAccessMode.ListedOnly => placeableObjects.FindAll(obj => scenarioCategoryRule.objectIds.Contains(obj.objectId)),
+            ScenarioCategoryAccessMode.AllExceptListed => placeableObjects.FindAll(obj => !scenarioCategoryRule .objectIds.Contains(obj.objectId)),
+            _ => placeableObjects
+        };
     }
 
     private void LoadLevelOrEmpty()
@@ -255,65 +355,27 @@ public class EditorManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        LevelData data = levelSaveManager.LoadByPath(editorSession.SelectedLevelFilePath);
-        levelLoader.Load(data);
+        LevelData levelData = levelFileManager.LoadByPath(editorSession.SelectedLevelFilePath);
+        levelLoader.Load(levelData);
 
-        editorSession.LevelName = data.levelName;
-        editorSession.SelectedLocationId = data.locationId;
+        editorSession.LevelName = levelData.levelName;
+        editorSession.SelectedLocationId = levelData.locationId;
+        editorSession.SelectedScenarioId = levelData.scenarioId;
     }
 
     private void LoadEmptyLevel()
     {
         EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
 
-        LevelData empty = new LevelData
+        LevelData empty = new()
         {
             levelName = editorSession.LevelName,
-            locationId = editorSession.SelectedLocationId
+            locationId = editorSession.SelectedLocationId,
+            scenarioId = editorSession.SelectedScenarioId
         };
 
         levelLoader.Load(empty);
     }
-
-    /// <summary>
-    /// Loads the location chosen earlier in GameSettings.
-    /// </summary>
-    //private void LoadSelectedLocation()
-    //{
-    //    EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
-    //    string selectedLocationId = editorSession.SelectedLocationId;
-
-    //    if (string.IsNullOrEmpty(selectedLocationId))
-    //    {
-    //        Debug.LogWarning("[EditorManager] No selected location found. Loading first available location.");
-
-    //        if (locationDatabase.locations.Count == 0)
-    //        {
-    //            Debug.LogError("[EditorManager] LocationDatabase is empty.");
-    //            return;
-    //        }
-
-    //        selectedLocationId = locationDatabase.locations[0].locationId;
-    //        editorSession.SelectedLocationId = selectedLocationId;
-    //    }
-
-    //    LocationData data = locationDatabase.locations.Find(location => location.locationId == selectedLocationId);
-    //    if (data == null)
-    //    {
-    //        Debug.LogWarning($"[EditorManager] Location with Id '{selectedLocationId}' not found in database. Loading default.");
-    //        data = locationDatabase.locations[0];
-    //    }
-
-    //    if (data.prefab == null)
-    //    {
-    //        Debug.LogError($"[EditorManager] Prefab missing for location '{data.localizationKey}'.");
-    //        return;
-    //    }
-
-    //    Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-    //    //currentLocation = Instantiate(data.prefab, Vector3.zero, Quaternion.identity, levelRoot);
-    //    //Debug.Log($"[EditorManager] Loaded location: {location.name}");
-    //}
 
     public bool OnBack()
     {
@@ -322,9 +384,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
         return true;
     }
 
-    //public void ExitEditor()
-    //{
-    //    localizationPreloader.Unload();
-    //    SceneManager.LoadScene("MainMenu");
-    //}
+    public void UnloadLocalization()
+    {
+        if (localizationPreloader != null)
+        {
+            localizationPreloader.Unload();
+        }
+    }
 }

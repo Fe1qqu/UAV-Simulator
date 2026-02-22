@@ -4,14 +4,14 @@ public class DroneDebugUI : MonoBehaviour
 {
     private DroneControllerBase droneController;
     private bool visible = true;
-    private Rect windowRectangle = new Rect(20, 20, 250, 270);
+    private Rect windowRectangle = new(20, 20, 250, 270);
 
     private void Awake()
     {
         droneController = GetComponent<DroneControllerBase>();
         if (droneController == null)
         {
-            Debug.LogError($"[DroneDebugUI] No DroneControllerBase found on {gameObject.name}");
+            Debug.LogError($"[DroneDebugUI] No DroneControllerBase found on {gameObject.name}.");
             enabled = false;
             return;
         }
@@ -42,9 +42,9 @@ public class DroneDebugUI : MonoBehaviour
         if (rotors != null)
         {
             GUILayout.Label("<b>Rotors</b>");
-            foreach (var kvp in rotors)
+            foreach (var keyValuePair in rotors)
             {
-                GUILayout.Label($"{kvp.Key}: {kvp.Value:F0} RPM");
+                GUILayout.Label($"{keyValuePair.Key}: {keyValuePair.Value:F0} RPM");
             }
         }
 

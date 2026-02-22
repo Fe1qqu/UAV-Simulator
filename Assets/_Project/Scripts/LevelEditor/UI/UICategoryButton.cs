@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 [RequireComponent(typeof(Button))]
 [RequireComponent(typeof(CanvasGroup))]
-public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ITooltipSource
 {
     // Button component attached to this UI element
     private Button button;
@@ -20,14 +20,12 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private CanvasGroup canvasGroup;
 
     // Category data assigned during initialization
-    private CategoryData categoryData;
+    private CategoryDefinition linkedCategory;
 
     // Callback invoked when this button is clicked
-    private System.Action<CategoryData, UICategoryButton> onClick;
+    private System.Action<CategoryDefinition, UICategoryButton> onClick;
 
     [SerializeField] private RectTransform tooltipAnchor;
-
-    public RectTransform TooltipAnchor => tooltipAnchor;
 
     private void Awake()
     {
@@ -46,26 +44,21 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
     }
 
-    /// <summary>
-    /// Sets up the category button with category data and a click callback.
-    /// </summary>
-    /// <param name="data">Category data containing icon and display name.</param>
-    /// <param name="onClick">Callback invoked when the button is pressed.</param>
-    public void Setup(CategoryData categoryData, System.Action<CategoryData, UICategoryButton> onClick)
+    public void Setup(CategoryDefinition category, System.Action<CategoryDefinition, UICategoryButton> onClick)
     {
-        if (categoryData == null)
+        if (category == null)
         {
-            Debug.LogError("[UICategoryButton] Tried to setup with null categoryData.");
+            Debug.LogError("[UICategoryButton] Tried to setup with null Category.");
             return;
         }
 
-        this.categoryData = categoryData;
+        linkedCategory = category;
         this.onClick = onClick;
 
-        icon.sprite = categoryData.icon;
+        icon.sprite = linkedCategory.icon;
 
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick?.Invoke(categoryData, this));
+        button.onClick.AddListener(() => onClick?.Invoke(linkedCategory, this));
 
         SetSelected(false);
     }
@@ -85,13 +78,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     /// </summary>
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (categoryData == null)
-        {
-            Debug.LogWarning("[UICategoryButton] Tried to show tooltip with null categoryData.");
-            return; 
-        }
-
-        TooltipManager.Instance.Show(categoryData, gameObject);
+        TooltipManager.Instance.Show(this);
     }
 
     /// <summary>
@@ -106,5 +93,23 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
 
         TooltipManager.Instance.Hide();
+    }
+
+    public TooltipRequest CreateTooltipRequest()
+    {
+        if (linkedCategory == null)
+        {
+            Debug.LogWarning("[UICategoryButton] Tried to create tooltip request with null Category.");
+            return TooltipRequest.Invalid;
+        }
+
+        return new TooltipRequest
+        {
+            isValid = true,
+            text = linkedCategory.localizedString,
+            explicitSettings = linkedCategory.useTooltipSettingsOverride ? linkedCategory.tooltipSettingsOverride : null,
+            context = gameObject,
+            fixedAnchor = tooltipAnchor
+        };
     }
 }

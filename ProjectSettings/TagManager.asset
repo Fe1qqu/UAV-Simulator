@@ -7,6 +7,7 @@ TagManager:
   - UI
   - PlaceableObjectButton
   - CategoryButton
+  - InspectorTabButton
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - UI
   - Outline
   - EditorOnly
-  - 
-  - 
+  - TriggerArea
+  - Drone
   - 
   - 
   - 

@@ -5,16 +5,21 @@ public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance { get; private set; }
 
-    public event System.Action<SelectableObject> OnSelectionChanged;
+    /// <summary>
+    /// Fired when selection changes. Null means deselection.
+    /// </summary>
+    public event System.Action<ISelectable> OnSelectionChanged;
 
+    [Header("Raycast")]
     [Tooltip("Mask for selectable objects.")]
     [SerializeField] private LayerMask selectableMask = 0;
 
     [Tooltip("Maximum ray distance used for selection checks.")]
     [SerializeField] private float rayLength = 100000f;
 
-    // Currently selected object
-    public SelectableObject Current { get; private set; }
+    // Currently selectable
+    private ISelectable current;
+    public ISelectable Current => current;
 
     private void Awake()
     {
@@ -43,52 +48,45 @@ public class SelectionManager : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            TrySelectObject();
+            TrySelect();
         }
     }
 
-    private void TrySelectObject()
+    private void TrySelect()
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (Physics.Raycast(ray, out RaycastHit hit, rayLength, selectableMask))
         {
-            SelectableObject selectableObject = hit.collider.GetComponentInParent<SelectableObject>();
-            if (selectableObject != null)
+            ISelectable selectable = hit.collider.GetComponentInParent<ISelectable>();
+            if (selectable != null)
             {
-                Select(selectableObject);
+                Select(selectable);
+                return;
             }
-            return;
         }
 
-        DeselectCurrent();
+        Deselect();
     }
 
-    public void Select(SelectableObject selectableObject)
+    public void Select(ISelectable selectable)
     {
-        if (Current == selectableObject)
+        if (current == selectable)
         {
             return;
         }
 
-        DeselectCurrent();
+        current?.OnDeselected();
 
-        Current = selectableObject;
-        Current.Select();
+        current = selectable;
 
-        OnSelectionChanged?.Invoke(Current);
+        current?.OnSelected();
+
+        OnSelectionChanged?.Invoke(current);
     }
 
-    public void DeselectCurrent()
+    public void Deselect()
     {
-        if (Current == null)
-        {
-            return;
-        }
-
-        Current.Deselect();
-        Current = null;
-
-        OnSelectionChanged?.Invoke(null);
+        Select(null);
     }
 }

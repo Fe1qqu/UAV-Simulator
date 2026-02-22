@@ -3,7 +3,7 @@ using System;
 
 public class EditorInput : MonoBehaviour
 {
-    public event Action DeleteSelected;
+    public event Action Delete;
 
     private Input input;
 
@@ -15,12 +15,12 @@ public class EditorInput : MonoBehaviour
     private void OnEnable()
     {
         input.Enable();
-        input.Editor.DeleteSelected.performed += _ => DeleteSelected?.Invoke();
+        input.Editor.Delete.performed += _ => Delete?.Invoke();
     }
 
     private void OnDisable()
     {
-        input.Editor.DeleteSelected.performed -= _ => DeleteSelected?.Invoke();
+        input.Editor.Delete.performed -= _ => Delete?.Invoke();
         input.Disable();
     }
 }

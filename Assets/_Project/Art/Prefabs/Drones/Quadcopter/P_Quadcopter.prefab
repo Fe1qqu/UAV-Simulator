@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3425543440927077624}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Systems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6261024844600467066}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CinemachineCameras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: 8605870652172076439}
   - component: {fileID: 182695068962305849}
   - component: {fileID: 6950659985736767948}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Main Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4167582685610940069}
   - component: {fileID: 5498660466986963400}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AudioListener
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 6275646386128506323}
   - component: {fileID: 232289340337327092}
   - component: {fileID: 5789625115350206303}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ThirdPersonCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 7364415119496014791}
   - component: {fileID: 1359797942059224940}
   - component: {fileID: 12796076280572042}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FirstPersonCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1668,9 +1668,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: BladeFL
       objectReference: {fileID: 0}
+    - target: {fileID: 6136893308250225595, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6306986065276198615, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
       propertyPath: m_Name
       value: BladeRL
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306986065276198615, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432914952420968748, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6743247493399336368, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821524168377590582, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343988422985250362, guid: ae8bb6f8f24664b45a7c63aeed4ffbb9, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1871,6 +1895,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e63274e03e4b0d74d81e2389df7a1055, type: 3}
       propertyPath: m_Name
       value: SM_CameraZRotator
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e63274e03e4b0d74d81e2389df7a1055, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

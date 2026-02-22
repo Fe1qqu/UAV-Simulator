@@ -13,51 +13,8 @@ MonoBehaviour:
   m_Name: PlaceableObjectDatabase
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDatabase
   objects:
-  - objectId: hangar
-    localizationKey:
-      m_TableReference:
-        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
-      m_TableEntryReference:
-        m_KeyId: 36164493312
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
-    prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
-    type: 0
-    previewMaterialMode: 0
-    previewMaterialOverride: {fileID: 0}
-  - objectId: plane
-    localizationKey:
-      m_TableReference:
-        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
-      m_TableEntryReference:
-        m_KeyId: 72772378624
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-    prefab: {fileID: 1325102438002783170, guid: 1c13df92af5bdb64b9fba7b9e9e12ab5, type: 3}
-    type: 1
-    previewMaterialMode: 0
-    previewMaterialOverride: {fileID: 0}
-  - objectId: drone_spawn_point
-    localizationKey:
-      m_TableReference:
-        m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
-      m_TableEntryReference:
-        m_KeyId: 14974251858812928
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
-    prefab: {fileID: 4367814652480787245, guid: 75a8531a979f0bb4aa3b2da713a024b6, type: 3}
-    type: 4
-    previewMaterialMode: 2
-    previewMaterialOverride: {fileID: 0}
-  references:
-    version: 2
-    RefIds: []
+  - {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
+  - {fileID: 11400000, guid: f48d736678511a84a9edf88327e6fbe6, type: 2}
+  - {fileID: 11400000, guid: 0989848d1ab095b4d92b28822fe78288, type: 2}
+  - {fileID: 11400000, guid: bb976e95c00101e479a3cc5dd249b9f4, type: 2}
+  - {fileID: 11400000, guid: 584cbd70993256043b45a6343be237ce, type: 2}

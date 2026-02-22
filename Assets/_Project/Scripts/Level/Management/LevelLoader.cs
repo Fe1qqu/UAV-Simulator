@@ -47,7 +47,7 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLocation(string locationId)
     {
-        LocationData location = locationDatabase.locations.Find(location => location.locationId == locationId);
+        LocationDefinition location = locationDatabase.locations.Find(location => location.locationId == locationId);
 
         if (location == null)
         {
@@ -61,26 +61,26 @@ public class LevelLoader : MonoBehaviour
 
             Debug.LogWarning($"[LevelLoader] Location '{locationId}' not found. Falling back to default location '{location.locationId}'.");
         }
-
+        
         Instantiate(location.prefab, Vector3.zero, Quaternion.identity, levelRoot);
     }
 
-    private void LoadObjects(LevelData data)
+    private void LoadObjects(LevelData levelData)
     {
-        foreach (LevelObjectData obj in data.objects)
+        foreach (LevelObjectData levelObjectData in levelData.objects)
         {
-            PlaceableObjectData placeableObjectData = placeableObjectDatabase.GetById(obj.objectId);
-            if (placeableObjectData == null)
+            PlaceableObjectDefinition placeableObject = placeableObjectDatabase.GetById(levelObjectData.objectId);
+            if (placeableObject == null)
             {
-                Debug.LogError($"[LevelLoader] Missing object: {obj.objectId}.");
+                Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");
                 continue;
             }
 
-            GameObject instance = Instantiate(placeableObjectData.prefab, levelRoot);
-            LevelObject levelObj = instance.GetComponent<LevelObject>();
+            GameObject instance = Instantiate(placeableObject.prefab, levelRoot);
+            LevelObject levelObject = instance.GetComponent<LevelObject>();
 
-            levelObj.Initialize(placeableObjectData.objectId);
-            levelObj.FromData(obj);
+            levelObject.Initialize(placeableObject);
+            levelObject.FromData(levelObjectData);
         }
     }
 }

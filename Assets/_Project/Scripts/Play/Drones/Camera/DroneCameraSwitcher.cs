@@ -5,7 +5,7 @@ using Unity.Cinemachine;
 public class DroneCameraSwitcher : MonoBehaviour
 {
     [Header("Cinemachine cameras")]
-    [SerializeField] private List<CinemachineCamera> cameras = new List<CinemachineCamera>();
+    [SerializeField] private List<CinemachineCamera> cameras = new();
 
     [Header("Default active camera index")]
     [SerializeField] private int defaultCameraIndex = 0;

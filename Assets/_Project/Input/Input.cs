@@ -488,7 +488,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ""id"": ""0560722f-3fd3-400f-9ae8-0e71d49cb6af"",
             ""actions"": [
                 {
-                    ""name"": ""DeleteSelected"",
+                    ""name"": ""Delete"",
                     ""type"": ""Button"",
                     ""id"": ""a3fafce3-5244-4c88-b7db-f8f4e3736aa0"",
                     ""expectedControlType"": """",
@@ -505,7 +505,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DeleteSelected"",
+                    ""action"": ""Delete"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -722,7 +722,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_DroneCamera_EnableMovement = m_DroneCamera.FindAction("EnableMovement", throwIfNotFound: true);
         // Editor
         m_Editor = asset.FindActionMap("Editor", throwIfNotFound: true);
-        m_Editor_DeleteSelected = m_Editor.FindAction("DeleteSelected", throwIfNotFound: true);
+        m_Editor_Delete = m_Editor.FindAction("Delete", throwIfNotFound: true);
         // EditorCamera
         m_EditorCamera = asset.FindActionMap("EditorCamera", throwIfNotFound: true);
         m_EditorCamera_Look = m_EditorCamera.FindAction("Look", throwIfNotFound: true);
@@ -1149,7 +1149,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     // Editor
     private readonly InputActionMap m_Editor;
     private List<IEditorActions> m_EditorActionsCallbackInterfaces = new List<IEditorActions>();
-    private readonly InputAction m_Editor_DeleteSelected;
+    private readonly InputAction m_Editor_Delete;
     /// <summary>
     /// Provides access to input actions defined in input action map "Editor".
     /// </summary>
@@ -1162,9 +1162,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// </summary>
         public EditorActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Editor/DeleteSelected".
+        /// Provides access to the underlying input action "Editor/Delete".
         /// </summary>
-        public InputAction @DeleteSelected => m_Wrapper.m_Editor_DeleteSelected;
+        public InputAction @Delete => m_Wrapper.m_Editor_Delete;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1191,9 +1191,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_EditorActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_EditorActionsCallbackInterfaces.Add(instance);
-            @DeleteSelected.started += instance.OnDeleteSelected;
-            @DeleteSelected.performed += instance.OnDeleteSelected;
-            @DeleteSelected.canceled += instance.OnDeleteSelected;
+            @Delete.started += instance.OnDelete;
+            @Delete.performed += instance.OnDelete;
+            @Delete.canceled += instance.OnDelete;
         }
 
         /// <summary>
@@ -1205,9 +1205,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="EditorActions" />
         private void UnregisterCallbacks(IEditorActions instance)
         {
-            @DeleteSelected.started -= instance.OnDeleteSelected;
-            @DeleteSelected.performed -= instance.OnDeleteSelected;
-            @DeleteSelected.canceled -= instance.OnDeleteSelected;
+            @Delete.started -= instance.OnDelete;
+            @Delete.performed -= instance.OnDelete;
+            @Delete.canceled -= instance.OnDelete;
         }
 
         /// <summary>
@@ -1547,12 +1547,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
     public interface IEditorActions
     {
         /// <summary>
-        /// Method invoked when associated input action "DeleteSelected" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Delete" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDeleteSelected(InputAction.CallbackContext context);
+        void OnDelete(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "EditorCamera" which allows adding and removing callbacks.
