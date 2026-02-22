@@ -42,6 +42,45 @@
             ]
         },
         {
+            "name": "Play",
+            "id": "9b4043aa-2d4f-4ca4-850f-1b674f2183a1",
+            "actions": [
+                {
+                    "name": "RestartLevel",
+                    "type": "Button",
+                    "id": "5200ebac-b5eb-4bb3-acdb-22d7cc6f4e2e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9e7c9ef1-cf07-462f-bccb-b8293094da0a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RestartLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "990c6cde-21e4-4a90-80e4-2ab349d50f15",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RestartLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "DroneControl",
             "id": "8c9d2c0d-82f7-403d-ac89-f051158a1046",
             "actions": [
@@ -317,7 +356,7 @@
                 {
                     "name": "",
                     "id": "5043bf32-e451-4c3a-aff1-5da7dd8b3520",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -574,45 +613,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "EnableMovement",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Play",
-            "id": "9b4043aa-2d4f-4ca4-850f-1b674f2183a1",
-            "actions": [
-                {
-                    "name": "RestartLevel",
-                    "type": "Button",
-                    "id": "5200ebac-b5eb-4bb3-acdb-22d7cc6f4e2e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "9e7c9ef1-cf07-462f-bccb-b8293094da0a",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RestartLevel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "990c6cde-21e4-4a90-80e4-2ab349d50f15",
-                    "path": "<Gamepad>/start",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RestartLevel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

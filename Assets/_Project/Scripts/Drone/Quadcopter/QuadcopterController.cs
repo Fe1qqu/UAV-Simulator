@@ -30,7 +30,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
     [Header("Physics Settings")]
     [SerializeField] private float liftCoefficient = 1e-6f;
-    [SerializeField] private float dragCoefficient = 1e-6f;
+    //[SerializeField] private float dragCoefficient = 1e-6f;
     [SerializeField] private float maxRotorRPM = 4000f;
     [SerializeField] private float rotorRPMChangeRate = 0.5f;
 
@@ -68,12 +68,12 @@ public class QuadcopterController : DroneControllerBase, IControllable
         rotors[RotorPosition.RearLeft] = rearLeft;
         rotors[RotorPosition.RearRight] = rearRight;
 
-        foreach (var kvp in rotors)
+        foreach (var keyValuePair in rotors)
         {
-            Rotor rotor = kvp.Value;
+            Rotor rotor = keyValuePair.Value;
             if (rotor == null || rotor.bone == null)
             {
-                Debug.LogError($"[QuadcopterController] Rotor {kvp.Key} not configured correctly.");
+                Debug.LogError($"[QuadcopterController] Rotor {keyValuePair.Key} not configured correctly.");
                 enabled = false;
                 return;
             }
@@ -86,9 +86,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
     void Update()
     {
         // Rotor animation
-        foreach (var kvp in rotors)
+        foreach (var keyValuePair in rotors)
         {
-            Rotor rotor = kvp.Value;
+            Rotor rotor = keyValuePair.Value;
             float direction = rotor.clockwise ? 1f : -1f;
             rotor.bone.Rotate(360f * rotor.CurrentRPM * direction * Vector3.up / 60f * Time.deltaTime, Space.Self);
         }
@@ -111,9 +111,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
     private void LateUpdate()
     {
-        foreach (var kvp in rotors)
+        foreach (var keyValuePair in rotors)
         {
-            rpmDebugDict[kvp.Key.ToString()] = kvp.Value.CurrentRPM;
+            rpmDebugDict[keyValuePair.Key.ToString()] = keyValuePair.Value.CurrentRPM;
         }
     }
 
@@ -139,22 +139,24 @@ public class QuadcopterController : DroneControllerBase, IControllable
     private void ApplyRotationControl()
     {
         // Smoothly interpolate to target rotation
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
+        Quaternion newRotation = Quaternion.Slerp(
+            rigidBody.rotation,
             targetRotation,
             rotationLerpSpeed * Time.fixedDeltaTime
         );
+
+        rigidBody.MoveRotation(newRotation);
     }
 
     private void UpdateMotorSpeeds()
     {
-        // Вычисляем целевые RPM для каждого ротора по формулам
+        // Calculate the target RPM for each rotor
         float frontLeftTarget = throttleInput - 0.4f * yawInput - 0.2f * pitchInput + 0.3f * rollInput;
         float frontRightTarget = throttleInput + 0.4f * yawInput - 0.2f * pitchInput - 0.3f * rollInput;
         float rearLeftTarget = throttleInput + 0.4f * yawInput + 0.2f * pitchInput + 0.3f * rollInput;
         float rearRightTarget = throttleInput - 0.4f * yawInput + 0.2f * pitchInput - 0.3f * rollInput;
 
-        // Применяем целевые RPM к каждому ротору
+        // Apply target RPM to each rotor
         frontLeft.CurrentRPM = Mathf.Lerp(
             frontLeft.CurrentRPM,
             frontLeftTarget * maxRotorRPM,
@@ -179,7 +181,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
             rotorRPMChangeRate * Time.fixedDeltaTime
         );
 
-        // Ограничиваем RPM
+        // Limiting RPM
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = Mathf.Clamp(rotor.CurrentRPM, 0, maxRotorRPM);
@@ -188,7 +190,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
     private void ApplyRotorForces()
     {
-        // Применяем подъемную силу только для throttle
+        // Apply lift only to the throttle
         foreach (Rotor rotor in rotors.Values)
         {
             float lift = liftCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
@@ -202,7 +204,7 @@ public class QuadcopterController : DroneControllerBase, IControllable
     public void ApplyPitch(float value) => pitchInput = Mathf.Clamp(value, -1f, 1f);
     public void ApplyRoll(float value) => rollInput = Mathf.Clamp(value, -1f, 1f);
 
-    public override void ResetState()
+    public override void ResetState(Vector3 position, Quaternion rotation)
     {
         // Resetting control inputs
         throttleInput = 0f;
@@ -210,22 +212,24 @@ public class QuadcopterController : DroneControllerBase, IControllable
         pitchInput = 0f;
         rollInput = 0f;
 
-        // Reset target rotation to current rotation
-        targetRotation = transform.rotation;
-
         // Resetting RPM of all rotors
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = 0f;
         }
 
-        // Physics reset
+        // RigidBody reset
         if (rigidBody != null)
         {
+            rigidBody.position = position;
+            rigidBody.rotation = rotation;
+
             rigidBody.linearVelocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
-            rigidBody.Sleep();
         }
+
+        // Reset target rotation
+        targetRotation = rotation;
 
         // Clearing debug data
         rpmDebugDict.Clear();

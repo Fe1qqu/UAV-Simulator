@@ -128,6 +128,45 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""Play"",
+            ""id"": ""9b4043aa-2d4f-4ca4-850f-1b674f2183a1"",
+            ""actions"": [
+                {
+                    ""name"": ""RestartLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""5200ebac-b5eb-4bb3-acdb-22d7cc6f4e2e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""9e7c9ef1-cf07-462f-bccb-b8293094da0a"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RestartLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""990c6cde-21e4-4a90-80e4-2ab349d50f15"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RestartLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""DroneControl"",
             ""id"": ""8c9d2c0d-82f7-403d-ac89-f051158a1046"",
             ""actions"": [
@@ -403,7 +442,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""5043bf32-e451-4c3a-aff1-5da7dd8b3520"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -664,45 +703,6 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Play"",
-            ""id"": ""9b4043aa-2d4f-4ca4-850f-1b674f2183a1"",
-            ""actions"": [
-                {
-                    ""name"": ""RestartLevel"",
-                    ""type"": ""Button"",
-                    ""id"": ""5200ebac-b5eb-4bb3-acdb-22d7cc6f4e2e"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""9e7c9ef1-cf07-462f-bccb-b8293094da0a"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RestartLevel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""990c6cde-21e4-4a90-80e4-2ab349d50f15"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RestartLevel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": []
@@ -710,6 +710,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+        // Play
+        m_Play = asset.FindActionMap("Play", throwIfNotFound: true);
+        m_Play_RestartLevel = m_Play.FindAction("RestartLevel", throwIfNotFound: true);
         // DroneControl
         m_DroneControl = asset.FindActionMap("DroneControl", throwIfNotFound: true);
         m_DroneControl_ThrottleAndYaw = m_DroneControl.FindAction("Throttle And Yaw", throwIfNotFound: true);
@@ -729,19 +732,16 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_EditorCamera_Move = m_EditorCamera.FindAction("Move", throwIfNotFound: true);
         m_EditorCamera_UpDown = m_EditorCamera.FindAction("UpDown", throwIfNotFound: true);
         m_EditorCamera_EnableMovement = m_EditorCamera.FindAction("EnableMovement", throwIfNotFound: true);
-        // Play
-        m_Play = asset.FindActionMap("Play", throwIfNotFound: true);
-        m_Play_RestartLevel = m_Play.FindAction("RestartLevel", throwIfNotFound: true);
     }
 
     ~@Input()
     {
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, Input.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Play.enabled, "This will cause a leak and performance issues, Input.Play.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_DroneControl.enabled, "This will cause a leak and performance issues, Input.DroneControl.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_DroneCamera.enabled, "This will cause a leak and performance issues, Input.DroneCamera.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Editor.enabled, "This will cause a leak and performance issues, Input.Editor.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_EditorCamera.enabled, "This will cause a leak and performance issues, Input.EditorCamera.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Play.enabled, "This will cause a leak and performance issues, Input.Play.Disable() has not been called.");
     }
 
     /// <summary>
@@ -909,6 +909,102 @@ public partial class @Input: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
+
+    // Play
+    private readonly InputActionMap m_Play;
+    private List<IPlayActions> m_PlayActionsCallbackInterfaces = new List<IPlayActions>();
+    private readonly InputAction m_Play_RestartLevel;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Play".
+    /// </summary>
+    public struct PlayActions
+    {
+        private @Input m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public PlayActions(@Input wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Play/RestartLevel".
+        /// </summary>
+        public InputAction @RestartLevel => m_Wrapper.m_Play_RestartLevel;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Play; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="PlayActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(PlayActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="PlayActions" />
+        public void AddCallbacks(IPlayActions instance)
+        {
+            if (instance == null || m_Wrapper.m_PlayActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayActionsCallbackInterfaces.Add(instance);
+            @RestartLevel.started += instance.OnRestartLevel;
+            @RestartLevel.performed += instance.OnRestartLevel;
+            @RestartLevel.canceled += instance.OnRestartLevel;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="PlayActions" />
+        private void UnregisterCallbacks(IPlayActions instance)
+        {
+            @RestartLevel.started -= instance.OnRestartLevel;
+            @RestartLevel.performed -= instance.OnRestartLevel;
+            @RestartLevel.canceled -= instance.OnRestartLevel;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="PlayActions.UnregisterCallbacks(IPlayActions)" />.
+        /// </summary>
+        /// <seealso cref="PlayActions.UnregisterCallbacks(IPlayActions)" />
+        public void RemoveCallbacks(IPlayActions instance)
+        {
+            if (m_Wrapper.m_PlayActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="PlayActions.AddCallbacks(IPlayActions)" />
+        /// <seealso cref="PlayActions.RemoveCallbacks(IPlayActions)" />
+        /// <seealso cref="PlayActions.UnregisterCallbacks(IPlayActions)" />
+        public void SetCallbacks(IPlayActions instance)
+        {
+            foreach (var item in m_Wrapper.m_PlayActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_PlayActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="PlayActions" /> instance referencing this action map.
+    /// </summary>
+    public PlayActions @Play => new PlayActions(this);
 
     // DroneControl
     private readonly InputActionMap m_DroneControl;
@@ -1370,102 +1466,6 @@ public partial class @Input: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="EditorCameraActions" /> instance referencing this action map.
     /// </summary>
     public EditorCameraActions @EditorCamera => new EditorCameraActions(this);
-
-    // Play
-    private readonly InputActionMap m_Play;
-    private List<IPlayActions> m_PlayActionsCallbackInterfaces = new List<IPlayActions>();
-    private readonly InputAction m_Play_RestartLevel;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Play".
-    /// </summary>
-    public struct PlayActions
-    {
-        private @Input m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public PlayActions(@Input wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Play/RestartLevel".
-        /// </summary>
-        public InputAction @RestartLevel => m_Wrapper.m_Play_RestartLevel;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Play; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="PlayActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(PlayActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="PlayActions" />
-        public void AddCallbacks(IPlayActions instance)
-        {
-            if (instance == null || m_Wrapper.m_PlayActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayActionsCallbackInterfaces.Add(instance);
-            @RestartLevel.started += instance.OnRestartLevel;
-            @RestartLevel.performed += instance.OnRestartLevel;
-            @RestartLevel.canceled += instance.OnRestartLevel;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="PlayActions" />
-        private void UnregisterCallbacks(IPlayActions instance)
-        {
-            @RestartLevel.started -= instance.OnRestartLevel;
-            @RestartLevel.performed -= instance.OnRestartLevel;
-            @RestartLevel.canceled -= instance.OnRestartLevel;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="PlayActions.UnregisterCallbacks(IPlayActions)" />.
-        /// </summary>
-        /// <seealso cref="PlayActions.UnregisterCallbacks(IPlayActions)" />
-        public void RemoveCallbacks(IPlayActions instance)
-        {
-            if (m_Wrapper.m_PlayActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="PlayActions.AddCallbacks(IPlayActions)" />
-        /// <seealso cref="PlayActions.RemoveCallbacks(IPlayActions)" />
-        /// <seealso cref="PlayActions.UnregisterCallbacks(IPlayActions)" />
-        public void SetCallbacks(IPlayActions instance)
-        {
-            foreach (var item in m_Wrapper.m_PlayActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_PlayActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="PlayActions" /> instance referencing this action map.
-    /// </summary>
-    public PlayActions @Play => new PlayActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
     /// </summary>
@@ -1480,6 +1480,21 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCancel(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Play" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="PlayActions.AddCallbacks(IPlayActions)" />
+    /// <seealso cref="PlayActions.RemoveCallbacks(IPlayActions)" />
+    public interface IPlayActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "RestartLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRestartLevel(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DroneControl" which allows adding and removing callbacks.
@@ -1589,20 +1604,5 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnEnableMovement(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Play" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="PlayActions.AddCallbacks(IPlayActions)" />
-    /// <seealso cref="PlayActions.RemoveCallbacks(IPlayActions)" />
-    public interface IPlayActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "RestartLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRestartLevel(InputAction.CallbackContext context);
     }
 }

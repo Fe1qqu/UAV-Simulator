@@ -11,9 +11,17 @@ public abstract class DroneControllerBase : MonoBehaviour, IDroneActor
     public abstract float RollInput { get; }
 
     /// <summary>
-    /// Called when level is restarted. Must fully reset drone runtime state.
+    /// Fully resets the drone runtime state and teleports it to the specified transform.
+    /// 
+    /// Implementation MUST:
+    /// - Reset all control inputs
+    /// - Reset internal simulation state (RPM, target rotations, etc.)
+    /// - Reset Rigidbody state (position, rotation, velocities)
+    /// - Synchronize any cached target state with the provided rotation
+    /// 
+    /// This method is the only valid way to externally reposition the drone during runtime.
     /// </summary>
-    public abstract void ResetState();
+    public abstract void ResetState(Vector3 position, Quaternion rotation);
 
     /// <summary>
     /// May be null if the drone has no rotors.

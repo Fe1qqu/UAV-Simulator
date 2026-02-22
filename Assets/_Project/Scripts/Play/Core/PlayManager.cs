@@ -98,7 +98,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
         DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
         if (droneSpawnPoint == null)
         {
-            Debug.LogError("[PlayManager] DroneSpawnPoint not found.");
+            Debug.LogError("[PlayManager] Alive DroneSpawnPoint not found.");
             return;
         }
 
@@ -155,7 +155,6 @@ public class PlayManager : MonoBehaviour, IBackHandler
     public void RestartLevel()
     {
         ResetDrone();
-
         scenarioRuntime?.ResetScenario();
 
         Debug.Log("[PlayManager] Level restarted.");
@@ -169,18 +168,15 @@ public class PlayManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        DroneSpawnPoint spawnPoint = FindFirstObjectByType<DroneSpawnPoint>();
-        if (spawnPoint == null)
+        DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
+        if (droneSpawnPoint == null)
         {
-            Debug.LogError("[PlayManager] DroneSpawnPoint not found.");
+            Debug.LogError("[PlayManager] Alive DroneSpawnPoint not found.");
             return;
         }
 
         // Resetting the drone's internal state
-        spawnedDrone.ResetState();
-
-        // Return drone to spawn point
-        spawnedDrone.transform.SetPositionAndRotation(spawnPoint.transform.position, spawnPoint.transform.rotation);
+        spawnedDrone.ResetState(droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation);
     }
 
     private void OnScenarioCompleted(IScenarioRuntime _)
