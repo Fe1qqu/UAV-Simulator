@@ -113,19 +113,19 @@ public class PlayManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        ScenarioDefinition scenarioDefinition = scenarioDatabase.GetById(loadedLevelData.scenarioId);
-        if (scenarioDefinition == null)
+        ScenarioDefinition scenario = scenarioDatabase.GetById(loadedLevelData.scenarioId);
+        if (scenario == null)
         {
             Debug.LogError($"[PlayManager] Scenario '{loadedLevelData.scenarioId}' not found in database.");
             return;
         }
 
-        if (scenarioDefinition.runtime == null)
+        if (scenario.runtime == null)
         {
-            Debug.LogError($"[PlayManager] No runtime bound for scenario '{scenarioDefinition.scenarioId}'.");
+            Debug.LogError($"[PlayManager] No runtime bound for scenario '{scenario.scenarioId}'.");
             return;
         }
-        scenarioRuntime = Instantiate(scenarioDefinition.runtime);
+        scenarioRuntime = Instantiate(scenario.runtime);
 
         scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;

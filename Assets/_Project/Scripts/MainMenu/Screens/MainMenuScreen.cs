@@ -84,17 +84,17 @@ public class MainMenuScreen : MainMenuScreenBase
     {
         modalDialogService.Show(new ModalDialogConfig
         {
-            MessageKey = "modal_exit_message",
+            messageLocalizationTableEntryKey = "modal_exit_message",
             Buttons = new[]
             {
                 new ModalButtonConfig
                 {
-                    TextKey = "confirm",
+                    localizationTableEntryKey = "confirm",
                     Result = ModalResult.Confirm
                 },
                 new ModalButtonConfig
                 {
-                    TextKey = "cancel",
+                    localizationTableEntryKey = "cancel",
                     Result = ModalResult.Cancel,
                     IsBackAction = true
                 }

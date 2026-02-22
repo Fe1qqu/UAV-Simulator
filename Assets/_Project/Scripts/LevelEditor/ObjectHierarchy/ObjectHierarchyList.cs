@@ -30,8 +30,8 @@ public class ObjectHierarchyList : MonoBehaviour
     private readonly Dictionary<LevelObject, UIObjectHierarchyItem> levelObjectToItemMap = new();
     private UIObjectHierarchyItem currentSelectedItem;
 
-    // Optimization: SourceData cache → object list
-    private readonly Dictionary<PlaceableObjectData, List<LevelObject>> sourceDataToObjectsMap = new();
+    // Optimization: SourcePlaceableObject cache → object list
+    private readonly Dictionary<PlaceableObjectDefinition, List<LevelObject>> sourcePlaceableObjectToObjectsMap = new();
 
     private void Awake()
     {
@@ -130,7 +130,7 @@ public class ObjectHierarchyList : MonoBehaviour
                 return; // There is no need to update displayName further
         }
 
-        UpdateDisplayNamesForSourceGroup(levelObject.SourceData);
+        UpdateDisplayNamesForSourceGroup(levelObject.SourcePlaceableObject);
     }
 
     private void OnSelectionChanged(ISelectable selectable)
@@ -203,15 +203,15 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void AddToSourceGroup(LevelObject levelObject)
     {
-        if (levelObject.SourceData == null)
+        if (levelObject.SourcePlaceableObject == null)
         {
             return;
         }
 
-        if (!sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        if (!sourcePlaceableObjectToObjectsMap.TryGetValue(levelObject.SourcePlaceableObject, out var levelObjectsList))
         {
             levelObjectsList = new List<LevelObject>();
-            sourceDataToObjectsMap[levelObject.SourceData] = levelObjectsList;
+            sourcePlaceableObjectToObjectsMap[levelObject.SourcePlaceableObject] = levelObjectsList;
         }
 
         if (!levelObjectsList.Contains(levelObject))
@@ -222,24 +222,24 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void RemoveFromSourceGroup(LevelObject levelObject)
     {
-        if (levelObject.SourceData == null)
+        if (levelObject.SourcePlaceableObject == null)
         {
             return;
         }
 
-        if (sourceDataToObjectsMap.TryGetValue(levelObject.SourceData, out var levelObjectsList))
+        if (sourcePlaceableObjectToObjectsMap.TryGetValue(levelObject.SourcePlaceableObject, out var levelObjectsList))
         {
             levelObjectsList.Remove(levelObject);
             if (levelObjectsList.Count == 0)
             {
-                sourceDataToObjectsMap.Remove(levelObject.SourceData);
+                sourcePlaceableObjectToObjectsMap.Remove(levelObject.SourcePlaceableObject);
             }
         }
     }
 
-    private void UpdateDisplayNamesForSourceGroup(PlaceableObjectData sourceData)
+    private void UpdateDisplayNamesForSourceGroup(PlaceableObjectDefinition sourcePlaceableObject)
     {
-        if (sourceData == null || !sourceDataToObjectsMap.TryGetValue(sourceData, out var group))
+        if (sourcePlaceableObject == null || !sourcePlaceableObjectToObjectsMap.TryGetValue(sourcePlaceableObject, out var group))
         {
             return;
         }
@@ -258,7 +258,7 @@ public class ObjectHierarchyList : MonoBehaviour
                 continue;
             }
 
-            string baseName = levelObject.SourceData.localizationKey.GetLocalizedString();
+            string baseName = levelObject.SourcePlaceableObject.localizedString.GetLocalizedString();
             string displayName = index == 1 ? baseName : $"{baseName} ({index})";
             item.SetDisplayName(displayName);
 

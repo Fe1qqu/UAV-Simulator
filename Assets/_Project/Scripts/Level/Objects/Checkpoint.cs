@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using System;
 
 public class Checkpoint : LevelObject, ITriggerReceiver
@@ -8,6 +9,8 @@ public class Checkpoint : LevelObject, ITriggerReceiver
     [SerializeField] private Renderer meshRenderer;
     [SerializeField] private Material unpassedMaterial;
     [SerializeField] private Material passedMaterial;
+
+    [SerializeField] private TMP_Text indexNumberText;
 
     private bool isPassed;
 
@@ -28,7 +31,36 @@ public class Checkpoint : LevelObject, ITriggerReceiver
             Debug.LogError("[Checkpoint] PassedMaterial is not assigned.");
         }
 
+        if (indexNumberText == null)
+        {
+            Debug.LogError("[Checkpoint] IndexNumberText is not assigned.");
+        }
+
         ResetState();
+    }
+
+    private void OnEnable()
+    {
+        PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnDisable()
+    {
+        PropertyChanged -= OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(LevelObject levelObject, PropertyKey changedKey)
+    {
+        if (changedKey == LevelPropertyKeys.Index)
+        {
+            UpdateIndexVisual();
+        }
+    }
+
+    private void UpdateIndexVisual()
+    {
+        int index = Get(LevelPropertyKeys.Index, -1);
+        indexNumberText.text = index >= 0 ? index.ToString() : "?";
     }
 
     public void MarkPassed()
@@ -39,7 +71,7 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         }
 
         isPassed = true;
-        meshRenderer.sharedMaterial = passedMaterial;
+        meshRenderer.material = passedMaterial;
     }
 
     public void ResetState()

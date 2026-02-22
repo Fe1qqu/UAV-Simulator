@@ -17,7 +17,7 @@ public class LocationSelection : MonoBehaviour
     [SerializeField] private GameObject locationButtonPrefab;
 
     // Currently selected location data
-    private LocationData selectedLocation;
+    private LocationDefinition selectedLocation;
 
     // List of created buttons and their checkmarks
     private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
@@ -68,7 +68,7 @@ public class LocationSelection : MonoBehaviour
         }
         createdButtons.Clear();
 
-        foreach (LocationData location in locationDatabase.locations)
+        foreach (LocationDefinition location in locationDatabase.locations)
         {
             GameObject locationButtonInstance = Instantiate(locationButtonPrefab, contentParent);
             if (locationButtonInstance == null)
@@ -88,7 +88,7 @@ public class LocationSelection : MonoBehaviour
             LocalizeStringEvent localizeStringEvent = locationButtonInstance.GetComponentInChildren<LocalizeStringEvent>();
             if (localizeStringEvent != null)
             {
-                localizeStringEvent.StringReference = location.localizationKey;
+                localizeStringEvent.StringReference = location.localizedString;
                 //localizeStringEvent.RefreshString();
             }
             else
@@ -134,7 +134,7 @@ public class LocationSelection : MonoBehaviour
         }
     }
 
-    private void OnLocationSelected(LocationData location, Button clickedButton)
+    private void OnLocationSelected(LocationDefinition location, Button clickedButton)
     {
         selectedLocation = location;
 
@@ -149,7 +149,7 @@ public class LocationSelection : MonoBehaviour
         //Debug.Log($"[LocationSelection] Selected: {location.locationId}.");
     }
 
-    public LocationData GetSelectedLocation()
+    public LocationDefinition GetSelectedLocation()
     {
         return selectedLocation;
     }

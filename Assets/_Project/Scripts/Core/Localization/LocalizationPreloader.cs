@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEditor.Localization;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEditor.Localization;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 /// <summary>
 /// Preloads multiple localization tables in parallel.
@@ -22,7 +23,7 @@ public class LocalizationPreloader : MonoBehaviour
     /// <summary>
     /// Loads all tables in parallel.
     /// </summary>
-    public async Task Load()
+    public async Task Load(CancellationToken cancellationToken = default)
     {
         if (IsLoaded)
         {
@@ -44,6 +45,11 @@ public class LocalizationPreloader : MonoBehaviour
                 continue;
             }
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var handle = LocalizationSettings.StringDatabase.GetTableAsync(stringTableCollection.TableCollectionName);
             handles.Add(stringTableCollection, handle);
             tasks.Add(handle.Task);
@@ -51,10 +57,15 @@ public class LocalizationPreloader : MonoBehaviour
 
         await Task.WhenAll(tasks);
 
-        foreach (var kvp in handles)
+        if (cancellationToken.IsCancellationRequested)
         {
-            var collection = kvp.Key;
-            var handle = kvp.Value;
+            return;
+        }
+
+        foreach (var keyValuePair in handles)
+        {
+            var collection = keyValuePair.Key;
+            var handle = keyValuePair.Value;
 
             if (!handle.IsValid() || handle.Status != AsyncOperationStatus.Succeeded)
             {
@@ -75,11 +86,11 @@ public class LocalizationPreloader : MonoBehaviour
     /// </summary>
     public void Unload()
     {
-        foreach (var kvp in handles)
+        foreach (var keyValuePair in handles)
         {
-            if (kvp.Value.IsValid())
+            if (keyValuePair.Value.IsValid())
             {
-                Addressables.Release(kvp.Value);
+                Addressables.Release(keyValuePair.Value);
             }
         }
 

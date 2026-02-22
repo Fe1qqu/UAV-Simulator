@@ -17,7 +17,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
     {
         checkpoints = levelObjectRegistry
             .EnumerateAlive<Checkpoint>()
-            .OrderBy(checkpoint => checkpoint.GetInt("index"))
+            .OrderBy(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, 0))
             .ToList();
 
         targetArea = levelObjectRegistry.FindFirstAlive<TriggerArea>();

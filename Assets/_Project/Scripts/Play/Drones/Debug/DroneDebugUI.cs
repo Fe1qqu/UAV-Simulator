@@ -42,9 +42,9 @@ public class DroneDebugUI : MonoBehaviour
         if (rotors != null)
         {
             GUILayout.Label("<b>Rotors</b>");
-            foreach (var kvp in rotors)
+            foreach (var keyValuePair in rotors)
             {
-                GUILayout.Label($"{kvp.Key}: {kvp.Value:F0} RPM");
+                GUILayout.Label($"{keyValuePair.Key}: {keyValuePair.Value:F0} RPM");
             }
         }
 

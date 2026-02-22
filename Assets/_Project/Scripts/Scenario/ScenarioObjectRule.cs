@@ -3,8 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class ScenarioObjectRule
 {
-    [Tooltip("PlaceableObjectData.objectId")]
-    public string objectId;
+    public PlaceableObjectDefinition placeableObject;
 
     [Min(0)]
     public int minCount = 0;

@@ -48,7 +48,7 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
             return;
         }
 
-        messageLocalizeStringEvent.StringReference.TableEntryReference = config.MessageKey;
+        messageLocalizeStringEvent.StringReference.TableEntryReference = config.messageLocalizationTableEntryKey;
         onResult = config.OnResult;
 
         ClearButtons();
@@ -82,7 +82,7 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
         {
             ModalButton button = Instantiate(buttonPrefab, buttonsContainer);
             button.gameObject.SetActive(true);
-            button.Initialize(modalButtonConfig.TextKey, modalButtonConfig.Result, OnButtonResult);
+            button.Initialize(modalButtonConfig.localizationTableEntryKey, modalButtonConfig.Result, OnButtonResult);
 
             if (modalButtonConfig.IsBackAction)
             {

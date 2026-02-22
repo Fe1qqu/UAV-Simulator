@@ -35,11 +35,29 @@ public static class ScenarioValidator
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "LevelObjectRegistry is missing");
         }
 
-        // Validating scenario definition
-        string scenarioErrorMessage = ValidateScenarioDefinition(scenario);
+        // Validating scenario
+        string scenarioErrorMessage = ValidateScenario(scenario);
         if (scenarioErrorMessage != null)
         {
             return new ScenarioValidationResult(false, ScenarioValidationErrorType.ScenarioInvalid, scenarioErrorMessage);
+        }
+
+        // Validating level
+        foreach (ScenarioObjectRule objectRule in scenario.objectRules)
+        {
+            int count = CountObjects(objectRule.placeableObject, levelObjectRegistry);
+
+            if (count < objectRule.minCount)
+            {
+                return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, 
+                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.placeableObject.name}'");
+            }
+
+            if (objectRule.maxCount >= 0 && count > objectRule.maxCount)
+            {
+                return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid,
+                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.placeableObject.name}'");
+            }
         }
 
         // Validating scenario specific data
@@ -48,28 +66,10 @@ public static class ScenarioValidator
             return scenario.specificValidator.Validate(levelObjectRegistry);
         }
 
-        // Validating level
-        foreach (ScenarioObjectRule objectRule in scenario.objectRules)
-        {
-            int count = CountObjects(objectRule.objectId, levelObjectRegistry);
-
-            if (count < objectRule.minCount)
-            {
-                return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, 
-                    $"Scenario requires at least {objectRule.minCount} object(s) of type '{objectRule.objectId}'");
-            }
-
-            if (objectRule.maxCount >= 0 && count > objectRule.maxCount)
-            {
-                return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid,
-                    $"Scenario allows at most {objectRule.maxCount} object(s) of type '{objectRule.objectId}'");
-            }
-        }
-
         return ScenarioValidationResult.Ok();
     }
 
-    private static string ValidateScenarioDefinition(ScenarioDefinition scenario)
+    private static string ValidateScenario(ScenarioDefinition scenario)
     {
         if (string.IsNullOrEmpty(scenario.scenarioId))
         {
@@ -83,21 +83,21 @@ public static class ScenarioValidator
 
         foreach (ScenarioObjectRule objectRule in scenario.objectRules)
         {
-            if (string.IsNullOrEmpty(objectRule.objectId))
+            if (string.IsNullOrEmpty(objectRule.placeableObject.objectId))
             {
                 return $"Scenario '{scenario.scenarioId}' contains rule with empty objectId";
             }
 
             if (objectRule.maxCount >= 0 && objectRule.maxCount < objectRule.minCount)
             {
-                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.objectId}': maxCount < minCount";
+                return $"Scenario '{scenario.scenarioId}' has invalid rule for '{objectRule.placeableObject.name}': maxCount < minCount";
             }
         }
 
         return null;
     }
 
-    private static int CountObjects(string objectId, LevelObjectRegistry levelObjectRegistry)
+    private static int CountObjects(PlaceableObjectDefinition placeableObject, LevelObjectRegistry levelObjectRegistry)
     {
         int count = 0;
 
@@ -108,7 +108,7 @@ public static class ScenarioValidator
                 continue;
             }
 
-            if (levelObject.SourceData.objectId == objectId)
+            if (levelObject.SourcePlaceableObject == placeableObject)
             {
                 count++;
             }

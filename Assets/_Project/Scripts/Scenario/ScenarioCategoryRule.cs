@@ -12,7 +12,8 @@ public enum ScenarioCategoryAccessMode
 [System.Serializable]
 public class ScenarioCategoryRule
 {
-    public PlaceableObjectType category;
+    public CategoryDefinition category;
+
     public ScenarioCategoryAccessMode accessMode;
 
     private bool UseObjectList => accessMode != ScenarioCategoryAccessMode.All;

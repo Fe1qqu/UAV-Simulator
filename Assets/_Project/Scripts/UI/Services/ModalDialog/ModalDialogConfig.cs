@@ -3,10 +3,7 @@ using System.Collections.Generic;
 
 public class ModalDialogConfig
 {
-    /// <summary>
-    /// Localization table entry key
-    /// </summary>
-    public string MessageKey;
+    public string messageLocalizationTableEntryKey;
 
     public IReadOnlyList<ModalButtonConfig> Buttons;
 

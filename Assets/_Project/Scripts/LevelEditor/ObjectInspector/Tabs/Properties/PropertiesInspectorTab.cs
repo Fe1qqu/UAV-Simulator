@@ -3,7 +3,11 @@ using UnityEngine;
 public class PropertiesInspectorTab : MonoBehaviour
 {
     [SerializeField] private Transform listRoot;
-    [SerializeField] private PropertyInspectorField propertyInspectorFieldPrefab;
+
+    [SerializeField] private PropertyInspectorField_Input inputFieldPrefab;
+    [SerializeField] private PropertyInspectorField_Bool boolFieldPrefab;
+    //[SerializeField] private PropertyInspectorField_Color colorFieldPrefab;
+    [SerializeField] private PropertyInspectorField_Enum enumFieldPrefab;
 
     private LevelObject boundObject;
     private bool isDirty;
@@ -16,9 +20,24 @@ public class PropertiesInspectorTab : MonoBehaviour
             Debug.LogError("[PropertiesInspectorTab] ListRoot is not assigned.");
         }
 
-        if (propertyInspectorFieldPrefab == null)
+        if (inputFieldPrefab == null)
         {
-            Debug.LogError("[PropertiesInspectorTab] PropertyInspectorFieldPrefab is not assigned.");
+            Debug.LogError("[PropertiesInspectorTab] InputFieldPrefab is not assigned.");
+        }
+
+        if (boolFieldPrefab == null)
+        {
+            Debug.LogError("[PropertiesInspectorTab] BoolFieldPrefab is not assigned.");
+        }
+
+        //if (colorFieldPrefab == null)
+        //{
+        //    Debug.LogError("[PropertiesInspectorTab] ColorFieldPrefab is not assigned.");
+        //}
+
+        if (enumFieldPrefab == null)
+        {
+            Debug.LogError("[PropertiesInspectorTab] EnumFieldPrefab is not assigned.");
         }
     }
 
@@ -64,11 +83,34 @@ public class PropertiesInspectorTab : MonoBehaviour
             return;
         }
 
-        foreach (LevelObjectProperty property in boundObject.Properties)
+        foreach (ObjectPropertyDefinition objectProperty in boundObject.SourcePlaceableObject.properties)
         {
-            PropertyInspectorField propertyFieldInstance = Instantiate(propertyInspectorFieldPrefab, listRoot);
+            PropertyInspectorFieldBase propertyFieldInstance = CreateField(objectProperty);
+            propertyFieldInstance.Bind(boundObject, objectProperty);
             propertyFieldInstance.gameObject.SetActive(true);
-            propertyFieldInstance.Bind(boundObject, property.key);
+        }
+    }
+
+    private PropertyInspectorFieldBase CreateField(ObjectPropertyDefinition objectProperty)
+    {
+        switch (objectProperty.type)
+        {
+            case ObjectPropertyType.Int:
+            case ObjectPropertyType.Float:
+            case ObjectPropertyType.String:
+                return Instantiate(inputFieldPrefab, listRoot);
+
+            case ObjectPropertyType.Bool:
+                return Instantiate(boolFieldPrefab, listRoot);
+
+            case ObjectPropertyType.Enum:
+                return Instantiate(enumFieldPrefab, listRoot);
+
+            // case ObjectPropertyType.Color:
+            //     return Instantiate(colorFieldPrefab, listRoot);
+
+            default:
+                return Instantiate(inputFieldPrefab, listRoot);
         }
     }
 

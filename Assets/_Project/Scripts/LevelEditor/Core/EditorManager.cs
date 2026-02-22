@@ -55,8 +55,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     // Currently selected category button
     private UICategoryButton currentSelectedButton;
 
-    // Active category enum value
-    private PlaceableObjectType currentCategory;
+    private CategoryDefinition currentCategory;
 
     private FadeManager loadingScreenFader;
 
@@ -194,10 +193,10 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogWarning("[EditorManager] No scenario selected. Showing all categories.");
         }
 
-        List<CategoryData> categoriesToShow = GetAvailableCategories(scenario);
+        List<CategoryDefinition> categoriesToShow = GetAvailableCategories(scenario);
 
         // Create category buttons
-        foreach (CategoryData categoryData in categoriesToShow)
+        foreach (CategoryDefinition category in categoriesToShow)
         {
             GameObject categoryButtonInstance = Instantiate(categoryButtonPrefab, categoryListContainer);
             if (!categoryButtonInstance.TryGetComponent<UICategoryButton>(out var categoryButton))
@@ -207,35 +206,35 @@ public class EditorManager : MonoBehaviour, IBackHandler
             }
 
             categoryButtonInstance.SetActive(true);
-            categoryButton.Setup(categoryData, OnCategorySelected);
+            categoryButton.Setup(category, OnCategorySelected);
         }
 
         // Auto–select first category
         if (categoriesToShow.Count > 0)
         {
-            CategoryData firstCategoryData = categoriesToShow[0];
+            CategoryDefinition firstCategory = categoriesToShow[0];
             UICategoryButton firstCategoryButton = categoryListContainer.GetChild(0).GetComponent<UICategoryButton>();
-            OnCategorySelected(firstCategoryData, firstCategoryButton);
+            OnCategorySelected(firstCategory, firstCategoryButton);
         }
     }
 
-    private List<CategoryData> GetAvailableCategories(ScenarioDefinition scenario)
+    private List<CategoryDefinition> GetAvailableCategories(ScenarioDefinition scenario)
     {
-        List<CategoryData> categoriesToShow = new();
+        List<CategoryDefinition> categoriesToShow = new();
 
-        foreach (CategoryData categoryData in categoryDatabase.categories)
+        foreach (CategoryDefinition category in categoryDatabase.categories)
         {
             // If the scenario is selected, check the rules
             if (scenario != null)
             {
-                bool categoryAllowed = scenario.availableCategories.Exists(rule => rule.category == categoryData.type);
+                bool categoryAllowed = scenario.availableCategories.Exists(rule => rule.category == category);
                 if (!categoryAllowed)
                 {
                     continue;
                 }
             }
 
-            categoriesToShow.Add(categoryData);
+            categoriesToShow.Add(category);
         }
 
         return categoriesToShow;
@@ -245,7 +244,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     /// Called when a category button is clicked.
     /// Updates UI and object list.
     /// </summary>
-    private void OnCategorySelected(CategoryData categoryData, UICategoryButton categoryButton)
+    private void OnCategorySelected(CategoryDefinition category, UICategoryButton categoryButton)
     {
         if (currentSelectedButton != null)
         {
@@ -255,10 +254,10 @@ public class EditorManager : MonoBehaviour, IBackHandler
         currentSelectedButton = categoryButton;
         currentSelectedButton.SetSelected(true);
 
-        currentCategory = categoryData.type;
+        currentCategory = category;
         if (currentCategoryLocalizeEvent != null)
         {
-            currentCategoryLocalizeEvent.StringReference = categoryData.localizationKey;
+            currentCategoryLocalizeEvent.StringReference = category.localizedString;
             //currentCategoryLocalizeEvent.RefreshString();
         }
 
@@ -276,8 +275,8 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
 
         // Take all objects of the selected category
-        List<PlaceableObjectData> filteredObjects = placeableObjectDatabase.GetByType(currentCategory);
-        if (filteredObjects == null || filteredObjects.Count == 0)
+        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectDatabase.GetByCategory(currentCategory);
+        if (filteredPlaceableObjects == null || filteredPlaceableObjects.Count == 0)
         {
             Debug.LogWarning($"[EditorManager] No objects found for category '{currentCategory}'.");
             return;
@@ -287,11 +286,11 @@ public class EditorManager : MonoBehaviour, IBackHandler
         if (scenario != null)
         {
             ScenarioCategoryRule rule = scenario.availableCategories.Find(rule => rule.category == currentCategory);
-            filteredObjects = FilterObjectsByScenarioRule(filteredObjects, rule);
+            filteredPlaceableObjects = FilterObjectsByScenarioRule(filteredPlaceableObjects, rule);
         }
 
         // Create buttons for objects
-        foreach (PlaceableObjectData placeableObjectData in filteredObjects)
+        foreach (PlaceableObjectDefinition placeableObject in filteredPlaceableObjects)
         {
             GameObject placeableObjectButtonInstance = Instantiate(placeableObjectButtonPrefab, objectListContainer);
             if (!placeableObjectButtonInstance.TryGetComponent<UIPlaceableObjectButton>(out var placeableObjectButton))
@@ -301,46 +300,46 @@ public class EditorManager : MonoBehaviour, IBackHandler
             }
 
             placeableObjectButtonInstance.SetActive(true);
-            placeableObjectButton.Setup(placeableObjectData);
+            placeableObjectButton.Setup(placeableObject);
         }
     }
 
-    private List<PlaceableObjectData> FilterObjectsByScenarioRule(List<PlaceableObjectData> objects, ScenarioCategoryRule rule)
+    private List<PlaceableObjectDefinition> FilterObjectsByScenarioRule(List<PlaceableObjectDefinition> placeableObjects, ScenarioCategoryRule scenarioCategoryRule)
     {
-        if (rule == null || objects == null)
+        if (scenarioCategoryRule == null || placeableObjects == null)
         {
-            return objects;
+            return placeableObjects;
         }
 
         // Check for empty list in modes that require it
-        if ((rule.accessMode == ScenarioCategoryAccessMode.ListedOnly || rule.accessMode == ScenarioCategoryAccessMode.AllExceptListed)
-            && (rule.objectIds == null || rule.objectIds.Count == 0))
+        if ((scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.ListedOnly || scenarioCategoryRule.accessMode == ScenarioCategoryAccessMode.AllExceptListed)
+            && (scenarioCategoryRule.objectIds == null || scenarioCategoryRule.objectIds.Count == 0))
         {
-            Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{rule.category}' has accessMode '{rule.accessMode}' but objectIds list is empty.");
+            Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' has accessMode '{scenarioCategoryRule.accessMode}' but objectIds list is empty.");
         }
 
-        bool usesObjectList = rule.accessMode != ScenarioCategoryAccessMode.All;
+        bool usesObjectList = scenarioCategoryRule.accessMode != ScenarioCategoryAccessMode.All;
 
         // Check for invalid objectIds
-        if (usesObjectList && rule.objectIds != null && rule.objectIds.Count > 0)
+        if (usesObjectList && scenarioCategoryRule.objectIds != null && scenarioCategoryRule.objectIds.Count > 0)
         {
-            foreach (string objectId in rule.objectIds)
+            foreach (string objectId in scenarioCategoryRule.objectIds)
             {
-                bool exists = objects.Exists(obj => obj.objectId == objectId);
+                bool exists = placeableObjects.Exists(obj => obj.objectId == objectId);
                 if (!exists)
                 {
-                    Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{rule.category}' references objectId '{objectId}', but it was not found in the database.");
+                    Debug.LogWarning($"[EditorManager] ScenarioCategoryRule for category '{scenarioCategoryRule.category}' references objectId '{objectId}', but it was not found in the database.");
                 }
             }
         }
 
         // Filtering by accessMode
-        return rule.accessMode switch
+        return scenarioCategoryRule.accessMode switch
         {
-            ScenarioCategoryAccessMode.All => objects,
-            ScenarioCategoryAccessMode.ListedOnly => objects.FindAll(obj => rule.objectIds.Contains(obj.objectId)),
-            ScenarioCategoryAccessMode.AllExceptListed => objects.FindAll(obj => !rule.objectIds.Contains(obj.objectId)),
-            _ => objects
+            ScenarioCategoryAccessMode.All => placeableObjects,
+            ScenarioCategoryAccessMode.ListedOnly => placeableObjects.FindAll(obj => scenarioCategoryRule.objectIds.Contains(obj.objectId)),
+            ScenarioCategoryAccessMode.AllExceptListed => placeableObjects.FindAll(obj => !scenarioCategoryRule .objectIds.Contains(obj.objectId)),
+            _ => placeableObjects
         };
     }
 

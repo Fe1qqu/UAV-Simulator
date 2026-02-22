@@ -12,10 +12,10 @@ public enum LevelObjectLifecycleState
 
 public class LevelObject : MonoBehaviour
 {
-    [SerializeField, HideInInspector] private PlaceableObjectData sourceData;
+    [SerializeField, HideInInspector] private PlaceableObjectDefinition sourcePlaceableObject;
     [SerializeField, HideInInspector] private List<LevelObjectProperty> properties = new();
 
-    public PlaceableObjectData SourceData => sourceData;
+    public PlaceableObjectDefinition SourcePlaceableObject => sourcePlaceableObject;
 
     public IReadOnlyList<LevelObjectProperty> Properties => properties;
     public bool HasProperties => Properties != null && Properties.Count > 0;
@@ -24,7 +24,9 @@ public class LevelObject : MonoBehaviour
     public bool IsAlive => LifecycleState == LevelObjectLifecycleState.Alive;
 
     public event Action<LevelObject> TransformChanged;
-    public event Action<LevelObject, string> PropertyChanged;
+    public event Action<LevelObject, PropertyKey> PropertyChanged;
+
+    private Dictionary<string, LevelObjectProperty> _propertyCache;
 
     private void OnDestroy()
     {
@@ -35,26 +37,29 @@ public class LevelObject : MonoBehaviour
         }
     }
 
-    public void Initialize(PlaceableObjectData sourceData)
+    public void Initialize(PlaceableObjectDefinition placeableObject)
     {
-        if (sourceData == null)
+        if (placeableObject == null)
         {
-            Debug.LogError("[LevelObject] Initialize called with null PlaceableObjectData.");
+            Debug.LogError("[LevelObject] Initialize called with null PlaceableObject.");
             return;
         }
 
-        this.sourceData = sourceData;
+        sourcePlaceableObject = placeableObject;
+        
         LifecycleState = LevelObjectLifecycleState.Alive;
         gameObject.SetActive(true);
 
-        foreach (ObjectPropertyDefinition propertyDefinition in sourceData.propertyDefinitions)
+        properties.Clear();
+        foreach (ObjectPropertyDefinition objectProperty in placeableObject.properties)
         {
             properties.Add(new LevelObjectProperty
             {
-                key = propertyDefinition.key,
-                value = propertyDefinition.defaultValue
+                key = objectProperty.key,
+                value = objectProperty.defaultValue
             });
         }
+        BuildPropertyCache();
 
         if (LevelObjectRegistry.Instance != null)
         {
@@ -165,35 +170,185 @@ public class LevelObject : MonoBehaviour
         TransformChanged?.Invoke(this);
     }
 
-    public bool TrySetProperty(string key, string newValue)
+    protected void RaiseAllPropertiesChanged()
     {
-        LevelObjectProperty property = properties.Find(property => property.key == key);
-        if (property == null)
+        if (_propertyCache == null)
         {
-            Debug.LogWarning($"[LevelObject] Property '{key}' not found.");
+            BuildPropertyCache();
+        }
+
+        foreach (var keyValuePair in _propertyCache)
+        {
+            if (PropertyKeyRegistry.TryGet(keyValuePair.Key, out var key))
+            {
+                PropertyChanged?.Invoke(this, key);
+            }
+        }
+    }
+
+    public bool HasProperty(PropertyKey key)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        return _propertyCache.ContainsKey(key.Name);
+    }
+
+    private void BuildPropertyCache()
+    {
+        _propertyCache = new Dictionary<string, LevelObjectProperty>();
+
+        foreach (LevelObjectProperty property in properties)
+        {
+            _propertyCache[property.key] = property;
+        }
+    }
+
+    public bool TryGet<T>(PropertyKey<T> key, out T value)
+    {
+        value = default;
+
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
             return false;
         }
 
-        if (property.value == newValue)
+        string raw = property.value;
+
+        try
+        {
+            if (typeof(T) == typeof(int))
+            {
+                if (int.TryParse(raw, System.Globalization.NumberStyles.Integer,
+                    System.Globalization.CultureInfo.InvariantCulture, out int i))
+                {
+                    value = (T)(object)i;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(float))
+            {
+                if (float.TryParse(raw, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out float f))
+                {
+                    value = (T)(object)f;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(bool))
+            {
+                if (bool.TryParse(raw, out bool b))
+                {
+                    value = (T)(object)b;
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(string))
+            {
+                value = (T)(object)raw;
+                return true;
+            }
+            else if (typeof(T).IsEnum)
+            {
+                if (Enum.TryParse(typeof(T), raw, out object enumValue))
+                {
+                    value = (T)enumValue;
+                    return true;
+                }
+            }
+        }
+        catch { }
+
+        return false;
+    }
+
+    public T Get<T>(PropertyKey<T> key, T defaultValue = default)
+    {
+        return TryGet(key, out T value) ? value : defaultValue;
+    }
+
+    public string Get(PropertyKey key)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
+            return null;
+        }
+
+        return property.value;
+    }
+
+    public bool Set<T>(PropertyKey<T> key, T newValue)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
         {
             return false;
         }
 
-        property.value = newValue;
+        string stringValue = newValue is IFormattable f
+                ? f.ToString(null, System.Globalization.CultureInfo.InvariantCulture)
+                : newValue.ToString();
+
+        if (property.value == stringValue)
+        {
+            return false;
+        }
+
+        property.value = stringValue;
+
+        PropertyChanged?.Invoke(this, key);
+        return true;
+    }
+
+    public bool Set(PropertyKey key, string rawValue)
+    {
+        if (_propertyCache == null)
+        {
+            BuildPropertyCache();
+        }
+
+        if (!_propertyCache.TryGetValue(key.Name, out var property))
+        {
+            return false;
+        }
+
+        if (property.value == rawValue)
+        {
+            return false;
+        }
+
+        property.value = rawValue;
+
         PropertyChanged?.Invoke(this, key);
         return true;
     }
 
     public LevelObjectData ToData()
     {
-        if (string.IsNullOrEmpty(sourceData.objectId))
+        if (string.IsNullOrEmpty(sourcePlaceableObject.objectId))
         {
-            Debug.LogError($"[LevelObject] ObjectId is empty during ToData on '{name}'.");
+            Debug.LogError($"[LevelObject] PlaceableObject.objectId is empty during ToData on '{name}'.");
         }
 
         return new LevelObjectData
         {
-            objectId = sourceData.objectId,
+            objectId = sourcePlaceableObject.objectId,
             position = transform.position,
             rotation = transform.rotation,
             scale = transform.localScale,
@@ -201,37 +356,37 @@ public class LevelObject : MonoBehaviour
         };
     }
 
-    public void FromData(LevelObjectData data)
+    public void FromData(LevelObjectData objectData)
     {
-        if (data == null)
+        if (objectData == null)
         {
-            Debug.LogError($"[LevelObject] FromData called with null data on '{name}'.");
+            Debug.LogError($"[LevelObject] FromData called with null LevelObjectData on '{name}'.");
             return;
         }
 
-        if (string.IsNullOrEmpty(data.objectId))
+        if (string.IsNullOrEmpty(objectData.objectId))
         {
             Debug.LogError($"[LevelObject] ObjectId is empty in LevelObjectData on '{name}'.");
         }
-        else
-        {
-            sourceData.objectId = data.objectId;
-        }
 
-        transform.SetPositionAndRotation(data.position, data.rotation);
-        transform.localScale = data.scale;
+        transform.SetPositionAndRotation(objectData.position, objectData.rotation);
+        transform.localScale = objectData.scale;
 
         properties = new List<LevelObjectProperty>();
 
-        foreach (ObjectPropertyDefinition propertyDefinition in sourceData.propertyDefinitions)
+        foreach (ObjectPropertyDefinition objectProperty in sourcePlaceableObject.properties)
         {
-            LevelObjectProperty saved = data.properties?.Find(property => property.key == propertyDefinition.key);
+            LevelObjectProperty savedObjectProperty = objectData.properties?.Find(property => property.key == objectProperty.key);
 
             properties.Add(new LevelObjectProperty
             {
-                key = propertyDefinition.key,
-                value = saved != null ? saved.value : propertyDefinition.defaultValue
+                key = objectProperty.key,
+                value = savedObjectProperty != null ? savedObjectProperty.value : objectProperty.defaultValue
             });
         }
+
+        BuildPropertyCache();
+
+        RaiseAllPropertiesChanged();
     }
 }

@@ -88,7 +88,7 @@ public class ScenarioSelection : MonoBehaviour
             LocalizeStringEvent localizeStringEvent = scenarioButtonInstance.GetComponentInChildren<LocalizeStringEvent>();
             if (localizeStringEvent != null)
             {
-                localizeStringEvent.StringReference = scenario.localizationKey;
+                localizeStringEvent.StringReference = scenario.localizedString;
                 //localizeStringEvent.RefreshString();
             }
             else

@@ -26,12 +26,12 @@ public class ModalButton : MonoBehaviour
         }
     }
 
-    public void Initialize(string localizationKey, ModalResult result, Action<ModalResult> callback)
+    public void Initialize(string localizationTableEntryKey, ModalResult result, Action<ModalResult> callback)
     {
         this.result = result;
         this.callback = callback;
 
-        labelLocalizeStringEvent.StringReference.TableEntryReference = localizationKey;
+        labelLocalizeStringEvent.StringReference.TableEntryReference = localizationTableEntryKey;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClicked);

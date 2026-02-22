@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6bad5e76372f6458c25fc6e890594d, type: 3}
+  m_Name: FreeFlightScenarioDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinition
+  scenarioId: free_flight
+  localizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:a3aa967611b941544992f26420d0780c
+    m_TableEntryReference:
+      m_KeyId: 98147917824
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 21300000, guid: e65abd006f293e74ca4e394716773297, type: 3}
+  availableCategories:
+  - category: {fileID: 11400000, guid: ff0ab0850d667e84faf52e99ca338321, type: 2}
+    accessMode: 0
+    objectIds: []
+  - category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
+    accessMode: 0
+    objectIds: []
+  - category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
+    accessMode: 1
+    objectIds:
+    - drone_spawn_point
+  objectRules:
+  - placeableObject: {fileID: 11400000, guid: f48d736678511a84a9edf88327e6fbe6, type: 2}
+    minCount: 1
+    maxCount: 1
+  specificValidator: {fileID: 0}
+  runtime: {fileID: 11400000, guid: bd11b8b6252fcf04eb452103d6fa0171, type: 2}
+  references:
+    version: 2
+    RefIds: []

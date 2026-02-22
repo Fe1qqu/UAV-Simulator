@@ -33,6 +33,12 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3eec42838b004564b98f4d912ea37f7b
+    m_Address: Assets/_Project/Localization/TableCollections/ObjectProperties/ObjectProperties
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3aa967611b941544992f26420d0780c
     m_Address: Assets/_Project/Localization/TableCollections/Scenarios/Scenario Shared
       Data.asset

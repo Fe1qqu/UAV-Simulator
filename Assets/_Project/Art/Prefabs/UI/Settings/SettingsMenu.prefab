@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -18, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &9198319860567685208
 MonoBehaviour:
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438\n"
+  m_text: Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4281479730
   m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022bc1aba29ccc04f942f59c634ab360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorSettingsPage
-  localizationKey: video
+  localizationTableEntryKey: video
   vSyncToggle: {fileID: 4319127773207002088}
 --- !u!1 &1389836217473017971
 GameObject:
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f76e9219db30e4fb45a0471e462188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsTab1
-  localizationKey: language
+  localizationTableEntryKey: language
   languageDropdown: {fileID: 4873269283255853045}
 --- !u!1 &1596133274742425181
 GameObject:
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TabButtonPrefab
+  m_text: Tab name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1025,7 +1025,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1033684528987500587}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.2
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1716,7 +1716,7 @@ RectTransform:
   m_Father: {fileID: 116953626721853450}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.2}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1807,7 +1807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0421ce478da4f459543dcaa2042d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsPage
-  localizationKey: audio
+  localizationTableEntryKey: audio
   masterVolumeSlider: {fileID: 550297121714982647}
 --- !u!1 &4447996306722436264
 GameObject:
@@ -1819,13 +1819,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2809944382108909174}
   - component: {fileID: 945289994520315285}
+  - component: {fileID: 7921907404266155030}
   m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2809944382108909174
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1875,6 +1876,20 @@ MonoBehaviour:
     tabIds:
     - video
     - language
+--- !u!114 &7921907404266155030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447996306722436264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b1fdf1682fbd241bc181fd0bf1fce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsScreen
+  settingsMenuController: {fileID: 945289994520315285}
+  backButton: {fileID: 4288814176534859183}
 --- !u!1 &4739886516925452591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,7 +2003,7 @@ RectTransform:
   m_Father: {fileID: 6128768731651819829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2252,7 +2267,7 @@ RectTransform:
   m_Father: {fileID: 5658977186812180509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2693,7 +2708,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041D\u0430\u0437\u0430\u0434\n"
+  m_text: Back
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2912,7 +2927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5357806748999035547
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3109,7 +3124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &8600233368612531294

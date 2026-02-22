@@ -22,14 +22,14 @@ public class Step_ScenarioSelect : BaseLevelCreationStep
 
     public override bool ValidateStep()
     {
-        ScenarioDefinition scenarioDefinition = scenarioSelection.GetSelectedScenario();
-        if (scenarioDefinition == null)
+        ScenarioDefinition scenario = scenarioSelection.GetSelectedScenario();
+        if (scenario == null)
         {
             Debug.LogWarning("[Step_ScenarioSelect] No scenario selected.");
             return false;
         }
 
-        GameSettings.Instance.CurrentEditorSession.SelectedScenarioId = scenarioDefinition.scenarioId;
+        GameSettings.Instance.CurrentEditorSession.SelectedScenarioId = scenario.scenarioId;
         return true;
     }
 }
