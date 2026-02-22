@@ -20,6 +20,7 @@ public class Rotor
 public class QuadcopterController : DroneControllerBase, IControllable
 {
     private Rigidbody rigidBody;
+    private Quaternion targetRotation;
 
     [Header("Rotors")]
     [SerializeField] private Rotor frontLeft;
@@ -30,8 +31,12 @@ public class QuadcopterController : DroneControllerBase, IControllable
     [Header("Physics Settings")]
     [SerializeField] private float liftCoefficient = 1e-6f;
     [SerializeField] private float dragCoefficient = 1e-6f;
-    [SerializeField] private float maxRotorRPM = 8000f;
+    [SerializeField] private float maxRotorRPM = 4000f;
     [SerializeField] private float rotorRPMChangeRate = 0.5f;
+
+    [Header("Flight Controls")]
+    [SerializeField] private float rotationSpeed = 100f;
+    [SerializeField] private float rotationLerpSpeed = 10f;
 
     private Dictionary<RotorPosition, Rotor> rotors = new();
 
@@ -73,10 +78,14 @@ public class QuadcopterController : DroneControllerBase, IControllable
                 return;
             }
         }
+
+        // Initialize target rotation
+        targetRotation = transform.rotation;
     }
 
     void Update()
     {
+        // Rotor animation
         foreach (var kvp in rotors)
         {
             Rotor rotor = kvp.Value;
@@ -89,6 +98,15 @@ public class QuadcopterController : DroneControllerBase, IControllable
     {
         UpdateMotorSpeeds();
         ApplyRotorForces();
+
+        // Apply rotation control only when there's input
+        if (HasRotationInput())
+        {
+            UpdateTargetRotation();
+        }
+
+        // Smoothly rotate towards target rotation
+        ApplyRotationControl();
     }
 
     private void LateUpdate()
@@ -99,14 +117,69 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
+    private bool HasRotationInput()
+    {
+        return Mathf.Abs(yawInput) > 0.01f ||
+               Mathf.Abs(pitchInput) > 0.01f ||
+               Mathf.Abs(rollInput) > 0.01f;
+    }
+
+    private void UpdateTargetRotation()
+    {
+        // Calculate rotation deltas based on input
+        float yawRotation = yawInput * rotationSpeed * Time.fixedDeltaTime;
+        float pitchRotation = pitchInput * rotationSpeed * Time.fixedDeltaTime;
+        float rollRotation = rollInput * rotationSpeed * Time.fixedDeltaTime;
+
+        // Apply rotations to target
+        targetRotation *= Quaternion.Euler(pitchRotation, 0f, -rollRotation);
+        targetRotation *= Quaternion.Euler(0f, yawRotation, 0f);
+    }
+
+    private void ApplyRotationControl()
+    {
+        // Smoothly interpolate to target rotation
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationLerpSpeed * Time.fixedDeltaTime
+        );
+    }
+
     private void UpdateMotorSpeeds()
     {
-        foreach (Rotor rotor in rotors.Values)
-        {
-            rotor.CurrentRPM = Mathf.Lerp(rotor.CurrentRPM, throttleInput * maxRotorRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
-        }
+        // Вычисляем целевые RPM для каждого ротора по формулам
+        float frontLeftTarget = throttleInput - 0.4f * yawInput - 0.2f * pitchInput + 0.3f * rollInput;
+        float frontRightTarget = throttleInput + 0.4f * yawInput - 0.2f * pitchInput - 0.3f * rollInput;
+        float rearLeftTarget = throttleInput + 0.4f * yawInput + 0.2f * pitchInput + 0.3f * rollInput;
+        float rearRightTarget = throttleInput - 0.4f * yawInput + 0.2f * pitchInput - 0.3f * rollInput;
 
-        // RPM limit
+        // Применяем целевые RPM к каждому ротору
+        frontLeft.CurrentRPM = Mathf.Lerp(
+            frontLeft.CurrentRPM,
+            frontLeftTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        frontRight.CurrentRPM = Mathf.Lerp(
+            frontRight.CurrentRPM,
+            frontRightTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        rearLeft.CurrentRPM = Mathf.Lerp(
+            rearLeft.CurrentRPM,
+            rearLeftTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        rearRight.CurrentRPM = Mathf.Lerp(
+            rearRight.CurrentRPM,
+            rearRightTarget * maxRotorRPM,
+            rotorRPMChangeRate * Time.fixedDeltaTime
+        );
+
+        // Ограничиваем RPM
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = Mathf.Clamp(rotor.CurrentRPM, 0, maxRotorRPM);
@@ -115,19 +188,19 @@ public class QuadcopterController : DroneControllerBase, IControllable
 
     private void ApplyRotorForces()
     {
+        // Применяем подъемную силу только для throttle
         foreach (Rotor rotor in rotors.Values)
         {
             float lift = liftCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
             Vector3 liftForce = transform.up * lift;
-
             rigidBody.AddForceAtPosition(liftForce, rotor.bone.position, ForceMode.Force);
         }
     }
 
-    public void ApplyThrottle(float value) => throttleInput = value;
-    public void ApplyYaw(float value) => yawInput = value;
-    public void ApplyPitch(float value) => pitchInput = value;
-    public void ApplyRoll(float value) => rollInput = value;
+    public void ApplyThrottle(float value) => throttleInput = Mathf.Clamp01(value);
+    public void ApplyYaw(float value) => yawInput = Mathf.Clamp(value, -1f, 1f);
+    public void ApplyPitch(float value) => pitchInput = Mathf.Clamp(value, -1f, 1f);
+    public void ApplyRoll(float value) => rollInput = Mathf.Clamp(value, -1f, 1f);
 
     public override void ResetState()
     {
@@ -136,6 +209,9 @@ public class QuadcopterController : DroneControllerBase, IControllable
         yawInput = 0f;
         pitchInput = 0f;
         rollInput = 0f;
+
+        // Reset target rotation to current rotation
+        targetRotation = transform.rotation;
 
         // Resetting RPM of all rotors
         foreach (Rotor rotor in rotors.Values)
