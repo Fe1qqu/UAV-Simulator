@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Step_NameInput : BaseLevelCreationStep
+public class Step_NameInput : LevelCreationWizardStepBase
 {
     [Header("UI References")]
     [Tooltip("Input field where the user enters the level name.")]

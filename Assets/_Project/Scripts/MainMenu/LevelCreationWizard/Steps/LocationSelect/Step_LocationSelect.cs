@@ -1,7 +1,7 @@
 using UnityEngine;
  
 [RequireComponent(typeof(LocationSelection))]
-public class Step_LocationSelect : BaseLevelCreationStep
+public class Step_LocationSelect : LevelCreationWizardStepBase
 {
     private LocationSelection locationSelection;
 

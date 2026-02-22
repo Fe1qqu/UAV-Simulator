@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-public class EditorPauseMenu : BasePauseMenu
+public class EditorPauseMenu : PauseMenuBase
 {
     [SerializeField] private EditorManager editorManager;
     [SerializeField] private EditorLevelDataBuilder levelDataBuilder;

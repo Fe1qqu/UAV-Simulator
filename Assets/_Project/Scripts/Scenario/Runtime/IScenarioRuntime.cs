@@ -7,6 +7,7 @@ public interface IScenarioRuntime
     void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController);
     void StartScenario();
     void TickScenario();
+    void FixedTickScenario();
     void ResetScenario();
     void DisposeScenario();
 }

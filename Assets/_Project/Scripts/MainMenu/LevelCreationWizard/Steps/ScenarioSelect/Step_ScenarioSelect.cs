@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(ScenarioSelection))]
-public class Step_ScenarioSelect : BaseLevelCreationStep
+public class Step_ScenarioSelect : LevelCreationWizardStepBase
 {
     private ScenarioSelection scenarioSelection;
 

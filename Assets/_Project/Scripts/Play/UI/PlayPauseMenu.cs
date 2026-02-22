@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayPauseMenu : BasePauseMenu
+public class PlayPauseMenu : PauseMenuBase
 {
     [SerializeField] private PlayManager playManager;
 

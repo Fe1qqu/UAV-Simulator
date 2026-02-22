@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BasePauseMenu : MonoBehaviour, IBackHandler
+public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
 {
     [SerializeField] protected GameObject pauseMenuRoot;
 

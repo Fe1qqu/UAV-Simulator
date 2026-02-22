@@ -16,8 +16,8 @@ public class LevelCreationWizard : MonoBehaviour
     [SerializeField] private GameObject wizardPanel;
 
     [Header("Steps")]
-    [Tooltip("Array of BaseLevelCreationStep components representing each step of the wizard.")]
-    [SerializeField] private BaseLevelCreationStep[] steps;
+    [Tooltip("Array of LevelCreationWizardStepBase components representing each step of the wizard.")]
+    [SerializeField] private LevelCreationWizardStepBase[] steps;
 
     [Header("Buttons")]
     [Tooltip("Button used to navigate to the next step.")]
@@ -90,7 +90,7 @@ public class LevelCreationWizard : MonoBehaviour
 
     private void Start()
     {
-        foreach (BaseLevelCreationStep step in steps)
+        foreach (LevelCreationWizardStepBase step in steps)
         {
             step.Initialize(mainMenuContext);
         }

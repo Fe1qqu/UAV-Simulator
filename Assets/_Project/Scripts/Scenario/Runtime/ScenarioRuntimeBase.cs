@@ -15,12 +15,48 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
         this.levelObjectRegistry = levelObjectRegistry;
         this.droneController = droneController;
         isCompleted = false;
+
+        OnInitialize();
     }
 
-    public abstract void StartScenario();
-    public abstract void TickScenario();
-    public abstract void ResetScenario();
-    public virtual void DisposeScenario() { }
+    public void StartScenario()
+    {
+        isCompleted = false;
+        StartScenarioInternal();
+    }
+
+    public void TickScenario()
+    {
+        if (isCompleted)
+        {
+            return;
+        }
+
+        TickScenarioInternal();
+    }
+
+
+    public void FixedTickScenario()
+    {
+        if (isCompleted)
+        {
+            return;
+        }
+
+        FixedTickScenarioInternal();
+    }
+
+    public void ResetScenario()
+    {
+        isCompleted = false;
+        ResetScenarioInternal();
+    }
+
+    public void DisposeScenario()
+    {
+        DisposeScenarioInternal();
+        isCompleted = false;
+    }
 
     protected void CompleteScenario()
     {
@@ -30,7 +66,13 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
         }
 
         isCompleted = true;
-
         ScenarioCompleted?.Invoke(this);
     }
+
+    protected virtual void OnInitialize() { }
+    protected abstract void StartScenarioInternal();
+    protected virtual void TickScenarioInternal() { }
+    protected virtual void FixedTickScenarioInternal() { }
+    protected abstract void ResetScenarioInternal();
+    protected virtual void DisposeScenarioInternal() { }
 }

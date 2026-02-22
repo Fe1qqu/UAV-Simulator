@@ -50,6 +50,7 @@ public class DroneCameraInput : MonoBehaviour
         PauseManager.PauseStateChanged -= OnPauseChanged;
         input.Disable();
     }
+
     private void OnPauseChanged(bool paused)
     {
         if (paused)

@@ -79,6 +79,11 @@ public class PlayManager : MonoBehaviour, IBackHandler
         scenarioRuntime?.TickScenario();
     }
 
+    private void FixedUpdate()
+    {
+        scenarioRuntime?.FixedTickScenario();
+    }
+
     private void LoadLevel()
     {
         PlaySession playSession = GameSettings.Instance.CurrentPlaySession;

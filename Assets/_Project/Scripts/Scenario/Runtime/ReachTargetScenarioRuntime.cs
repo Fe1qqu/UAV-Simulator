@@ -13,7 +13,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
     private bool allCheckpointsPassed;
     private bool droneInsideTarget;
 
-    public override void StartScenario()
+    protected override void StartScenarioInternal()
     {
         checkpoints = levelObjectRegistry
             .EnumerateAlive<Checkpoint>()
@@ -44,7 +44,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
         targetArea.ObjectExited += OnTargetAreaObjectExited;
     }
 
-    public override void DisposeScenario()
+    private void Unsubscribe()
     {
         foreach (Checkpoint checkpoint in checkpoints)
         {
@@ -53,7 +53,48 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 
         targetArea.ObjectEntered -= OnTargetAreaObjectEntered;
         targetArea.ObjectExited -= OnTargetAreaObjectExited;
+    }
 
+    protected override void TickScenarioInternal()
+    {
+        if (!allCheckpointsPassed)
+        {
+            return;
+        }
+
+        if (!droneInsideTarget)
+        {
+            return;
+        }
+
+        //if (!droneController.IsLanded) // Or/And Disarm
+        //{
+        //    return;
+        //}
+
+        if (!DroneIsLanded())
+        {
+            return;
+        }
+
+        CompleteScenario();
+    }
+
+    protected override void ResetScenarioInternal()
+    {
+        currentCheckpointIndex = 0;
+        allCheckpointsPassed = false;
+        droneInsideTarget = false;
+
+        foreach (Checkpoint checkpoint in checkpoints)
+        {
+            checkpoint.ResetState();
+        }
+    }
+
+    protected override void DisposeScenarioInternal()
+    {
+        Unsubscribe();
         checkpoints.Clear();
         targetArea = null;
     }
@@ -101,43 +142,6 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
         }
 
         droneInsideTarget = false;
-    }
-
-    public override void TickScenario()
-    {
-        if (!allCheckpointsPassed)
-        {
-            return;
-        }
-
-        if (!droneInsideTarget)
-        {
-            return;
-        }
-
-        //if (!droneController.IsLanded) // Or/And Disarm
-        //{
-        //    return;
-        //}
-
-        if (!DroneIsLanded())
-        {
-            return;
-        }
-
-        CompleteScenario();
-    }
-
-    public override void ResetScenario()
-    {
-        currentCheckpointIndex = 0;
-        allCheckpointsPassed = false;
-        droneInsideTarget = false;
-
-        foreach (Checkpoint checkpoint in checkpoints)
-        {
-            checkpoint.ResetState();
-        }
     }
 
     private bool DroneIsLanded()

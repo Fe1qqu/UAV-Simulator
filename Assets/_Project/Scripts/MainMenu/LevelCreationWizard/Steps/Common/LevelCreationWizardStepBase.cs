@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Base class for a step in the level creation wizard.
 /// </summary>
-public abstract class BaseLevelCreationStep : MonoBehaviour
+public abstract class LevelCreationWizardStepBase : MonoBehaviour
 {
     protected MainMenuContext MainMenuContext { get; private set; }
 
