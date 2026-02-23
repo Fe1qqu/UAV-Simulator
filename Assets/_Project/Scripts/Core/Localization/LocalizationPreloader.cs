@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEditor.Localization;
+using UnityEngine.Localization;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Localization.Settings;
@@ -14,9 +14,9 @@ using System.Collections.Generic;
 public class LocalizationPreloader : MonoBehaviour
 {
     [Tooltip("Localization table collections to preload.")]
-    public StringTableCollection[] stringTableCollections;
+    public LocalizedStringTable[] localizedStringTables;
 
-    private readonly Dictionary<StringTableCollection, AsyncOperationHandle<StringTable>> handles = new();
+    private readonly Dictionary<LocalizedStringTable, AsyncOperationHandle<StringTable>> handles = new();
 
     public bool IsLoaded { get; private set; }
 
@@ -33,14 +33,14 @@ public class LocalizationPreloader : MonoBehaviour
 
         List<Task> tasks = new();
 
-        foreach (StringTableCollection stringTableCollection in stringTableCollections)
+        foreach (LocalizedStringTable localizedStringTable in localizedStringTables)
         {
-            if (stringTableCollection == null)
+            if (localizedStringTable == null)
             {
                 continue;
             }
 
-            if (handles.ContainsKey(stringTableCollection))
+            if (handles.ContainsKey(localizedStringTable))
             {
                 continue;
             }
@@ -50,8 +50,8 @@ public class LocalizationPreloader : MonoBehaviour
                 return;
             }
 
-            var handle = LocalizationSettings.StringDatabase.GetTableAsync(stringTableCollection.TableCollectionName);
-            handles.Add(stringTableCollection, handle);
+            var handle = LocalizationSettings.StringDatabase.GetTableAsync(localizedStringTable.TableReference);
+            handles.Add(localizedStringTable, handle);
             tasks.Add(handle.Task);
         }
 
@@ -64,17 +64,17 @@ public class LocalizationPreloader : MonoBehaviour
 
         foreach (var keyValuePair in handles)
         {
-            var collection = keyValuePair.Key;
+            LocalizedStringTable localizedStringTable = keyValuePair.Key;
             var handle = keyValuePair.Value;
 
             if (!handle.IsValid() || handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError($"[LocalizationPreloader] Failed to load table '{collection.TableCollectionName}'.");
+                Debug.LogError($"[LocalizationPreloader] Failed to load table '{localizedStringTable.TableReference.TableCollectionName}'.");
                 IsLoaded = false;
                 return;
             }
 
-            //Debug.Log($"[LocalizationPreloader] Loaded '{collection.TableCollectionName}'.");
+            //Debug.Log($"[LocalizationPreloader] Loaded '{localizedStringTable.TableReference.TableCollectionName}'.");
         }
 
         IsLoaded = true;

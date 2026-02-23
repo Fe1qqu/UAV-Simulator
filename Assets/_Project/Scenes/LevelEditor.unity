@@ -4457,7 +4457,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820032608}
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10430,7 +10430,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 715833496}
   m_HandleRect: {fileID: 715833495}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15933,11 +15933,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084258437aa47534dbac97e7fe86c799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizationPreloader
-  stringTableCollections:
-  - {fileID: 11400000, guid: 919e755d874376d4881afdf10ec32707, type: 2}
-  - {fileID: 11400000, guid: ac04bd3a49d636649b87234e644bd43b, type: 2}
-  - {fileID: 11400000, guid: 49779fc7c8f870543b50c752d4a631ac, type: 2}
-  - {fileID: 11400000, guid: 6f9c6e21145b88847bcad93ad4c552f8, type: 2}
+  localizedStringTables:
+  - m_TableReference:
+      m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+  - m_TableReference:
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+  - m_TableReference:
+      m_TableCollectionName: GUID:3eec42838b004564b98f4d912ea37f7b
+  - m_TableReference:
+      m_TableCollectionName: GUID:2ec303a8f3a42c9479b870808142144e
 --- !u!1 &1635204782
 GameObject:
   m_ObjectHideFlags: 0
@@ -16071,7 +16075,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1994954575}
   m_HandleRect: {fileID: 1994954574}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
