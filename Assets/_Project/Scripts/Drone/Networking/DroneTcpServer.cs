@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -9,20 +10,20 @@ using UavSim.Core.Protocol.Drone;
 
 public class DroneTcpServer : MonoBehaviour
 {
-    private TcpListener tcpListener;
-    private DroneCommandController droneCommandController;
+    [SerializeField] private DroneCommandController droneCommandController;
 
-    private const int BufferSize = 4096;
-    private const int Port = 9000;
+    [SerializeField] private int bufferSize = 4096;
+    [SerializeField] private int port = 9000;
+
+    private TcpListener tcpListener;
 
     private CancellationTokenSource cancellationTokenSource;
 
     private void Awake()
     {
-        droneCommandController = GetComponent<DroneCommandController>();
         if (droneCommandController == null)
         {
-            Debug.LogError($"[DroneTcpServer] There is no DroneCommandController component on the object {gameObject.name}.");
+            Debug.LogError($"[DroneTcpServer] DroneCommandController is not assigned.");
         }
     }
 
@@ -35,7 +36,7 @@ public class DroneTcpServer : MonoBehaviour
             return;
         }
 
-        tcpListener = new TcpListener(IPAddress.Loopback, Port);
+        tcpListener = new TcpListener(IPAddress.Loopback, port);
         tcpListener.Start();
 
         cancellationTokenSource = new CancellationTokenSource();
@@ -62,12 +63,12 @@ public class DroneTcpServer : MonoBehaviour
                 {
                     tcpClient = await tcpListener.AcceptTcpClientAsync();
                 }
-                catch (System.ObjectDisposedException)
+                catch (ObjectDisposedException)
                 {
                     // Listener has been stopped, exiting
                     break;
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
                     // The token may have been revoked before Accept
                     cancellationToken.ThrowIfCancellationRequested();
@@ -82,13 +83,16 @@ public class DroneTcpServer : MonoBehaviour
                     {
                         await HandleClientAsync(tcpClient);
                     }
-                    catch (System.Exception exception)
+                    catch (Exception exception)
                     {
                         Debug.LogError($"[DroneTcpServer] Client session error: {exception}.");
                     }
                     finally
                     {
                         Debug.Log("[DroneTcpServer] Client disconnected.");
+
+                        UnityMainThreadDispatcher.Enqueue(() => droneCommandController.ResetState());
+
                         tcpClient.Close();
                     }
                 });
@@ -99,7 +103,7 @@ public class DroneTcpServer : MonoBehaviour
     private async Task HandleClientAsync(TcpClient tcpClient)
     {
         using NetworkStream networkStream = tcpClient.GetStream();
-        byte[] buffer = new byte[BufferSize];
+        byte[] buffer = new byte[bufferSize];
 
         while (tcpClient.Connected)
         {
@@ -132,14 +136,14 @@ public class DroneTcpServer : MonoBehaviour
 
         TaskCompletionSource<bool> completionSource = new();
 
-        droneCommandController.EnqueueCommand(async () =>
+        UnityMainThreadDispatcher.Enqueue(() =>
         {
             try
             {
-                await ExecuteCommandAsync(commandName, arguments);
+                droneCommandController.EnqueueCommand(commandName, arguments);
                 completionSource.SetResult(true);
             }
-            catch (System.Exception exception)
+            catch (Exception exception)
             {
                 completionSource.SetException(exception);
             }
@@ -150,44 +154,9 @@ public class DroneTcpServer : MonoBehaviour
             await completionSource.Task;
             await SendCommandResultAsync(stream, commandId, "ok");
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
             await SendCommandErrorAsync(stream, commandId, exception.Message);
-        }
-    }
-
-    private async Task ExecuteCommandAsync(string commandName, JObject arguments)
-    {
-        switch (commandName)
-        {
-            case "takeoff":
-                await droneCommandController.TakeOffAsync();
-                break;
-
-            //case "land":
-            //    await droneCommandController.LandAsync();
-            //    break;
-
-            case "move_forward":
-                float distance = arguments["distance_cm"]!.Value<float>();
-                await droneCommandController.MoveForwardAsync(distance);
-                break;
-
-            //case "rotate_clockwise":
-            //    float degrees = arguments["degrees"]!.Value<float>();
-            //    await droneCommandController.RotateClockwiseAsync(degrees);
-            //    break;
-
-            case "streamon":
-                await droneCommandController.StreamOnAsync();
-                break;
-
-            case "streamoff":
-                await droneCommandController.StreamOffAsync();
-                break;
-
-            default:
-                throw new System.InvalidOperationException($"Unknown command: {commandName}.");
         }
     }
 

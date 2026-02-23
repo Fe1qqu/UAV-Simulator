@@ -3,18 +3,18 @@ using UnityEngine;
 public class DroneInput : MonoBehaviour
 {
     private Input input;
-    private IControllable controllable;
+    private DroneControlAuthority droneControlAuthority;
     private DroneCameraSwitcher cameraSwitcher;
     private DroneDebugUI debugUI;
 
     void Awake()
     {
         input = new Input();
-        
-        controllable = GetComponent<IControllable>();
-        if (controllable == null)
+
+        droneControlAuthority = GetComponent<DroneControlAuthority>();
+        if (droneControlAuthority == null)
         {
-            Debug.LogError($"[DroneInput] There is no IControllable component on the object {gameObject.name}.");
+            Debug.LogError($"[DroneInput] There is no DroneControlAuthority component on the object {gameObject.name}.");
         }
 
         cameraSwitcher = GetComponent<DroneCameraSwitcher>();
@@ -50,9 +50,6 @@ public class DroneInput : MonoBehaviour
         Vector2 throttleAndYaw = input.DroneControl.ThrottleAndYaw.ReadValue<Vector2>();
         Vector2 pitchAndRoll = input.DroneControl.PitchAndRoll.ReadValue<Vector2>();
 
-        controllable.ApplyThrottle(throttleAndYaw.y);
-        controllable.ApplyYaw(throttleAndYaw.x);
-        controllable.ApplyPitch(pitchAndRoll.y);
-        controllable.ApplyRoll(pitchAndRoll.x);
+        droneControlAuthority.ApplyManual(throttleAndYaw.y, throttleAndYaw.x, pitchAndRoll.y, pitchAndRoll.x);
     }
 }

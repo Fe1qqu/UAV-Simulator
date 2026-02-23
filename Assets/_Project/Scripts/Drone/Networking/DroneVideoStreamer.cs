@@ -10,7 +10,7 @@ public class DroneVideoStreamer : MonoBehaviour
     [SerializeField] private Camera droneCamera;
 
     [Header("Stream settings")]
-    [SerializeField] private int fps = 30;
+    [SerializeField] private int fps = 60;
     [SerializeField] private int jpegQuality = 70;
 
     [Header("Network")]

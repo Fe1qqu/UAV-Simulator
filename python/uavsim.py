@@ -82,9 +82,9 @@ class Drone:
         LOGGER.info("Send command: takeoff")
         self._send_command_and_wait("takeoff")
 
-    # def land(self) -> None:
-    #     LOGGER.info("Send command: land")
-    #     self._send_command_and_wait("land")
+    def land(self) -> None:
+        LOGGER.info("Send command: land")
+        self._send_command_and_wait("land")
 
     def move_forward(self, distance_cm: float) -> None:
         LOGGER.info("Send command: move_forward %s cm", distance_cm)

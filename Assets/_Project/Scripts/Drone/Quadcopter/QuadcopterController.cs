@@ -17,7 +17,7 @@ public class Rotor
     [HideInInspector] public float CurrentRPM;
 }
 
-public class QuadcopterController : DroneControllerBase, IControllable
+public class QuadcopterController : DroneControllerBase
 {
     private Rigidbody rigidBody;
     private Quaternion targetRotation;
@@ -199,10 +199,13 @@ public class QuadcopterController : DroneControllerBase, IControllable
         }
     }
 
-    public void ApplyThrottle(float value) => throttleInput = Mathf.Clamp01(value);
-    public void ApplyYaw(float value) => yawInput = Mathf.Clamp(value, -1f, 1f);
-    public void ApplyPitch(float value) => pitchInput = Mathf.Clamp(value, -1f, 1f);
-    public void ApplyRoll(float value) => rollInput = Mathf.Clamp(value, -1f, 1f);
+    public override void Apply(float throttle, float yaw, float pitch, float roll)
+    {
+        throttleInput = Mathf.Clamp01(throttle);
+        yawInput = Mathf.Clamp(yaw, -1f, 1f);
+        pitchInput = Mathf.Clamp(pitch, -1f, 1f);
+        rollInput = Mathf.Clamp(roll, -1f, 1f);
+    }
 
     public override void ResetState(Vector3 position, Quaternion rotation)
     {

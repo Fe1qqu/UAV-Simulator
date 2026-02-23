@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class DroneControllerBase : MonoBehaviour, IDroneActor
+public abstract class DroneControllerBase : MonoBehaviour, IControllable, IDroneActor
 {
     public DroneControllerBase Controller => this;
 
@@ -22,6 +22,8 @@ public abstract class DroneControllerBase : MonoBehaviour, IDroneActor
     /// This method is the only valid way to externally reposition the drone during runtime.
     /// </summary>
     public abstract void ResetState(Vector3 position, Quaternion rotation);
+
+    public virtual void Apply(float throttle, float yaw, float pitch, float roll) { }
 
     /// <summary>
     /// May be null if the drone has no rotors.
