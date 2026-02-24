@@ -39,6 +39,8 @@ public class GameSettings : MonoBehaviour
     private const string PREF_LANGUAGE_CODE = "LanguageCode";
     private const string DEFAULT_LANGUAGE_CODE = "ru";
 
+    private const string PREF_VSYNC = "VSync";
+
     #endregion
 
     #region Singleton
@@ -102,6 +104,7 @@ public class GameSettings : MonoBehaviour
 
     private void Start()
     {
+        ApplyVSync(SavedVSyncEnabled);
         _ = InitializeLocalizationAsync();
     }
 
@@ -139,6 +142,14 @@ public class GameSettings : MonoBehaviour
         SavedLanguageCode = locale.Identifier.Code;
     }
 
+    public bool VSyncEnabled => SavedVSyncEnabled;
+
+    public void SetVSync(bool enabled)
+    {
+        ApplyVSync(enabled);
+        SavedVSyncEnabled = enabled;
+    }
+
     #endregion
 
     #region Properties
@@ -149,6 +160,16 @@ public class GameSettings : MonoBehaviour
         set
         {
             PlayerPrefs.SetString(PREF_LANGUAGE_CODE, value);
+            Save();
+        }
+    }
+
+    private bool SavedVSyncEnabled
+    {
+        get => PlayerPrefs.GetInt(PREF_VSYNC, 1) == 1;
+        set
+        {
+            PlayerPrefs.SetInt(PREF_VSYNC, value ? 1 : 0);
             Save();
         }
     }
@@ -176,6 +197,12 @@ public class GameSettings : MonoBehaviour
     #endregion
 
     #region Utilities
+
+    private void ApplyVSync(bool enabled)
+    {
+        QualitySettings.vSyncCount = enabled ? 1 : 0;
+        Application.targetFrameRate = enabled ? -1 : 60;
+    }
 
     public void Save()
     {

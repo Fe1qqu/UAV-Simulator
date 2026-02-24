@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Components;
 
 /// <summary>
 /// Base class for the settings tab

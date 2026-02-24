@@ -12,7 +12,7 @@ public class VideoSettingsTab : SettingsTabBase
 
         if (vSyncToggle == null)
         {
-            Debug.LogWarning("[VideoSettingsTab] vSyncToggle not assigned.");
+            Debug.LogWarning("[VideoSettingsTab] vSyncToggle is not assigned.");
         }
     }
 
@@ -20,28 +20,19 @@ public class VideoSettingsTab : SettingsTabBase
     {
         base.OnTabSelected();
 
-        //if (vSyncToggle != null)
-        //{
-        //    vSyncToggle.isOn = PlayerPrefs.GetInt("VSync", 1) == 1;
-        //    vSyncToggle.onValueChanged.RemoveListener(OnToggleChanged);
-        //    vSyncToggle.onValueChanged.AddListener(OnToggleChanged);
-        //}
+        vSyncToggle.isOn = GameSettings.Instance.VSyncEnabled;
+        vSyncToggle.onValueChanged.AddListener(OnVSyncChanged);
     }
 
     public override void OnTabUnselected()
     {
         base.OnTabUnselected();
 
-        //if (vSyncToggle != null)
-        //{
-        //    vSyncToggle.onValueChanged.RemoveListener(OnToggleChanged);
-        //}
+        vSyncToggle.onValueChanged.RemoveAllListeners();
     }
 
-    private void OnToggleChanged(bool v)
+    private void OnVSyncChanged(bool enabled)
     {
-        //PlayerPrefs.SetInt("VSync", v ? 1 : 0);
-        //PlayerPrefs.Save();
-        Debug.Log($"[VideoSettingsTab] VSync = {v}.");
+        GameSettings.Instance.SetVSync(enabled);
     }
 }
