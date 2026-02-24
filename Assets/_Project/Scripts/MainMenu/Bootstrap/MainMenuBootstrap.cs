@@ -12,6 +12,9 @@ public class MainMenuBootstrap : MonoBehaviour
             Debug.LogError("[MainMenuBootstrap] MainMenuRoot is not assigned.");
             return;
         }
+
+        QualitySettings.SetQualityLevel(0, false);
+        Application.targetFrameRate = 60;
     }
 
     private void Start()

@@ -34,15 +34,6 @@ public class EditorSession
 /// </summary>
 public class GameSettings : MonoBehaviour
 {
-    #region Constants
-
-    private const string PREF_LANGUAGE_CODE = "LanguageCode";
-    private const string DEFAULT_LANGUAGE_CODE = "ru";
-
-    private const string PREF_VSYNC = "VSync";
-
-    #endregion
-
     #region Singleton
 
     private static GameSettings _instance;
@@ -70,23 +61,6 @@ public class GameSettings : MonoBehaviour
 
     #endregion
 
-    #region Runtime Sessions (Not Persisted)
-
-    public PlaySession CurrentPlaySession { get; private set; } = new();
-    public EditorSession CurrentEditorSession { get; private set; } = new();
-
-    public void ClearPlaySession() => CurrentPlaySession.Clear();
-    public void ClearEditorSession() => CurrentEditorSession.Clear();
-
-    #endregion
-
-    #region Localization
-
-    private TaskCompletionSource<bool> _localizationReadyTaskCompletionSource = new();
-    public Task LocalizationReadyTask => _localizationReadyTaskCompletionSource.Task;
-
-    #endregion
-
     #region Unity Lifecycle
 
     private void Awake()
@@ -104,13 +78,38 @@ public class GameSettings : MonoBehaviour
 
     private void Start()
     {
-        ApplyVSync(SavedVSyncEnabled);
         _ = InitializeLocalizationAsync();
     }
 
     #endregion
 
-    #region Initialization
+    #region Runtime Sessions (Not Persisted)
+
+    public PlaySession CurrentPlaySession { get; private set; } = new();
+    public EditorSession CurrentEditorSession { get; private set; } = new();
+
+    public void ClearPlaySession() => CurrentPlaySession.Clear();
+    public void ClearEditorSession() => CurrentEditorSession.Clear();
+
+    #endregion
+
+    #region Localization
+
+    private const string PREF_LANGUAGE_CODE = "LanguageCode";
+    private const string DEFAULT_LANGUAGE_CODE = "ru";
+
+    private string SavedLanguageCode
+    {
+        get => PlayerPrefs.GetString(PREF_LANGUAGE_CODE, DEFAULT_LANGUAGE_CODE);
+        set
+        {
+            PlayerPrefs.SetString(PREF_LANGUAGE_CODE, value);
+            Save();
+        }
+    }
+
+    private TaskCompletionSource<bool> _localizationReadyTaskCompletionSource = new();
+    public Task LocalizationReadyTask => _localizationReadyTaskCompletionSource.Task;
 
     private async Task InitializeLocalizationAsync()
     {
@@ -127,10 +126,6 @@ public class GameSettings : MonoBehaviour
         _localizationReadyTaskCompletionSource.TrySetResult(true);
     }
 
-    #endregion
-
-    #region Public API
-
     public void SetLocale(Locale locale)
     {
         if (locale == null)
@@ -142,27 +137,11 @@ public class GameSettings : MonoBehaviour
         SavedLanguageCode = locale.Identifier.Code;
     }
 
-    public bool VSyncEnabled => SavedVSyncEnabled;
-
-    public void SetVSync(bool enabled)
-    {
-        ApplyVSync(enabled);
-        SavedVSyncEnabled = enabled;
-    }
-
     #endregion
 
-    #region Properties
+    #region VSync
 
-    private string SavedLanguageCode
-    {
-        get => PlayerPrefs.GetString(PREF_LANGUAGE_CODE, DEFAULT_LANGUAGE_CODE);
-        set
-        {
-            PlayerPrefs.SetString(PREF_LANGUAGE_CODE, value);
-            Save();
-        }
-    }
+    private const string PREF_VSYNC = "VSync";
 
     private bool SavedVSyncEnabled
     {
@@ -173,6 +152,41 @@ public class GameSettings : MonoBehaviour
             Save();
         }
     }
+
+    public bool VSyncEnabled => SavedVSyncEnabled;
+
+    public void SetVSync(bool enabled)
+    {
+        SavedVSyncEnabled = enabled;
+    }
+
+    private void ApplyVSync(bool enabled)
+    {
+        QualitySettings.vSyncCount = enabled ? 1 : 0;
+        Application.targetFrameRate = -1;
+    }
+
+    #endregion
+
+    public void ApplyCurrentGraphicsSettings()
+    {
+        ApplyVSync(SavedVSyncEnabled);
+    }
+
+    #region Utilities
+
+    public void Save()
+    {
+        PlayerPrefs.Save();
+    }
+
+    public void ResetAll()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
+
+    #endregion
 
     //public float MasterVolume
     //{
@@ -193,27 +207,4 @@ public class GameSettings : MonoBehaviour
     //        Save();
     //    }
     //}
-
-    #endregion
-
-    #region Utilities
-
-    private void ApplyVSync(bool enabled)
-    {
-        QualitySettings.vSyncCount = enabled ? 1 : 0;
-        Application.targetFrameRate = enabled ? -1 : 60;
-    }
-
-    public void Save()
-    {
-        PlayerPrefs.Save();
-    }
-
-    public void ResetAll()
-    {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-    }
-
-    #endregion
 }
