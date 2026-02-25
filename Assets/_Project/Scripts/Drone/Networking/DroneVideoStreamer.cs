@@ -10,15 +10,14 @@ public class DroneVideoStreamer : MonoBehaviour
     [SerializeField] private Camera droneCamera;
 
     [Header("Stream settings")]
-    [SerializeField] private int fps = 60;
+    [SerializeField] private int streamWidth = 640;
+    [SerializeField] private int streamHeight = 480;
+    [SerializeField] private int fps = 30;
     [SerializeField] private int jpegQuality = 70;
 
     [Header("Network")]
     [SerializeField] private int udpPort = 11111;
     [SerializeField] private int maxPacketSize = 1200;
-
-    private int width;
-    private int height;
 
     private RenderTexture renderTexture;
     private Texture2D readTexture;
@@ -37,15 +36,12 @@ public class DroneVideoStreamer : MonoBehaviour
             return;
         }
 
-        width = Screen.width;
-        height = Screen.height;
-
-        renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+        renderTexture = new RenderTexture(streamWidth, streamHeight, 24, RenderTextureFormat.ARGB32);
         renderTexture.Create();
 
-        readTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+        readTexture = new Texture2D(streamWidth, streamHeight, TextureFormat.RGB24, false);
 
-        droneCamera.targetTexture = renderTexture;
+        droneCamera.enabled = false;
 
         remoteEndPoint = new IPEndPoint(IPAddress.Loopback, udpPort);
     }
@@ -70,7 +66,7 @@ public class DroneVideoStreamer : MonoBehaviour
             yield return waitForEndOfFrame;
 
             RenderTexture.active = renderTexture;
-            readTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            readTexture.ReadPixels(new Rect(0, 0, streamWidth, streamHeight), 0, 0);
             readTexture.Apply(false);
             RenderTexture.active = null;
 
@@ -119,6 +115,10 @@ public class DroneVideoStreamer : MonoBehaviour
         Debug.Log("[DroneVideoStreamer] Stream ON.");
 
         udpClient = new UdpClient();
+
+        droneCamera.targetTexture = renderTexture;
+        droneCamera.enabled = true;
+
         isStreaming = true;
         streamCoroutine = StartCoroutine(StreamLoop());
     }
@@ -139,6 +139,9 @@ public class DroneVideoStreamer : MonoBehaviour
             StopCoroutine(streamCoroutine);
             streamCoroutine = null;
         }
+
+        droneCamera.targetTexture = null;
+        droneCamera.enabled = false;
 
         udpClient?.Close();
         udpClient = null;
