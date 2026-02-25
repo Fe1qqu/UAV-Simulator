@@ -26,6 +26,10 @@ MonoBehaviour:
     m_Localized: Snowy mountain
     m_Metadata:
       m_Items: []
+  - m_Id: 36596859171659776
+    m_Localized: Plain
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
