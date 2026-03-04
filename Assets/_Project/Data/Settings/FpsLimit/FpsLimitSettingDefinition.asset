@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5279e10d6b5ba9544adecf25ed378b54, type: 3}
+  m_Name: FpsLimitSettingDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::RangeSettingDefinition
+  settingId: fps_limit
+  displayName:
+    m_TableReference:
+      m_TableCollectionName: GUID:05247530cab4a384d87030cd9f580bf6
+    m_TableEntryReference:
+      m_KeyId: 2473709428736
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  autoApply: 2
+  handler: {fileID: 11400000, guid: 2b204c6a7b865ee4c8e9702c24bf0346, type: 2}
+  dependencyRules:
+  - condition:
+      targetSetting: {fileID: 11400000, guid: 25ca9bf8cdaa4e1489025d9378091c3f, type: 2}
+      operatorType: 0
+      compareValue: 1
+    effect:
+      effectType: 1
+      forcedValue: 500
+  - condition:
+      targetSetting: {fileID: 11400000, guid: 25ca9bf8cdaa4e1489025d9378091c3f, type: 2}
+      operatorType: 0
+      compareValue: 1
+    effect:
+      effectType: 0
+      forcedValue: 0
+  minValue: 10
+  maxValue: 500
+  step: 5
+  defaultValue: 60
+  hasSpecialMinValue: 0
+  specialMinValueLabel:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  hasSpecialMaxValue: 1
+  specialMaxValueLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:05247530cab4a384d87030cd9f580bf6
+    m_TableEntryReference:
+      m_KeyId: 2616131215360
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

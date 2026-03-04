@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using System.Threading.Tasks;
 
 public class MainMenuBootstrap : MonoBehaviour
@@ -13,8 +14,7 @@ public class MainMenuBootstrap : MonoBehaviour
             return;
         }
 
-        QualitySettings.SetQualityLevel(0, false);
-        Application.targetFrameRate = 60;
+        GameSettings.Instance.EnterMainMenu();
     }
 
     private void Start()
@@ -26,7 +26,7 @@ public class MainMenuBootstrap : MonoBehaviour
     {
         mainMenuRoot.SetActive(false);
 
-        await GameSettings.Instance.LocalizationReadyTask;
+        await LocalizationSettings.InitializationOperation.Task;
 
         mainMenuRoot.SetActive(true);
     }
