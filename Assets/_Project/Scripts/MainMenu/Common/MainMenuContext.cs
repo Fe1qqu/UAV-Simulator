@@ -6,11 +6,11 @@ public class MainMenuContext : MonoBehaviour
     [SerializeField] private LevelFileManager levelFileManager;
 
     [Header("Databases")]
-    [SerializeField] private LocationDatabase locationDatabase;
-    [SerializeField] private ScenarioDatabase scenarioDatabase;
+    [SerializeField] private LocationsDatabase locationsDatabase;
+    [SerializeField] private ScenariosDatabase scenariosDatabase;
 
-    public LocationDatabase LocationDatabase => locationDatabase;
-    public ScenarioDatabase ScenarioDatabase => scenarioDatabase;
+    public LocationsDatabase LocationsDatabase => locationsDatabase;
+    public ScenariosDatabase ScenariosDatabase => scenariosDatabase;
 
     private ILevelCatalog levelCatalog;
     public ILevelCatalog LevelCatalog => levelCatalog;
@@ -23,18 +23,18 @@ public class MainMenuContext : MonoBehaviour
             return;
         }
 
-        if (locationDatabase == null || locationDatabase.locations.Count == 0)
+        if (locationsDatabase == null || locationsDatabase.locations.Count == 0)
         {
-            Debug.LogError("[MainMenuContext] LocationDatabase is missing or empty.");
+            Debug.LogError("[MainMenuContext] LocationsDatabase is missing or empty.");
             return;
         }
 
-        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
         {
-            Debug.LogError("[MainMenuContext] ScenarioDatabase is missing or empty.");
+            Debug.LogError("[MainMenuContext] ScenariosDatabase is missing or empty.");
             return;
         }
 
-        levelCatalog = new FileSystemLevelCatalog(levelFileManager, scenarioDatabase);
+        levelCatalog = new FileSystemLevelCatalog(levelFileManager, scenariosDatabase);
     }
 }

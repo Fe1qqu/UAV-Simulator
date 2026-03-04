@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "Game Data/Scenario Database")]
-public class ScenarioDatabase : ScriptableObject
+[CreateAssetMenu(menuName = "Game Data/Scenarios Database")]
+public class ScenariosDatabase : ScriptableObject
 {
     public List<ScenarioDefinition> scenarios = new();
 

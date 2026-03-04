@@ -35,15 +35,15 @@ public class EditorManager : MonoBehaviour, IBackHandler
 
     [Header("Databases")]
     [Tooltip("Database containing all available locations.")]
-    [SerializeField] private LocationDatabase locationDatabase;
+    [SerializeField] private LocationsDatabase locationsDatabase;
 
     [Tooltip("Database that stores all placeable objects available to the editor.")]
-    [SerializeField] private PlaceableObjectDatabase placeableObjectDatabase;
+    [SerializeField] private PlaceableObjectsDatabase placeableObjectsDatabase;
 
     [Tooltip("Database that stores object categories and their icons.")]
-    [SerializeField] private CategoryDatabase categoryDatabase;
+    [SerializeField] private CategoriesDatabase categoriesDatabase;
 
-    [SerializeField] private ScenarioDatabase scenarioDatabase;
+    [SerializeField] private ScenariosDatabase scenariosDatabase;
 
     [Header("Scene Root")]
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
@@ -61,7 +61,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
 
     public LevelFileManager LevelFileManager => levelFileManager;
 
-    public ScenarioDefinition CurrentScenario => scenarioDatabase.GetById(GameSettings.Instance.CurrentEditorSession.SelectedScenarioId);
+    public ScenarioDefinition CurrentScenario => scenariosDatabase.GetById(GameSettings.Instance.CurrentEditorSession.SelectedScenarioId);
 
     private void Awake()
     {
@@ -110,24 +110,24 @@ public class EditorManager : MonoBehaviour, IBackHandler
             Debug.LogError("[EditorManager] PlaceableObjectButtonPrefab is not assigned.");
         }
 
-        if (locationDatabase == null || locationDatabase.locations.Count == 0)
+        if (locationsDatabase == null || locationsDatabase.locations.Count == 0)
         {
-            Debug.LogError("[EditorManager] LocationDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] LocationsDatabase is missing or empty.");
         }
 
-        if (placeableObjectDatabase == null || placeableObjectDatabase.objects.Count == 0)
+        if (placeableObjectsDatabase == null || placeableObjectsDatabase.objects.Count == 0)
         {
-            Debug.LogError("[EditorManager] PlaceableObjectDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] PlaceableObjectsDatabase is missing or empty.");
         }
 
-        if (categoryDatabase == null || categoryDatabase.categories.Count == 0)
+        if (categoriesDatabase == null || categoriesDatabase.categories.Count == 0)
         {
-            Debug.LogError("[EditorManager] CategoryDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] CategoriesDatabase is missing or empty.");
         }
 
-        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
         {
-            Debug.LogError("[EditorManager] ScenarioDatabase is missing or empty.");
+            Debug.LogError("[EditorManager] ScenariosDatabase is missing or empty.");
         }
 
         if (levelRoot == null)
@@ -222,7 +222,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
     {
         List<CategoryDefinition> categoriesToShow = new();
 
-        foreach (CategoryDefinition category in categoryDatabase.categories)
+        foreach (CategoryDefinition category in categoriesDatabase.categories)
         {
             // If the scenario is selected, check the rules
             if (scenario != null)
@@ -275,7 +275,7 @@ public class EditorManager : MonoBehaviour, IBackHandler
         }
 
         // Take all objects of the selected category
-        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectDatabase.GetByCategory(currentCategory);
+        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectsDatabase.GetByCategory(currentCategory);
         if (filteredPlaceableObjects == null || filteredPlaceableObjects.Count == 0)
         {
             Debug.LogWarning($"[EditorManager] No objects found for category '{currentCategory}'.");

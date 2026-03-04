@@ -7,7 +7,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
     [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
     [SerializeField] private LevelObjectRegistry levelObjectRegistry;
-    [SerializeField] private ScenarioDatabase scenarioDatabase;
+    [SerializeField] private ScenariosDatabase scenariosDatabase;
 
     [Header("UI")]
     [SerializeField] private PlayPauseMenu pauseMenu;
@@ -41,9 +41,9 @@ public class PlayManager : MonoBehaviour, IBackHandler
             Debug.LogError("[PlayManager] LevelObjectRegistry is not assigned.");
         }
 
-        if (scenarioDatabase == null || scenarioDatabase.scenarios.Count == 0)
+        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
         {
-            Debug.LogError("[PlayManager] ScenarioDatabase is missing or empty.");
+            Debug.LogError("[PlayManager] ScenariosDatabase is missing or empty.");
         }
 
         if (pauseMenu == null)
@@ -118,7 +118,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        ScenarioDefinition scenario = scenarioDatabase.GetById(loadedLevelData.scenarioId);
+        ScenarioDefinition scenario = scenariosDatabase.GetById(loadedLevelData.scenarioId);
         if (scenario == null)
         {
             Debug.LogError($"[PlayManager] Scenario '{loadedLevelData.scenarioId}' not found in database.");

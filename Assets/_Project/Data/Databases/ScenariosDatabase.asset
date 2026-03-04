@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84716a13038fd6b43839658deeeb3c2b, type: 3}
-  m_Name: ScenarioDatabase
+  m_Name: ScenariosDatabase
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioDatabase
   scenarios:
   - {fileID: 11400000, guid: f806aaf9ee96ab947add27766233f086, type: 2}

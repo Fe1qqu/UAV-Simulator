@@ -12,7 +12,7 @@ public class Step_ScenarioSelect : LevelCreationWizardStepBase
             scenarioSelection = GetComponent<ScenarioSelection>();
         }
 
-        scenarioSelection.SetDatabase(MainMenuContext.ScenarioDatabase);
+        scenarioSelection.SetDatabase(MainMenuContext.ScenariosDatabase);
     }
 
     public override void OnStepShown()

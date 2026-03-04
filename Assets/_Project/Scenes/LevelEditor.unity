@@ -3049,8 +3049,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
   levelRoot: {fileID: 1078942368}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  placeableObjectsDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
 --- !u!1 &366945400
 GameObject:
   m_ObjectHideFlags: 0
@@ -4457,7 +4457,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820032608}
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8654,10 +8654,10 @@ MonoBehaviour:
   currentCategoryLocalizeEvent: {fileID: 1872083171}
   categoryButtonPrefab: {fileID: 1833584260}
   placeableObjectButtonPrefab: {fileID: 74227642}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
-  categoryDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
-  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  placeableObjectsDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
+  categoriesDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
+  scenariosDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   levelRoot: {fileID: 1078942368}
   localizationPreloader: {fileID: 1632345560}
 --- !u!4 &614972947
@@ -10430,7 +10430,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 715833496}
   m_HandleRect: {fileID: 715833495}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -16075,8 +16075,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1994954575}
   m_HandleRect: {fileID: 1994954574}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

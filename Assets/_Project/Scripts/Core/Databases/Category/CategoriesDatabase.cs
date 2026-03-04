@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "Game Data/Category Database")]
-public class CategoryDatabase : ScriptableObject
+[CreateAssetMenu(menuName = "Game Data/Categories Database")]
+public class CategoriesDatabase : ScriptableObject
 {
     public List<CategoryDefinition> categories = new();
 

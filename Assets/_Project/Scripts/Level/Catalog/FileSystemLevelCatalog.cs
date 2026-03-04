@@ -5,12 +5,12 @@ using System.IO;
 public sealed class FileSystemLevelCatalog : ILevelCatalog
 {
     private readonly LevelFileManager levelFileManager;
-    private readonly ScenarioDatabase scenarioDatabase;
+    private readonly ScenariosDatabase scenariosDatabase;
 
-    public FileSystemLevelCatalog(LevelFileManager levelFileManager, ScenarioDatabase scenarioDatabase)
+    public FileSystemLevelCatalog(LevelFileManager levelFileManager, ScenariosDatabase scenariosDatabase)
     {
         this.levelFileManager = levelFileManager;
-        this.scenarioDatabase = scenarioDatabase;
+        this.scenariosDatabase = scenariosDatabase;
     }
 
     public IReadOnlyList<LevelCatalogEntry> GetAll()
@@ -46,7 +46,7 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
             return "—";
         }
 
-        ScenarioDefinition scenario = scenarioDatabase.GetById(scenarioId);
+        ScenarioDefinition scenario = scenariosDatabase.GetById(scenarioId);
         if (scenario == null)
         {
             return "—";

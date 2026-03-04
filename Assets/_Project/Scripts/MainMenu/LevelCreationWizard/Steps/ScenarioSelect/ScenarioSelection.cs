@@ -22,7 +22,7 @@ public class ScenarioSelection : MonoBehaviour
     // List of created buttons and their checkmarks
     private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
     
-    private ScenarioDatabase scenarioDatabase;
+    private ScenariosDatabase scenariosDatabase;
     private bool isBuilt;
 
     private void Awake()
@@ -38,9 +38,9 @@ public class ScenarioSelection : MonoBehaviour
         }
     }
 
-    public void SetDatabase(ScenarioDatabase scenarioDatabase)
+    public void SetDatabase(ScenariosDatabase scenariosDatabase)
     {
-        this.scenarioDatabase = scenarioDatabase;
+        this.scenariosDatabase = scenariosDatabase;
     }
 
     public void BuildIfNeeded()
@@ -57,7 +57,7 @@ public class ScenarioSelection : MonoBehaviour
 
     private void SelectDefault()
     {
-        OnScenarioSelected(scenarioDatabase.scenarios[0], createdButtons[0].button);
+        OnScenarioSelected(scenariosDatabase.scenarios[0], createdButtons[0].button);
     }
 
     private void PopulateList()
@@ -68,7 +68,7 @@ public class ScenarioSelection : MonoBehaviour
         }
         createdButtons.Clear();
 
-        foreach (ScenarioDefinition scenario in scenarioDatabase.scenarios)
+        foreach (ScenarioDefinition scenario in scenariosDatabase.scenarios)
         {
             GameObject scenarioButtonInstance = Instantiate(scenarioButtonPrefab, contentParent);
             if (scenarioButtonInstance == null)

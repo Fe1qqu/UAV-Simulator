@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "Game Data/Location Database")]
-public class LocationDatabase : ScriptableObject
+[CreateAssetMenu(menuName = "Game Data/Locations Database")]
+public class LocationsDatabase : ScriptableObject
 {
     public List<LocationDefinition> locations = new();
 

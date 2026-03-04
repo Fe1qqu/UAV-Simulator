@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "Game Data/Placeable Object Database")]
-public class PlaceableObjectDatabase : ScriptableObject
+[CreateAssetMenu(menuName = "Game Data/Placeable Objects Database")]
+public class PlaceableObjectsDatabase : ScriptableObject
 {
     public List<PlaceableObjectDefinition> objects = new();
 

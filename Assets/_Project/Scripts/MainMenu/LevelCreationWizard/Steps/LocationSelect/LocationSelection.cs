@@ -22,7 +22,7 @@ public class LocationSelection : MonoBehaviour
     // List of created buttons and their checkmarks
     private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
 
-    private LocationDatabase locationDatabase;
+    private LocationsDatabase locationsDatabase;
     private bool isBuilt;
 
     private void Awake()
@@ -38,9 +38,9 @@ public class LocationSelection : MonoBehaviour
         }
     }
 
-    public void SetDatabase(LocationDatabase locationDatabase)
+    public void SetDatabase(LocationsDatabase locationsDatabase)
     {
-        this.locationDatabase = locationDatabase;
+        this.locationsDatabase = locationsDatabase;
     }
 
     public void BuildIfNeeded()
@@ -57,7 +57,7 @@ public class LocationSelection : MonoBehaviour
 
     private void SelectDefault()
     {
-        OnLocationSelected(locationDatabase.locations[0], createdButtons[0].button);
+        OnLocationSelected(locationsDatabase.locations[0], createdButtons[0].button);
     }
 
     private void PopulateList()
@@ -68,7 +68,7 @@ public class LocationSelection : MonoBehaviour
         }
         createdButtons.Clear();
 
-        foreach (LocationDefinition location in locationDatabase.locations)
+        foreach (LocationDefinition location in locationsDatabase.locations)
         {
             GameObject locationButtonInstance = Instantiate(locationButtonPrefab, contentParent);
             if (locationButtonInstance == null)

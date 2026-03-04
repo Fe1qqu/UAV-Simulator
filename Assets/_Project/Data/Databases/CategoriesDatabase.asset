@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6296c217df8301c43a4d1341cee23669, type: 3}
-  m_Name: CategoryDatabase
+  m_Name: CategoriesDatabase
   m_EditorClassIdentifier: Assembly-CSharp::CategoryDatabase
   categories:
   - {fileID: 11400000, guid: ff0ab0850d667e84faf52e99ca338321, type: 2}

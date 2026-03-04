@@ -12,7 +12,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
             locationSelection = GetComponent<LocationSelection>();
         }
 
-        locationSelection.SetDatabase(MainMenuContext.LocationDatabase);
+        locationSelection.SetDatabase(MainMenuContext.LocationsDatabase);
     }
 
     public override void OnStepShown()

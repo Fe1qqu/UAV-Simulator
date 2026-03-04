@@ -7416,6 +7416,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSettings
   settingsDatabase: {fileID: 11400000, guid: 05651d157c66f604d901b1556d464d9c, type: 2}
+  mainMenuQualityLevel: 0
+  gameplayQualityLevel: 1
 --- !u!1 &1531736132
 GameObject:
   m_ObjectHideFlags: 0
@@ -8205,8 +8207,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuContext
   levelFileManager: {fileID: 652211447}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  scenariosDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
 --- !u!1 &1726979489
 GameObject:
   m_ObjectHideFlags: 0

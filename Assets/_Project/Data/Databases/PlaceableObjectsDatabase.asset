@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfac1db3fe4114b42958abdcc22afd66, type: 3}
-  m_Name: PlaceableObjectDatabase
+  m_Name: PlaceableObjectsDatabase
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDatabase
   objects:
   - {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
