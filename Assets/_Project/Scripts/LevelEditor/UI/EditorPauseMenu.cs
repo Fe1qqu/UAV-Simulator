@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.IO;
 
 public class EditorPauseMenu : PauseMenuBase
@@ -102,13 +101,13 @@ public class EditorPauseMenu : PauseMenuBase
 
     public void OnExitClicked()
     {
-        Close();
+        Close(PauseCloseMode.SceneExit);
 
         if (editorManager != null)
         {
             editorManager.UnloadLocalization();
         }
 
-        SceneManager.LoadScene("MainMenu");
+        SceneLoader.LoadMainMenu();
     }
 }

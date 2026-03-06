@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum PauseCloseMode
+{
+    ResumeGameplay,
+    SceneExit
+}
+
 public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
 {
     [SerializeField] protected GameObject pauseMenuRoot;
@@ -26,16 +32,17 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
         }
 
         isOpen = true;
-        pauseMenuRoot.SetActive(true);
 
         PauseManager.SetPaused(true);
 
         BackDispatcher.RegisterHandler(this);
 
+        pauseMenuRoot.SetActive(true);
+
         OnOpened();
     }
 
-    public virtual void Close()
+    public virtual void Close(PauseCloseMode mode = PauseCloseMode.ResumeGameplay)
     {
         if (!isOpen)
         {
@@ -44,11 +51,14 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
 
         isOpen = false;
 
+        PauseManager.SetPaused(false);
+
         BackDispatcher.UnregisterHandler(this);
 
-        pauseMenuRoot.SetActive(false);
-
-        PauseManager.SetPaused(false);
+        if (mode == PauseCloseMode.ResumeGameplay)
+        {
+            pauseMenuRoot.SetActive(false);
+        }
 
         OnClosed();
     }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System;
 
 public enum LevelSelectMode
@@ -138,14 +137,14 @@ public class LevelSelectScreen : MainMenuScreenBase
         if (mode == LevelSelectMode.Editor)
         {
             GameSettings.Instance.CurrentEditorSession.SelectedLevelFilePath = filePath;
-            SceneManager.LoadScene("LevelEditor");
+            SceneLoader.LoadLevelEditor();
         }
         else
         {
             PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
             playSession.Clear();
             playSession.LevelFilePath = filePath;
-            SceneManager.LoadScene("Play");
+            SceneLoader.LoadPlay();
         }
     }
 

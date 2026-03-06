@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.Localization.Components;
 using System;
 using System.Threading;
@@ -216,6 +215,6 @@ public class LevelCreationWizard : MonoBehaviour
     private void CreateLevel()
     {
         localizationPreloader.Unload();
-        SceneManager.LoadScene("LevelEditor");
+        SceneLoader.LoadLevelEditor();
     }
 }
