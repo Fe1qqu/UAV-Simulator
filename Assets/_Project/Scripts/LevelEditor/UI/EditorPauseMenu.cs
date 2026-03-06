@@ -102,7 +102,7 @@ public class EditorPauseMenu : PauseMenuBase
 
     public void OnExitClicked()
     {
-        PauseManager.SetPaused(false);
+        Close();
 
         if (editorManager != null)
         {

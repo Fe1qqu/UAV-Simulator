@@ -67,9 +67,19 @@ public class GameSettings : MonoBehaviour
         Initialize();
     }
 
+    private void OnEnable()
+    {
+        GameStateManager.StateChanged += OnGameStateChanged;
+    }
+
     private void Start()
     {
         ApplyAuto(SettingAutoApply.OnAppBoot);
+    }
+
+    private void OnDisable()
+    {
+        GameStateManager.StateChanged -= OnGameStateChanged;
     }
 
     //private void Update()
@@ -131,13 +141,27 @@ public class GameSettings : MonoBehaviour
 
     #region Mode Switching
 
-    public void EnterMainMenu()
+    private void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.MainMenu:
+                EnterMainMenu();
+                break;
+
+            case GameState.Gameplay:
+                EnterGameplay();
+                break;
+        }
+    }
+
+    private void EnterMainMenu()
     {
         SetMainMenuQuality();
         Application.targetFrameRate = 60;
     }
 
-    public void EnterGameplay()
+    private void EnterGameplay()
     {
         SetGameplayQuality();
         ApplyAuto(SettingAutoApply.OnEnterGameplay);

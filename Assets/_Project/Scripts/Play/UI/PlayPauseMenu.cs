@@ -57,14 +57,13 @@ public class PlayPauseMenu : PauseMenuBase
 
     public void OnRestartClicked()
     {
-        PauseManager.SetPaused(false);
-        playManager.RestartLevel();
         Close();
+        playManager.RestartLevel();
     }
 
     public void OnExitClicked()
     {
-        PauseManager.SetPaused(false);
+        Close();
         SceneManager.LoadScene("MainMenu");
     }
 }

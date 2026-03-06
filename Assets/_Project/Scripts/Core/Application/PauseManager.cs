@@ -9,11 +9,15 @@ using System;
 //}
 //public static void SetPause(PauseMode mode)
 
-public class PauseManager : MonoBehaviour
+public static class PauseManager
 {
     public static bool IsPaused { get; private set; }
 
     public static event Action<bool> PauseStateChanged;
+
+    private const int PauseFpsLimit = 30;
+    private static int previousTargetFps;
+    private static bool hasStoredFps;
 
     public static void SetPaused(bool paused)
     {
@@ -24,7 +28,32 @@ public class PauseManager : MonoBehaviour
 
         IsPaused = paused;
 
-        Time.timeScale = paused ? 0f : 1f;
+        if (paused)
+        {
+            if (!hasStoredFps)
+            {
+                previousTargetFps = Application.targetFrameRate;
+                hasStoredFps = true;
+            }
+
+            Application.targetFrameRate = PauseFpsLimit;
+
+            Time.timeScale = 0f;
+
+            GameStateManager.SetState(GameState.Pause);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+
+            if (hasStoredFps)
+            {
+                Application.targetFrameRate = previousTargetFps;
+                hasStoredFps = false;
+            }
+
+            GameStateManager.SetState(GameState.Gameplay);
+        }
 
         PauseStateChanged?.Invoke(paused);
     }

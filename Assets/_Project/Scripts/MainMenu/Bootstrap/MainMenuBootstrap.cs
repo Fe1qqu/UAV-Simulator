@@ -14,7 +14,7 @@ public class MainMenuBootstrap : MonoBehaviour
             return;
         }
 
-        GameSettings.Instance.EnterMainMenu();
+        GameStateManager.SetState(GameState.MainMenu);
     }
 
     private void Start()

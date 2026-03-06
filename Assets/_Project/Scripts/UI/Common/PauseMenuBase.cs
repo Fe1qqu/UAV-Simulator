@@ -43,22 +43,18 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
         }
 
         isOpen = false;
+
+        BackDispatcher.UnregisterHandler(this);
+
         pauseMenuRoot.SetActive(false);
 
         PauseManager.SetPaused(false);
-
-        BackDispatcher.UnregisterHandler(this);
 
         OnClosed();
     }
 
     public bool OnBack()
     {
-        if (!isOpen)
-        {
-            return false;
-        }
-
         Close();
         return true;
     }

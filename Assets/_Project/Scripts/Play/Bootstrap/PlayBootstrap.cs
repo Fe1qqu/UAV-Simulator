@@ -5,7 +5,9 @@ public class PlayBootstrap : MonoBehaviour
     private void Awake()
     {
         GameModeContext.Current = GameMode.Play;
-        GameSettings.Instance.EnterGameplay();
+
+        GameStateManager.SetState(GameState.Gameplay);
+
         //Debug.Log("[GameMode] Play.");
     }
 }
