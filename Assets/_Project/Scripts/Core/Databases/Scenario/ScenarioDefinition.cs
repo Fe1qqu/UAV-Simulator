@@ -10,10 +10,10 @@ public class ScenarioDefinition : ScriptableObject
     public LocalizedString localizedString;
     public Sprite icon;
 
-    [Header("Editor Availability")]
+    [Header("Level Editor Availability")]
     public List<ScenarioCategoryRule> availableCategories = new();
 
-    [Header("Editor Validation")]
+    [Header("Level Editor Validation")]
     public List<ScenarioObjectRule> objectRules = new();
     public ScenarioSpecificValidator specificValidator;
 

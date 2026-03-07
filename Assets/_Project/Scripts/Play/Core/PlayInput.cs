@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
 
 public class PlayInput : MonoBehaviour
@@ -9,18 +10,21 @@ public class PlayInput : MonoBehaviour
 
     private void Awake()
     {
-        input = new Input();
+        input = InputModeController.Instance.Input;
     }
 
     private void OnEnable()
     {
-        input.Enable();
-        input.Play.RestartLevel.performed += _ => RestartRequested?.Invoke();
+        input.Play.RestartLevel.performed += OnRestartLevel;
     }
 
     private void OnDisable()
     {
-        input.Play.RestartLevel.performed -= _ => RestartRequested?.Invoke();
-        input.Disable();
+        input.Play.RestartLevel.performed -= OnRestartLevel;
+    }
+
+    private void OnRestartLevel(InputAction.CallbackContext _)
+    {
+        RestartRequested?.Invoke();
     }
 }

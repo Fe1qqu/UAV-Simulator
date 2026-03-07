@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class EditorVisualOnlyController : MonoBehaviour
+public class LevelEditorVisualOnlyController : MonoBehaviour
 {
     private void Awake()
     {
-        if (GameModeContext.Current != GameMode.LevelEditor)
+        if (GameModeManager.Current != GameMode.LevelEditor)
         {
             DisableVisuals();
         }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EditorSessionDebugUI : MonoBehaviour
+public class LevelEditorSessionDebugUI : MonoBehaviour
 {
     private bool visible = true;
     private Rect windowRect = new(20, 20, 300, 150);
@@ -12,25 +12,25 @@ public class EditorSessionDebugUI : MonoBehaviour
             return;
         }    
 
-        windowRect = GUI.Window(12345, windowRect, DrawWindow, "EditorSession Debug");
+        windowRect = GUI.Window(12345, windowRect, DrawWindow, "Level Editor Session Debug");
     }
 
     private void DrawWindow(int id)
     {
         GUILayout.BeginVertical();
 
-        if (GameSettings.Instance == null || GameSettings.Instance.CurrentEditorSession == null)
+        if (GameSettings.Instance == null || GameSettings.Instance.CurrentLevelEditorSession == null)
         {
-            GUILayout.Label("EditorSession is null.");
+            GUILayout.Label("LevelEditorSession is null.");
         }
         else
         {
-            EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+            LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
 
-            GUILayout.Label($"LevelName: {editorSession.LevelName ?? "null"}");
-            GUILayout.Label($"SelectedLocationId: {editorSession.SelectedLocationId ?? "null"}");
-            GUILayout.Label($"SelectedScenarioId: {editorSession.SelectedScenarioId ?? "null"}");
-            GUILayout.Label($"SelectedLevelFilePath: {editorSession.SelectedLevelFilePath ?? "null"}");
+            GUILayout.Label($"LevelName: {levelEditorSession.LevelName ?? "null"}");
+            GUILayout.Label($"SelectedLocationId: {levelEditorSession.SelectedLocationId ?? "null"}");
+            GUILayout.Label($"SelectedScenarioId: {levelEditorSession.SelectedScenarioId ?? "null"}");
+            GUILayout.Label($"SelectedLevelFilePath: {levelEditorSession.SelectedLevelFilePath ?? "null"}");
         }
 
         GUILayout.Space(5);

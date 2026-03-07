@@ -1,4 +1,4 @@
-namespace UavSim.Core.Protocol.Drone
+namespace UavSim.Drone.Protocol
 {
     public enum MessageType
     {

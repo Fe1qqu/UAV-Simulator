@@ -4,9 +4,11 @@ public class LevelEditorBootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        GameModeContext.Current = GameMode.LevelEditor;
+        GameModeManager.SetMode(GameMode.LevelEditor);
 
         GameStateManager.SetState(GameState.Gameplay);
+
+        InputModeController.Instance.SetMode(InputMode.LevelEditor);
 
         //Debug.Log("[GameMode] LevelEditor.");
     }

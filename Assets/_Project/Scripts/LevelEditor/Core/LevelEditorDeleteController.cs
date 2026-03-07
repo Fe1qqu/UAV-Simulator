@@ -1,31 +1,31 @@
 using UnityEngine;
 
-public class EditorDeleteController : MonoBehaviour
+public class LevelEditorDeleteController : MonoBehaviour
 {
-    [SerializeField] private EditorInput editorInput;
+    [SerializeField] private LevelEditorInput levelEditorInput;
     [SerializeField] private SelectionManager selectionManager;
 
     private void Awake()
     {
-        if (editorInput == null)
+        if (levelEditorInput == null)
         {
-            Debug.LogError("[EditorDeleteController] EditorInput is not assigned.");
+            Debug.LogError("[LevelEditorDeleteController] LevelEditorInput is not assigned.");
         }
 
         if (selectionManager == null)
         {
-            Debug.LogError("[EditorDeleteController] SelectionManager is not assigned.");
+            Debug.LogError("[LevelEditorDeleteController] SelectionManager is not assigned.");
         }
     }
 
     private void OnEnable()
     {
-        editorInput.Delete += DeleteSelectedObject;
+        levelEditorInput.DeleteRequested += DeleteSelectedObject;
     }
 
     private void OnDisable()
     {
-        editorInput.Delete -= DeleteSelectedObject;
+        levelEditorInput.DeleteRequested -= DeleteSelectedObject;
     }
 
     public void DeleteSelectedObject()
@@ -33,13 +33,13 @@ public class EditorDeleteController : MonoBehaviour
         ISelectable selected = selectionManager.Current;
         if (selected == null)
         {
-            Debug.LogError("[EditorDeleteController] Nothing selected.");
+            Debug.LogError("[LevelEditorDeleteController] Nothing selected.");
             return;
         }
 
         if (selected is not Component component || !component.TryGetComponent<LevelObject>(out var levelObject))
         {
-            Debug.LogError("[EditorDeleteController] Selected object has no LevelObject component.");
+            Debug.LogError("[LevelEditorDeleteController] Selected object has no LevelObject component.");
             return;
         }
 
@@ -50,13 +50,13 @@ public class EditorDeleteController : MonoBehaviour
     {
         if (levelObject == null)
         {
-            Debug.LogError("[EditorDeleteController] LevelObject is null.");
+            Debug.LogError("[LevelEditorDeleteController] LevelObject is null.");
             return;
         }
 
         if (!levelObject.TryGetComponent(out SelectableObject selectableObject))
         {
-            Debug.LogError("[EditorDeleteController] LevelObject has no SelectableObject ñomponent.");
+            Debug.LogError("[LevelEditorDeleteController] LevelObject has no SelectableObject ñomponent.");
             return;
         }
 
@@ -78,6 +78,6 @@ public class EditorDeleteController : MonoBehaviour
         PostLevelObjectDeleteAction deleteAction = new(levelObject, wasSelected);
         deleteAction.Execute();
 
-        Debug.Log($"[EditorDeleteController] Deleted object '{levelObject.name}'.");
+        Debug.Log($"[LevelEditorDeleteController] Deleted object '{levelObject.name}'.");
     }
 }

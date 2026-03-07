@@ -437,7 +437,7 @@
             ]
         },
         {
-            "name": "Editor",
+            "name": "LevelEditor",
             "id": "0560722f-3fd3-400f-9ae8-0e71d49cb6af",
             "actions": [
                 {
@@ -465,7 +465,7 @@
             ]
         },
         {
-            "name": "EditorCamera",
+            "name": "LevelEditorCamera",
             "id": "fab95a40-713e-4753-9b86-da0369cb9feb",
             "actions": [
                 {

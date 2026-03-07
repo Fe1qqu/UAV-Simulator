@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EditorLevelDataBuilder : MonoBehaviour
+public class LevelEditorLevelDataBuilder : MonoBehaviour
 {
     [SerializeField] private Transform levelRoot;
     [SerializeField] private LevelObjectRegistry levelObjectRegistry;
@@ -9,24 +9,24 @@ public class EditorLevelDataBuilder : MonoBehaviour
     {
         if (levelRoot == null)
         {
-            Debug.LogError("[EditorLevelDataBuilder] LevelRoot is not assigned.");
+            Debug.LogError("[LevelEditorLevelDataBuilder] LevelRoot is not assigned.");
         }
 
         if (levelObjectRegistry == null)
         {
-            Debug.LogError("[EditorLevelDataBuilder] LevelObjectRegistry is not assigned.");
+            Debug.LogError("[LevelEditorLevelDataBuilder] LevelObjectRegistry is not assigned.");
         }
     }
 
     public LevelData CollectLevelData()
     {
-        EditorSession editorSession = GameSettings.Instance.CurrentEditorSession;
+        LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
 
         LevelData data = new()
         {
-            levelName = editorSession.LevelName,
-            locationId = editorSession.SelectedLocationId,
-            scenarioId = editorSession.SelectedScenarioId
+            levelName = levelEditorSession.LevelName,
+            locationId = levelEditorSession.SelectedLocationId,
+            scenarioId = levelEditorSession.SelectedScenarioId
         };
 
         foreach (LevelObject levelObject in levelObjectRegistry.LevelObjects)

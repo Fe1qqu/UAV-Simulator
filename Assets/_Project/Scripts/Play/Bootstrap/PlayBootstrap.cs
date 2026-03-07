@@ -4,9 +4,11 @@ public class PlayBootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        GameModeContext.Current = GameMode.Play;
+        GameModeManager.SetMode(GameMode.Play);
 
         GameStateManager.SetState(GameState.Gameplay);
+
+        InputModeController.Instance.SetMode(InputMode.Play);
 
         //Debug.Log("[GameMode] Play.");
     }

@@ -34,7 +34,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
             return false;
         }
 
-        GameSettings.Instance.CurrentEditorSession.SelectedLocationId = location.locationId;
+        GameSettings.Instance.CurrentLevelEditorSession.SelectedLocationId = location.locationId;
         return true;
     }
 }

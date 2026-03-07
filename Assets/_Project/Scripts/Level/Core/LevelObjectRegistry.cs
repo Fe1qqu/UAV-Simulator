@@ -1,6 +1,6 @@
 /*
 NOTE:
-In the editor, LevelObjects are NOT destroyed on delete.
+In the level editor, LevelObjects are NOT destroyed on delete.
 Instead, a soft-delete approach is used via SetActive(false) to support undo/redo.
 
 Because of this:

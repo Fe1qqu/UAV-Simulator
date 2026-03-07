@@ -15,7 +15,7 @@ public static class PauseManager
 
     public static event Action<bool> PauseStateChanged;
 
-    private const int PauseFpsLimit = 30;
+    private const int PauseFpsLimit = 60;
     private static int previousTargetFps;
     private static bool hasStoredFps;
 

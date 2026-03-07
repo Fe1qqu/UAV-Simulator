@@ -11,7 +11,9 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
     [SerializeField] protected GameObject pauseMenuRoot;
 
     protected bool isOpen;
-    public bool IsOpen => isOpen; 
+    public bool IsOpen => isOpen;
+
+    private InputMode previousInputMode;
 
     protected virtual void Awake()
     {
@@ -33,7 +35,11 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
 
         isOpen = true;
 
+        previousInputMode = InputModeController.Instance.CurrentMode;
+
         PauseManager.SetPaused(true);
+
+        InputModeController.Instance.SetMode(InputMode.UI);
 
         BackDispatcher.RegisterHandler(this);
 
@@ -58,6 +64,8 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
         if (mode == PauseCloseMode.ResumeGameplay)
         {
             pauseMenuRoot.SetActive(false);
+
+            InputModeController.Instance.SetMode(previousInputMode);
         }
 
         OnClosed();

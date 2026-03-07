@@ -48,7 +48,7 @@ public class LevelEditorMenuScreen : MainMenuScreenBase
     {
         stateMachine.Show<LevelSelectScreen>(
             new LevelSelectContext(
-                LevelSelectMode.Editor,
+                LevelSelectMode.LevelEditor,
                 () => stateMachine.Show<LevelEditorMenuScreen>()
             )
         );

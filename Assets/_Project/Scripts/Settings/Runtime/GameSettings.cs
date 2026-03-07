@@ -11,7 +11,7 @@ public class PlaySession
     }
 }
 
-public class EditorSession
+public class LevelEditorSession
 {
     public string LevelName;
     public string SelectedLocationId;
@@ -38,8 +38,7 @@ public class GameSettings : MonoBehaviour
     [SerializeField] private int mainMenuQualityLevel = 0;
     [SerializeField] private int gameplayQualityLevel = 1;
 
-    private static GameSettings _instance;
-    public static GameSettings Instance => _instance;
+    public static GameSettings Instance { get; private set; }
 
     private readonly Dictionary<string, SettingInstance> settings = new();
     private readonly Dictionary<SettingAutoApply, List<SettingInstance>> settingsByAutoApply = new();
@@ -48,14 +47,14 @@ public class GameSettings : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        if (Instance != null && Instance != this)
         {
-            //Debug.LogError("[GameSettings] Duplicate instance detected. Only one instance is allowed in the scene.");
+            Debug.LogError("[GameSettings] Duplicate instance detected. Only one instance is allowed in the scene.");
             Destroy(gameObject);
             return;
         }
 
-        _instance = this;
+        Instance = this;
         DontDestroyOnLoad(gameObject);
 
         if (settingsDatabase == null)
@@ -95,10 +94,10 @@ public class GameSettings : MonoBehaviour
     #region Runtime Sessions (Not Persisted)
 
     public PlaySession CurrentPlaySession { get; private set; } = new();
-    public EditorSession CurrentEditorSession { get; private set; } = new();
+    public LevelEditorSession CurrentLevelEditorSession { get; private set; } = new();
 
     public void ClearPlaySession() => CurrentPlaySession.Clear();
-    public void ClearEditorSession() => CurrentEditorSession.Clear();
+    public void ClearLevelEditorSession() => CurrentLevelEditorSession.Clear();
 
     #endregion
 

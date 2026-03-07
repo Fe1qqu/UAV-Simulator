@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-public class EditorCameraController : MonoBehaviour
+public class LevelEditorCameraController : MonoBehaviour
 {
     [Header("Movement")]
     [Tooltip("Base movement speed of the camera.")]
@@ -52,7 +52,7 @@ public class EditorCameraController : MonoBehaviour
     // Velocity reference for pitch smoothing
     private float pitchVelocity;
 
-    [SerializeField] private EditorCameraInput cameraInput;
+    [SerializeField] private LevelEditorCameraInput cameraInput;
 
     private void Awake()
     {
@@ -60,7 +60,7 @@ public class EditorCameraController : MonoBehaviour
 
         if (cameraInput == null)
         {
-            Debug.LogError("[EditorCameraController] EditorCameraInput is not assigned.");
+            Debug.LogError("[LevelEditorCameraController] LevelEditorCameraInput is not assigned.");
         }
     }
 
@@ -102,12 +102,12 @@ public class EditorCameraController : MonoBehaviour
         // Prevent movement while dragging objects.
         if (DragPlacementHandler.Instance != null && DragPlacementHandler.Instance.IsDragging)
         {
-            //Debug.Log("[EditorCameraController] Camera movement blocked — drag in progress.");
+            //Debug.Log("[LevelEditorCameraController] Camera movement blocked — drag in progress.");
             return;
         }
 
         Vector2 lookInput = cameraInput.Look;
-        Vector3 moveInput = new Vector3(cameraInput.Move.x, cameraInput.UpDown, cameraInput.Move.y);
+        Vector3 moveInput = new(cameraInput.Move.x, cameraInput.UpDown, cameraInput.Move.y);
 
         HandleRotation(lookInput);
         HandleMovement(moveInput);

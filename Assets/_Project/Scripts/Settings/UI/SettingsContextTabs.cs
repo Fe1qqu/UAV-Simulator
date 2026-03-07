@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 
 public enum SettingsContext
 {
     MainMenu,
     PauseMenu,
-    Editor
+    LevelEditor
 }
 
-[System.Serializable]
+[Serializable]
 public class SettingsContextTabs
 {
     public SettingsContext context;

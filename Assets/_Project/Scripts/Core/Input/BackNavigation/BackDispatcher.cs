@@ -3,7 +3,6 @@
 // Stack depth > 1 usually indicates overlay or modal UI (dialogs, popups).
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +12,6 @@ public class BackDispatcher : MonoBehaviour
 
     [SerializeField] private bool enableDebugLogging = false;
 
-    private Input input;
     private readonly List<IBackHandler> handlers = new();
 
     private void Awake()
@@ -26,19 +24,25 @@ public class BackDispatcher : MonoBehaviour
         }
 
         Instance = this;
-
-        input = new Input();
-        input.UI.Cancel.performed += OnCancelPressed;
+        DontDestroyOnLoad(gameObject);
     }
 
-    private void OnEnable() => input.Enable();
-    private void OnDisable() => input.Disable();
+    public static void DispatchBack()
+    {
+        if (Instance == null)
+        {
+            Debug.LogWarning("[BackDispatcher] No instance.");
+            return;
+        }
 
-    private void OnCancelPressed(InputAction.CallbackContext _)
+        Instance.HandleBack();
+    }
+
+    private void HandleBack()
     {
         if (handlers.Count == 0)
         {
-            Debug.Log("[BackDispatcher] Cancel pressed, but no handler consumed it.");
+            Debug.Log("[BackDispatcher] Back pressed, but no handler consumed it.");
             return;
         }
 
@@ -75,7 +79,7 @@ public class BackDispatcher : MonoBehaviour
     {
         if (Instance == null)
         {
-            Debug.LogError($"[BackDispatcher] BackDispatcher is missing in the scene. Cannot register handler: {handler}.");
+            Debug.LogError($"[BackDispatcher] BackDispatcher is null. Cannot register handler: {handler}.");
             return;
         }
 
@@ -86,7 +90,6 @@ public class BackDispatcher : MonoBehaviour
     {
         if (Instance == null)
         {
-            Debug.LogError($"[BackDispatcher] BackDispatcher is missing in the scene. Cannot unregister handler: {handler}.");
             return;
         }
 

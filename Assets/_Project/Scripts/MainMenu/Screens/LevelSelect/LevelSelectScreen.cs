@@ -4,7 +4,7 @@ using System;
 
 public enum LevelSelectMode
 {
-    Editor,
+    LevelEditor,
     Play
 }
 
@@ -134,9 +134,9 @@ public class LevelSelectScreen : MainMenuScreenBase
 
         string filePath = selectedItem.Entry.FilePath;
 
-        if (mode == LevelSelectMode.Editor)
+        if (mode == LevelSelectMode.LevelEditor)
         {
-            GameSettings.Instance.CurrentEditorSession.SelectedLevelFilePath = filePath;
+            GameSettings.Instance.CurrentLevelEditorSession.SelectedLevelFilePath = filePath;
             SceneLoader.LoadLevelEditor();
         }
         else
