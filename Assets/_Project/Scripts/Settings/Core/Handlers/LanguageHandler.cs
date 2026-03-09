@@ -7,7 +7,7 @@ public class LanguageHandler : SettingHandlerBase
 {
     public override async void Apply(SettingInstance setting)
     {
-        Locale locale = setting.GetValue() as Locale;
+        Locale locale = setting.GetRuntimeValue() as Locale;
         if (locale == null)
         {
             return;

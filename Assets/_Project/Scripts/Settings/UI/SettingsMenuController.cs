@@ -86,6 +86,7 @@ public class SettingsMenuController : MonoBehaviour
 
     public void Hide()
     {
+        ResetMenu();
         gameObject.SetActive(false);
     }
 
@@ -133,11 +134,7 @@ public class SettingsMenuController : MonoBehaviour
             createdTabButtons.Add(tabButtonComponent);
         }
 
-        string firstTabId = contextTabs.tabIds.FirstOrDefault(id => tabsById.ContainsKey(id));
-        if (!string.IsNullOrEmpty(firstTabId))
-        {
-            SelectTab(firstTabId);
-        }
+        SelectFirstTabInContext(contextTabs);
     }
 
     /// <summary>
@@ -180,5 +177,28 @@ public class SettingsMenuController : MonoBehaviour
         }
 
         Debug.Log($"[SettingsMenuController] Selected tab '{tabId}'.");
+    }
+
+    private void SelectFirstTabInContext(SettingsContextTabs contextTabs)
+    {
+        string firstTabId = contextTabs.tabIds.FirstOrDefault(id => tabsById.ContainsKey(id));
+        if (!string.IsNullOrEmpty(firstTabId))
+        {
+            SelectTab(firstTabId);
+        }
+    }
+
+    public void ResetMenu()
+    {
+        foreach (SettingsTabBase tab in tabsById.Values)
+        {
+            tab.ResetTabState();
+        }
+
+        if (currentContext.HasValue)
+        {
+            var contextTabs = settingsContextTabs.Find(c => c.context == currentContext.Value);
+            SelectFirstTabInContext(contextTabs);
+        }
     }
 }

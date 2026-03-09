@@ -48,7 +48,6 @@ public class VideoSettingsTab : SettingsTabBase
             settings.Add(fpsLimitSettingUI.BoundSetting);
         }
 
-        //GameSettings.Instance.Apply(settings);
         GameSettings.Instance.Save(settings);
     }
 
@@ -64,6 +63,12 @@ public class VideoSettingsTab : SettingsTabBase
         base.OnTabUnselected();
 
         applyButton.gameObject.SetActive(false);
+    }
+
+    public override void ResetTabState()
+    {
+        vSyncSettingUI.Reload();
+        fpsLimitSettingUI.Reload();
     }
 
     private void OnDestroy()

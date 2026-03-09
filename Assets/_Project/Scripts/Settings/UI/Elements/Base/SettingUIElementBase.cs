@@ -6,6 +6,7 @@ public abstract class SettingUIElementBase : MonoBehaviour
 {
     public enum VisibilityMode
     {
+        AlwaysVisible,
         DisableGameObject,
         DisableInteraction,
         FadeAndDisableInteraction
@@ -25,7 +26,9 @@ public abstract class SettingUIElementBase : MonoBehaviour
     protected SettingInstance boundSetting;
     protected SettingDefinition definition;
 
-    public SettingInstance BoundSetting => boundSetting as SettingInstance;
+    public SettingInstance BoundSetting => boundSetting;
+
+    private bool isBound;
 
     protected virtual void Awake()
     {
@@ -42,17 +45,15 @@ public abstract class SettingUIElementBase : MonoBehaviour
 
     public virtual void Bind(SettingInstance setting)
     {
-        Unbind();
-
-        boundSetting = setting;
-
-        if (boundSetting is not SettingInstance instance)
+        if (isBound)
         {
-            Debug.LogError($"[{GetType().Name}] Setting must be SettingInstance.");
-            return;
+            Unbind();
         }
 
-        definition = instance.Definition;
+        boundSetting = setting;
+        definition = boundSetting.Definition;
+
+        isBound = true;
 
         if (definition.displayName != null)
         {
@@ -60,28 +61,43 @@ public abstract class SettingUIElementBase : MonoBehaviour
             labelText.text = definition.displayName.GetLocalizedString();
         }
 
-        boundSetting.OnValueChanged += OnSettingValueChanged;
-        instance.OnVisibilityChanged += ApplyVisibility;
+        boundSetting.OnRuntimeValueChanged += OnRuntimeValueChanged;
+        boundSetting.OnVisibilityChanged += ApplyVisibility;
 
-        ApplyVisibility(instance.IsVisible);
+        ApplyVisibility(boundSetting.IsVisible);
     }
 
     protected virtual void Unbind()
     {
-        if (boundSetting is SettingInstance instance)
+        if (!isBound)
         {
-            instance.OnVisibilityChanged -= ApplyVisibility;
-        }
+            return;
+        }    
 
         if (boundSetting != null)
         {
-            boundSetting.OnValueChanged -= OnSettingValueChanged;
+            boundSetting.OnRuntimeValueChanged -= OnRuntimeValueChanged;
+            boundSetting.OnVisibilityChanged -= ApplyVisibility;
         }
-        
+
         if (definition != null && definition.displayName != null)
         {
             definition.displayName.StringChanged -= OnDisplayNameChanged;
         }
+
+        boundSetting = null;
+        definition = null;
+        isBound = false;
+    }
+
+    public void Reload()
+    {
+        boundSetting.Reload();
+    }
+
+    private void OnRuntimeValueChanged(object value)
+    {
+        Refresh();
     }
 
     private void OnDisplayNameChanged(string value)
@@ -111,7 +127,7 @@ public abstract class SettingUIElementBase : MonoBehaviour
 
     protected virtual void SetInteractable(bool interactable) { }
 
-    protected abstract void OnSettingValueChanged(object value);
+    protected abstract void Refresh();
 
     protected virtual void OnDestroy()
     {

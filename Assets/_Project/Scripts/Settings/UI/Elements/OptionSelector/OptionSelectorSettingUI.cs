@@ -16,7 +16,6 @@ public class OptionSelectorSettingUI : SettingUIElementBase
 
     private OptionSettingDefinition optionDefinition;
     private SettingOption currentOption;
-    private int currentIndex;
 
     protected override void Awake()
     {
@@ -63,60 +62,59 @@ public class OptionSelectorSettingUI : SettingUIElementBase
         rightButton.onClick.AddListener(SelectNext);
 
         BuildIndicators();
-        RefreshFromModel();
+        Refresh();
     }
 
-    private void RefreshFromModel()
+    protected override void Refresh()
     {
-        currentIndex = (int)boundSetting.GetValue();
-        UpdateUI();
-    }
-
-    protected override void OnSettingValueChanged(object value)
-    {
-        currentIndex = (int)value;
         UpdateUI();
     }
 
     private void SelectNext()
     {
-        if (currentIndex >= optionDefinition.Options.Count - 1)
+        int index = (int)boundSetting.GetRuntimeValue();
+
+        if (index >= optionDefinition.Options.Count - 1)
         {
             return;
         }
 
-        GameSettings.Instance.SetValue(boundSetting, ++currentIndex);
+        boundSetting.SetRuntimeValue(index + 1);
     }
 
     private void SelectPrevious()
     {
-        if (currentIndex <= 0)
+        int index = (int)boundSetting.GetRuntimeValue();
+
+        if (index <= 0)
         {
             return;
         }
 
-        GameSettings.Instance.SetValue(boundSetting, --currentIndex);
+        boundSetting.SetRuntimeValue(index - 1);
     }
 
     private void UpdateUI()
     {
-        UpdateValueLabel();
-        UpdateIndicators();
-    }
+        int index = (int)boundSetting.GetRuntimeValue();
 
-    private void UpdateValueLabel()
-    {
-        if (currentIndex < 0 || currentIndex >= optionDefinition.Options.Count)
+        if (index < 0 || index >= optionDefinition.Options.Count)
         {
             return;
         }
 
+        UpdateValueLabel(index);
+        UpdateIndicators(index);
+    }
+
+    private void UpdateValueLabel(int index)
+    {
         if (currentOption != null && currentOption.localizedLabel != null)
         {
             currentOption.localizedLabel.StringChanged -= OnValueLocalized;
         }
 
-        currentOption = optionDefinition.Options[currentIndex];
+        currentOption = optionDefinition.Options[index];
 
         if (currentOption.localizedLabel != null)
         {
@@ -146,11 +144,9 @@ public class OptionSelectorSettingUI : SettingUIElementBase
             GameObject indicatorInstance = Instantiate(indicatorPrefab, indicatorsContainer);
             indicatorInstance.SetActive(true);
         }
-
-        UpdateIndicators();
     }
 
-    private void UpdateIndicators()
+    private void UpdateIndicators(int index)
     {
         for (int i = 0; i < indicatorsContainer.childCount; i++)
         {
@@ -159,7 +155,7 @@ public class OptionSelectorSettingUI : SettingUIElementBase
                 continue;
             }
 
-            image.color = (i == currentIndex) ? indicatorSelectedColor : indicatorUnselectedColor;
+            image.color = (i == index) ? indicatorSelectedColor : indicatorUnselectedColor;
         }
     }
 

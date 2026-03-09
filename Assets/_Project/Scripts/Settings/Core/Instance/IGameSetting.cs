@@ -4,12 +4,12 @@ public interface IGameSetting
 {
     string Id { get; }
 
-    object GetValue();
-    void SetValue(object value);
+    event Action<object> OnRuntimeValueChanged;
+
+    object GetRuntimeValue();
+    void SetRuntimeValue(object value);
 
     void Apply();
     void Save();
     void Load();
-
-    event Action<object> OnValueChanged;
 }

@@ -7,10 +7,11 @@ public class SettingInstance : IGameSetting
     public string Id => Definition.settingId;
     public SettingDefinition Definition { get; }
 
-    public event Action<object> OnValueChanged;
+    public event Action<object> OnRuntimeValueChanged;
     public event Action<bool> OnVisibilityChanged;
 
-    private object currentValue;
+    private object runtimeValue;
+
     private readonly Dictionary<string, SettingInstance> dependencyTargets = new();
 
     public bool IsVisible { get; private set; } = true;
@@ -44,24 +45,23 @@ public class SettingInstance : IGameSetting
             }
 
             dependencyTargets.Add(targetDefinition.settingId, targetInstance);
-            targetInstance.OnValueChanged += _ => EvaluateRules();
+            targetInstance.OnRuntimeValueChanged += _ => EvaluateRules();
         }
 
         EvaluateRules();
     }
 
-    public object GetValue() => currentValue;
+    public object GetRuntimeValue() => runtimeValue;
 
-    public void SetValue(object value)
+    public void SetRuntimeValue(object value)
     {
-        if (Equals(currentValue, value))
+        if (Equals(runtimeValue, value))
         {
-            //Debug.LogWarning("1");
             return;
         }
 
-        currentValue = value;
-        OnValueChanged?.Invoke(currentValue);
+        runtimeValue = value;
+        OnRuntimeValueChanged?.Invoke(runtimeValue);
     }
 
     public void Apply()
@@ -71,12 +71,18 @@ public class SettingInstance : IGameSetting
 
     public void Save()
     {
-        Definition.SaveValueToStorage(currentValue);
+        Definition.SaveValueToStorage(runtimeValue);
     }
 
     public void Load()
     {
-        currentValue = Definition.GetValueFromStorage();
+        runtimeValue = Definition.GetValueFromStorage();
+    }
+
+    public void Reload()
+    {
+        Load();
+        OnRuntimeValueChanged?.Invoke(runtimeValue);
     }
 
     private void SetVisibility(bool visible)
@@ -103,7 +109,7 @@ public class SettingInstance : IGameSetting
                 continue;
             }
 
-            bool condition = rule.condition.Evaluate(targetInstance.GetValue());
+            bool condition = rule.condition.Evaluate(targetInstance.runtimeValue);
 
             if (!condition)
             {
@@ -117,7 +123,7 @@ public class SettingInstance : IGameSetting
                     break;
 
                 case SettingEffectType.ForceValue:
-                    SetValue(rule.effect.forcedValue);
+                    SetRuntimeValue(rule.effect.forcedValue);
                     break;
             }
         }

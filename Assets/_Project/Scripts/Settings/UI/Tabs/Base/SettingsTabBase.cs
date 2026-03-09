@@ -41,4 +41,6 @@ public abstract class SettingsTabBase : MonoBehaviour
     {
         //Debug.Log($"[SettingsTabBase] OnTabUnselected: {TabId}.");
     }
+
+    public virtual void ResetTabState() { }
 }

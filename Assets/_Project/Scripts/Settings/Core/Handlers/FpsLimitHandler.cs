@@ -11,7 +11,7 @@ public class FpsLimitHandler : SettingHandlerBase
             return;
         }
 
-        float value = (float)setting.GetValue();
+        float value = (float)setting.GetRuntimeValue();
 
         bool isUnlimited = rangeSetting.hasSpecialMaxValue && Mathf.Approximately(value, rangeSetting.maxValue);
 

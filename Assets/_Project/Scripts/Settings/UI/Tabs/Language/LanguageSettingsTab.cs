@@ -59,7 +59,7 @@ public class LanguageSettingsTab : SettingsTabBase
             return;
         }
 
-        Locale currentLocale = languageSetting.GetValue() as Locale;
+        Locale currentLocale = languageSetting.GetRuntimeValue() as Locale;
         
         foreach (Locale locale in definition.AvailableLocales)
         {
@@ -86,7 +86,7 @@ public class LanguageSettingsTab : SettingsTabBase
 
     private void UpdateButtonsVisual()
     {
-        Locale currentLocale = languageSetting.GetValue() as Locale;
+        Locale currentLocale = languageSetting.GetRuntimeValue() as Locale;
 
         foreach (Button button in languageButtons)
         {

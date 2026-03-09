@@ -2628,7 +2628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2668,7 +2668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20d6e1e90becd247b069067bcea84ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliderSettingUI
-  visibilityMode: 2
+  visibilityMode: 3
   canvasGroup: {fileID: 7270239882176225359}
   labelText: {fileID: 5758553460111320290}
   slider: {fileID: 7049677072230770603}

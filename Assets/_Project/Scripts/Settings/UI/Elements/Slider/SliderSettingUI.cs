@@ -42,7 +42,7 @@ public class SliderSettingUI : SettingUIElementBase
 
         slider.onValueChanged.AddListener(OnSliderChanged);
 
-        RefreshFromModel();
+        Refresh();
     }
 
     protected override void Unbind()
@@ -53,19 +53,10 @@ public class SliderSettingUI : SettingUIElementBase
         SetActiveLocalizedValue(null);
     }
 
-    private void RefreshFromModel()
+    protected override void Refresh()
     {
-        float value = (float)boundSetting.GetValue();
+        float value = (float)boundSetting.GetRuntimeValue();
         float quantized = Quantize(value);
-
-        slider.SetValueWithoutNotify(quantized);
-        UpdateValueLabel(quantized);
-    }
-
-    protected override void OnSettingValueChanged(object value)
-    {
-        float floatValue = (float)value;
-        float quantized = Quantize(floatValue);
 
         slider.SetValueWithoutNotify(quantized);
         UpdateValueLabel(quantized);
@@ -153,14 +144,7 @@ public class SliderSettingUI : SettingUIElementBase
         float quantized = Quantize(rawValue);
 
         slider.SetValueWithoutNotify(quantized);
-        GameSettings.Instance.SetValue(boundSetting, quantized);
 
-        UpdateValueLabel(quantized);
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        Unbind();
+        boundSetting.SetRuntimeValue(quantized);
     }
 }

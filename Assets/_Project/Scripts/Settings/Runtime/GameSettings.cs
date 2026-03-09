@@ -186,10 +186,10 @@ public class GameSettings : MonoBehaviour
         return setting;
     }
 
-    public void SetValue(SettingInstance setting, object value)
-    {
-        setting.SetValue(value);
-    }
+    //public void SetRuntimeValue(SettingInstance setting, object value)
+    //{
+    //    setting.SetRuntimeValue(value);
+    //}
 
     public void Apply(SettingInstance setting)
     {
@@ -222,7 +222,7 @@ public class GameSettings : MonoBehaviour
 
     public void ChangeApplyAndSave(SettingInstance setting, object value)
     {
-        setting.SetValue(value);
+        setting.SetRuntimeValue(value);
         setting.Apply();
         setting.Save();
         PlayerPrefs.Save();
