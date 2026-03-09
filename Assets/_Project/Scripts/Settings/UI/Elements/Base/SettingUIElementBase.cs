@@ -12,6 +12,9 @@ public abstract class SettingUIElementBase : MonoBehaviour
         FadeAndDisableInteraction
     }
 
+    [Header("Reference")]
+    [SerializeField] private SettingDefinition definitionReference;
+
     [Header("Visibility")]
     [SerializeField] private VisibilityMode visibilityMode = VisibilityMode.DisableGameObject;
 
@@ -24,14 +27,17 @@ public abstract class SettingUIElementBase : MonoBehaviour
     [SerializeField] private TMP_Text labelText;
 
     protected SettingInstance boundSetting;
-    protected SettingDefinition definition;
-
     public SettingInstance BoundSetting => boundSetting;
 
     private bool isBound;
 
     protected virtual void Awake()
     {
+        if (definitionReference == null)
+        {
+            Debug.LogError("[SettingUIElementBase] DefinitionReference is not assigned.");
+        }
+
         if (visibilityMode == VisibilityMode.FadeAndDisableInteraction && canvasGroup == null)
         {
             Debug.LogError("[SettingUIElementBase] CanvasGroup required for Fade mode.");
@@ -43,22 +49,40 @@ public abstract class SettingUIElementBase : MonoBehaviour
         }
     }
 
-    public virtual void Bind(SettingInstance setting)
+    public void AutoBind()
+    {
+        SettingInstance instance = GameSettings.Instance.Get(definitionReference.Id);
+        if (instance != null)
+        {
+            Bind(instance);
+        }
+        else
+        {
+            Debug.LogError($"[SettingUIElementBase] {name}: SettingInstance with ID '{definitionReference.Id}' not found.");
+        }
+    }
+
+    protected virtual void Bind(SettingInstance setting)
     {
         if (isBound)
         {
             Unbind();
         }
 
+        if (setting == null)
+        {
+            Debug.LogError("[SettingUIElementBase] Cannot bind to null SettingInstance.");
+            return;
+        }
+
         boundSetting = setting;
-        definition = boundSetting.Definition;
 
         isBound = true;
 
-        if (definition.displayName != null)
+        if (boundSetting.Definition.DisplayName != null)
         {
-            definition.displayName.StringChanged += OnDisplayNameChanged;
-            labelText.text = definition.displayName.GetLocalizedString();
+            boundSetting.Definition.DisplayName.StringChanged += OnDisplayNameChanged;
+            labelText.text = boundSetting.Definition.DisplayName.GetLocalizedString();
         }
 
         boundSetting.OnRuntimeValueChanged += OnRuntimeValueChanged;
@@ -80,19 +104,18 @@ public abstract class SettingUIElementBase : MonoBehaviour
             boundSetting.OnVisibilityChanged -= ApplyVisibility;
         }
 
-        if (definition != null && definition.displayName != null)
+        if (boundSetting.Definition != null && boundSetting.Definition.DisplayName != null)
         {
-            definition.displayName.StringChanged -= OnDisplayNameChanged;
+            boundSetting.Definition.DisplayName.StringChanged -= OnDisplayNameChanged;
         }
 
         boundSetting = null;
-        definition = null;
         isBound = false;
     }
 
     public void Reload()
     {
-        boundSetting.Reload();
+        boundSetting?.Reload();
     }
 
     private void OnRuntimeValueChanged(object value)

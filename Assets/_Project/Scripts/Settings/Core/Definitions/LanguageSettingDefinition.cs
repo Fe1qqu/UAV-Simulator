@@ -6,13 +6,14 @@ using System.Collections.Generic;
 public class LanguageSettingDefinition : SettingDefinition
 {
     [SerializeField] private List<Locale> availableLocales = new();
-    [SerializeField] private Locale defaultLocale;
-
     public IReadOnlyList<Locale> AvailableLocales => availableLocales;
+
+    [Header("Default")]
+    [SerializeField] private Locale defaultLocale;
 
     public override object GetValueFromStorage()
     {
-        string code = PlayerPrefs.GetString(settingId, defaultLocale.name);
+        string code = PlayerPrefs.GetString(Id, defaultLocale.name);
         Locale locale = availableLocales.Find(locale => locale.name == code);
         return locale != null ? locale : defaultLocale;
     }
@@ -21,7 +22,7 @@ public class LanguageSettingDefinition : SettingDefinition
     {
         if (value is Locale locale)
         {
-            PlayerPrefs.SetString(settingId, locale.name);
+            PlayerPrefs.SetString(Id, locale.name);
         }
     }
 

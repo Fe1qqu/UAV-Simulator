@@ -6,32 +6,40 @@ using Alchemy.Inspector;
 public class RangeSettingDefinition : SettingDefinition
 {
     [Header("Range")]
-    public float minValue = 0f;
-    public float maxValue = 1f;
-    public float step = 0.1f;
+    [SerializeField] private float minValue = 0f;
+    [SerializeField] private float maxValue = 1f;
+    [SerializeField] private float step = 0.1f;
+
+    public float MinValue => minValue;
+    public float MaxValue => maxValue;
+    public float Step => step;
 
     [Header("Default")]
-    public float defaultValue = 0f;
+    [SerializeField] private float defaultValue = 0f;
 
     [Header("Special Values")]
-    public bool hasSpecialMinValue;
+    [SerializeField] private bool hasSpecialMinValue;
+    public bool HasSpecialMinValue => hasSpecialMinValue;
 
     [ShowIf(nameof(hasSpecialMinValue))]
-    public LocalizedString specialMinValueLabel;
+    [SerializeField] private LocalizedString specialMinValueLabel;
+    public LocalizedString SpecialMinValueLabel => specialMinValueLabel;
 
-    public bool hasSpecialMaxValue;
+    [SerializeField] private bool hasSpecialMaxValue;
+    public bool HasSpecialMaxValue => hasSpecialMaxValue;
 
     [ShowIf(nameof(hasSpecialMaxValue))]
-    public LocalizedString specialMaxValueLabel;
+    [SerializeField] private LocalizedString specialMaxValueLabel;
+    public LocalizedString SpecialMaxValueLabel => specialMaxValueLabel;
 
     public override object GetValueFromStorage()
     {
-        return PlayerPrefs.GetFloat(settingId, defaultValue);
+        return PlayerPrefs.GetFloat(Id, defaultValue);
     }
 
     public override void SaveValueToStorage(object value)
     {
-        PlayerPrefs.SetFloat(settingId, (float)value);
+        PlayerPrefs.SetFloat(Id, (float)value);
     }
 
     public override object GetDefaultValue() => defaultValue;

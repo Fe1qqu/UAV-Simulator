@@ -110,23 +110,23 @@ public class GameSettings : MonoBehaviour
 
         foreach (SettingDefinition setting in settingsDatabase.Settings)
         {
-            if (string.IsNullOrWhiteSpace(setting.settingId))
+            if (string.IsNullOrWhiteSpace(setting.Id))
             {
                 Debug.LogError("[GameSettings] SettingDefinition has empty settingId.");
                 continue;
             }
 
-            if (settings.ContainsKey(setting.settingId))
+            if (settings.ContainsKey(setting.Id))
             {
-                Debug.LogError($"[GameSettings] Duplicate settingId detected: {setting.settingId}.");
+                Debug.LogError($"[GameSettings] Duplicate settingId detected: {setting.Id}.");
                 continue;
             }
 
             SettingInstance settingInstance = new(setting, Get);
             
-            settings.Add(setting.settingId, settingInstance);
+            settings.Add(setting.Id, settingInstance);
 
-            SettingAutoApply autoApply = setting.autoApply;
+            SettingAutoApply autoApply = setting.AutoApply;
             if (!settingsByAutoApply.TryGetValue(autoApply, out var scopedList))
             {
                 scopedList = new List<SettingInstance>();

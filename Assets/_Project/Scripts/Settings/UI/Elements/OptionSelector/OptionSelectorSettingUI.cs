@@ -47,11 +47,11 @@ public class OptionSelectorSettingUI : SettingUIElementBase
         }
     }
 
-    public override void Bind(SettingInstance setting)
+    protected override void Bind(SettingInstance setting)
     {
         base.Bind(setting);
 
-        optionDefinition = definition as OptionSettingDefinition;
+        optionDefinition = boundSetting.Definition as OptionSettingDefinition;
         if (optionDefinition == null)
         {
             Debug.LogError("[OptionSelectorSettingUI] Wrong definition type.");

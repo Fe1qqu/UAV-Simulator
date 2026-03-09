@@ -6,11 +6,14 @@ using System.Collections.Generic;
 
 public class LanguageSettingsTab : SettingsTabBase
 {
+    [Header("Reference")]
+    [SerializeField] private LanguageSettingDefinition definitionReference;
+
     [Header("UI")]
     [SerializeField] private Transform buttonsContainer;
     [SerializeField] private GameObject languageButtonPrefab;
 
-    private LanguageSettingDefinition definition;
+    private LanguageSettingDefinition languageDefinition;
     private SettingInstance languageSetting;
 
     private readonly List<Button> languageButtons = new();
@@ -18,6 +21,11 @@ public class LanguageSettingsTab : SettingsTabBase
     protected override void Awake()
     {
         base.Awake();
+
+        if (definitionReference == null)
+        {
+            Debug.LogWarning("[LanguageSettingsTab] DefinitionReference is not assigned.");
+        }
 
         if (buttonsContainer == null)
         {
@@ -29,11 +37,11 @@ public class LanguageSettingsTab : SettingsTabBase
             Debug.LogWarning("[LanguageSettingsTab] LanguageButtonPrefab is not assigned.");
         }
 
-        languageSetting = GameSettings.Instance.Get("language");
-        definition = languageSetting.Definition as LanguageSettingDefinition;
-        if (definition == null)
+        languageSetting = GameSettings.Instance.Get(definitionReference.Id);
+        languageDefinition = languageSetting.Definition as LanguageSettingDefinition;
+        if (languageDefinition == null)
         {
-            Debug.LogError("[LanguageSettingsTab] LanguageSettingDefinition not found.");
+            Debug.LogError("[LanguageSettingsTab] LanguageDefinition not found.");
             return;
         }
 
@@ -61,7 +69,7 @@ public class LanguageSettingsTab : SettingsTabBase
 
         Locale currentLocale = languageSetting.GetRuntimeValue() as Locale;
         
-        foreach (Locale locale in definition.AvailableLocales)
+        foreach (Locale locale in languageDefinition.AvailableLocales)
         {
             GameObject buttonInstance = Instantiate(languageButtonPrefab, buttonsContainer);
             buttonInstance.SetActive(true);

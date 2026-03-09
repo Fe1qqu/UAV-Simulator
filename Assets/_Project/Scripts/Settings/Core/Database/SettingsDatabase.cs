@@ -10,6 +10,6 @@ public class SettingsDatabase : ScriptableObject
 
     public SettingDefinition GetById(string id)
     {
-        return settings.Find(setting => setting.settingId == id);
+        return settings.Find(setting => setting.Id == id);
     }
 }

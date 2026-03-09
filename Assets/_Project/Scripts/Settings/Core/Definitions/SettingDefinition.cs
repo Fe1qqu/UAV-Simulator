@@ -20,19 +20,24 @@ public enum SettingAutoApply
 public abstract class SettingDefinition : ScriptableObject
 {
     [Header("Identity")]
-    public string settingId;
+    [SerializeField] private string id;
+    public string Id => id;
 
     [Header("Localization")]
-    public LocalizedString displayName;
+    [SerializeField] private LocalizedString displayName;
+    public LocalizedString DisplayName => displayName;
 
     [Header("Auto Apply")]
-    public SettingAutoApply autoApply = SettingAutoApply.None;
+    [SerializeField] private SettingAutoApply autoApply = SettingAutoApply.None;
+    public SettingAutoApply AutoApply => autoApply;
 
     [Header("Handler")]
-    public SettingHandlerBase handler;
+    [SerializeField] private SettingHandlerBase handler;
+    public SettingHandlerBase Handler => handler;
 
     [Header("Dependency Rules")]
-    public List<SettingDependencyRule> dependencyRules = new();
+    [SerializeField] private List<SettingDependencyRule> dependencyRules = new();
+    public IReadOnlyList<SettingDependencyRule> DependencyRules => dependencyRules;
 
     public abstract object GetValueFromStorage();
     public abstract void SaveValueToStorage(object value);

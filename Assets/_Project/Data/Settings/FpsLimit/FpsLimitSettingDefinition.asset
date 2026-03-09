@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5279e10d6b5ba9544adecf25ed378b54, type: 3}
   m_Name: FpsLimitSettingDefinition
   m_EditorClassIdentifier: Assembly-CSharp::RangeSettingDefinition
-  settingId: fps_limit
+  id: fps_limit
   displayName:
     m_TableReference:
       m_TableCollectionName: GUID:05247530cab4a384d87030cd9f580bf6

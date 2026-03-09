@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac346e34b9f5c674186b3b1ee72d61ea, type: 3}
   m_Name: VSyncSettingDefinition
   m_EditorClassIdentifier: Assembly-CSharp::OptionSettingDefinition
-  settingId: vsync
+  id: vsync
   displayName:
     m_TableReference:
       m_TableCollectionName: GUID:05247530cab4a384d87030cd9f580bf6
@@ -24,7 +24,7 @@ MonoBehaviour:
     m_LocalVariables: []
   autoApply: 2
   handler: {fileID: 11400000, guid: 0fd8f549a9cc38640b2d75fdcaa2581a, type: 2}
-  dependencies: []
+  dependencyRules: []
   options:
   - valueId: off
     localizedLabel:

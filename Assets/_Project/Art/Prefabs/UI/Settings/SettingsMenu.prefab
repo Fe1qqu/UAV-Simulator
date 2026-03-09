@@ -512,6 +512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20d6e1e90becd247b069067bcea84ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliderSettingUI
+  definitionReference: {fileID: 0}
   visibilityMode: 0
   canvasGroup: {fileID: 0}
   labelText: {fileID: 475273561468523624}
@@ -1090,6 +1091,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  definitionReference: {fileID: 11400000, guid: 42509e44f144c574f81170013d6283a9, type: 2}
   buttonsContainer: {fileID: 7071596375849440099}
   languageButtonPrefab: {fileID: 4097228138878973470}
   references:
@@ -2668,6 +2670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20d6e1e90becd247b069067bcea84ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliderSettingUI
+  definitionReference: {fileID: 11400000, guid: eff636eeae546e04dbd0f66766d22951, type: 2}
   visibilityMode: 3
   canvasGroup: {fileID: 7270239882176225359}
   labelText: {fileID: 5758553460111320290}
@@ -5271,6 +5274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30727593064a024aba3ac7e2d55910f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OptionSelectorSettingUI
+  definitionReference: {fileID: 11400000, guid: 25ca9bf8cdaa4e1489025d9378091c3f, type: 2}
   visibilityMode: 0
   canvasGroup: {fileID: 0}
   labelText: {fileID: 3986501355386058190}
@@ -5519,6 +5523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30727593064a024aba3ac7e2d55910f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OptionSelectorSettingUI
+  definitionReference: {fileID: 0}
   visibilityMode: 0
   canvasGroup: {fileID: 0}
   labelText: {fileID: 4522403544255471339}

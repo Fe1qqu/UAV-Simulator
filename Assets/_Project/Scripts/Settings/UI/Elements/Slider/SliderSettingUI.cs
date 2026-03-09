@@ -26,19 +26,19 @@ public class SliderSettingUI : SettingUIElementBase
         }
     }
 
-    public override void Bind(SettingInstance setting)
+    protected override void Bind(SettingInstance setting)
     {
         base.Bind(setting);
 
-        rangeDefinition = definition as RangeSettingDefinition;
+        rangeDefinition = boundSetting.Definition as RangeSettingDefinition;
         if (rangeDefinition == null)
         {
             Debug.LogError("[SliderSettingUI] Wrong definition type.");
             return;
         }
 
-        slider.minValue = rangeDefinition.minValue;
-        slider.maxValue = rangeDefinition.maxValue;
+        slider.minValue = rangeDefinition.MinValue;
+        slider.maxValue = rangeDefinition.MaxValue;
 
         slider.onValueChanged.AddListener(OnSliderChanged);
 
@@ -64,9 +64,9 @@ public class SliderSettingUI : SettingUIElementBase
 
     private float Quantize(float rawValue)
     {
-        float min = rangeDefinition.minValue;
-        float max = rangeDefinition.maxValue;
-        float step = rangeDefinition.step;
+        float min = rangeDefinition.MinValue;
+        float max = rangeDefinition.MaxValue;
+        float step = rangeDefinition.Step;
 
         float normalized = rawValue - min;
         float steps = Mathf.Round(normalized / step);
@@ -79,13 +79,13 @@ public class SliderSettingUI : SettingUIElementBase
     {
         LocalizedString targetLocalized = null;
 
-        if (rangeDefinition.hasSpecialMinValue && value == rangeDefinition.minValue)
+        if (rangeDefinition.HasSpecialMinValue && value == rangeDefinition.MinValue)
         {
-            targetLocalized = rangeDefinition.specialMinValueLabel;
+            targetLocalized = rangeDefinition.SpecialMinValueLabel;
         }
-        else if (rangeDefinition.hasSpecialMaxValue && value == rangeDefinition.maxValue)
+        else if (rangeDefinition.HasSpecialMaxValue && value == rangeDefinition.MaxValue)
         {
-            targetLocalized = rangeDefinition.specialMaxValueLabel;
+            targetLocalized = rangeDefinition.SpecialMaxValueLabel;
         }
 
         SetActiveLocalizedValue(targetLocalized);
@@ -102,7 +102,7 @@ public class SliderSettingUI : SettingUIElementBase
 
     private string FormatValue(float value)
     {
-        float step = rangeDefinition.step;
+        float step = rangeDefinition.Step;
 
         if (step >= 1f)
         {

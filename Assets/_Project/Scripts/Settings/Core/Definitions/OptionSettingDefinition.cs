@@ -15,16 +15,17 @@ public class OptionSettingDefinition : SettingDefinition
     [SerializeField] private List<SettingOption> options = new();
     public IReadOnlyList<SettingOption> Options => options;
 
+    [Header("Default")]
     [SerializeField] private int defaultIndex = 0;
 
     public override object GetValueFromStorage()
     {
-        return PlayerPrefs.GetInt(settingId, defaultIndex);
+        return PlayerPrefs.GetInt(Id, defaultIndex);
     }
 
     public override void SaveValueToStorage(object value)
     {
-        PlayerPrefs.SetInt(settingId, (int)value);
+        PlayerPrefs.SetInt(Id, (int)value);
     }
 
     public override object GetDefaultValue() => defaultIndex;

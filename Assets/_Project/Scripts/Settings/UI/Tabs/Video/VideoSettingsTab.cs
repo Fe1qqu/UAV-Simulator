@@ -28,8 +28,10 @@ public class VideoSettingsTab : SettingsTabBase
             Debug.LogError("[VideoSettingsTab] ApplyButton is not assigned.");
         }
 
-        vSyncSettingUI.Bind(GameSettings.Instance.Get("vsync"));
-        fpsLimitSettingUI.Bind(GameSettings.Instance.Get("fps_limit"));
+        foreach (SettingUIElementBase settingUIElement in GetComponentsInChildren<SettingUIElementBase>(true))
+        {
+            settingUIElement.AutoBind();
+        }
 
         applyButton.onClick.AddListener(ApplyTabSettings);
     }

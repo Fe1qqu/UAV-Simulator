@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SettingInstance : IGameSetting
 {
-    public string Id => Definition.settingId;
+    public string Id => Definition.Id;
     public SettingDefinition Definition { get; }
 
     public event Action<object> OnRuntimeValueChanged;
@@ -21,30 +21,30 @@ public class SettingInstance : IGameSetting
         Definition = definition;
         Load();
 
-        foreach (SettingDependencyRule rule in Definition.dependencyRules)
+        foreach (SettingDependencyRule rule in Definition.DependencyRules)
         {
             SettingDefinition targetDefinition = rule.condition.targetSetting;
             if (targetDefinition == null)
             {
-                Debug.Log($"[SettingInstance] Dependency rule on '{Definition.name}' (ID: {Definition.settingId}) has null targetSetting in condition.");
+                Debug.Log($"[SettingInstance] Dependency rule on '{Definition.name}' (ID: {Definition.Id}) has null targetSetting in condition.");
                 continue;
             }
 
-            if (dependencyTargets.ContainsKey(targetDefinition.settingId))
+            if (dependencyTargets.ContainsKey(targetDefinition.Id))
             {
                 continue;
             }
 
-            SettingInstance targetInstance = resolver(targetDefinition.settingId);
+            SettingInstance targetInstance = resolver(targetDefinition.Id);
             if (targetInstance == null)
             {
                 Debug.Log($"[SettingInstance] Failed to resolve dependency target '{targetDefinition.name}' " +
-                            $"(ID: {targetDefinition.settingId}) for setting '{Definition.name}' " +
-                            $"(ID: {Definition.settingId}).");
+                            $"(ID: {targetDefinition.Id}) for setting '{Definition.name}' " +
+                            $"(ID: {Definition.Id}).");
                 continue;
             }
 
-            dependencyTargets.Add(targetDefinition.settingId, targetInstance);
+            dependencyTargets.Add(targetDefinition.Id, targetInstance);
             targetInstance.OnRuntimeValueChanged += _ => EvaluateRules();
         }
 
@@ -66,7 +66,7 @@ public class SettingInstance : IGameSetting
 
     public void Apply()
     {
-        Definition.handler.Apply(this);
+        Definition.Handler.Apply(this);
     }
 
     public void Save()
@@ -102,9 +102,9 @@ public class SettingInstance : IGameSetting
 
         bool visible = true;
 
-        foreach (SettingDependencyRule rule in Definition.dependencyRules)
+        foreach (SettingDependencyRule rule in Definition.DependencyRules)
         {
-            if (!dependencyTargets.TryGetValue(rule.condition.targetSetting.settingId, out var targetInstance))
+            if (!dependencyTargets.TryGetValue(rule.condition.targetSetting.Id, out var targetInstance))
             {
                 continue;
             }
