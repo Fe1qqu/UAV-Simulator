@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afb451a5062d5a4db7b9a18661227c0, type: 3}
+  m_Name: LanguageSettingDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageSettingDefinition
+  id: language
+  displayName:
+    m_TableReference:
+      m_TableCollectionName: GUID:d7821e5eea5fd8741a742285a5215172
+    m_TableEntryReference:
+      m_KeyId: 24032718464638976
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  autoApply: 1
+  handler: {fileID: 11400000, guid: e635771e5d6f4a644abe8adae92a60dd, type: 2}
+  dependencyRules: []
+  availableLocales:
+  - {fileID: 11400000, guid: 95012cdf3a92fda458314830ee37b123, type: 2}
+  - {fileID: 11400000, guid: b334183847b10b04e9bc83a4b277ac1b, type: 2}
+  defaultLocale: {fileID: 11400000, guid: 95012cdf3a92fda458314830ee37b123, type: 2}
+  references:
+    version: 2
+    RefIds: []

@@ -4,8 +4,6 @@ using System;
 
 public class DroneCameraInput : MonoBehaviour
 {
-    public static DroneCameraInput Instance { get; private set; }
-
     private Input input;
 
     private InputAction lookAction;
@@ -18,50 +16,32 @@ public class DroneCameraInput : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("[DroneCameraInput] Duplicate instance detected. Only one instance is allowed in the scene.");
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
-        input = new Input();
+        input = InputModeController.Instance.Input;
 
         lookAction = input.DroneCamera.Look;
         enableMovementAction = input.DroneCamera.EnableMovement;
-        enableMovementAction.performed += _ => SetMovementEnabled(true);
-        enableMovementAction.canceled += _ => SetMovementEnabled(false);
     }
 
     private void OnEnable()
     {
-        PauseManager.PauseStateChanged += OnPauseChanged;
-
-        if (!PauseManager.IsPaused)
-        {
-            input.Enable();
-        }
+        enableMovementAction.performed += OnMovementStarted;
+        enableMovementAction.canceled += OnMovementCanceled;
     }
 
     private void OnDisable()
     {
-        PauseManager.PauseStateChanged -= OnPauseChanged;
-        input.Disable();
+        enableMovementAction.performed -= OnMovementStarted;
+        enableMovementAction.canceled -= OnMovementCanceled;
     }
 
-    private void OnPauseChanged(bool paused)
+    private void OnMovementStarted(InputAction.CallbackContext _)
     {
-        if (paused)
-        {
-            input.Disable();
-            SetMovementEnabled(false);
-        }
-        else
-        {
-            input.Enable();
-        }
+        SetMovementEnabled(true);
+    }
+
+    private void OnMovementCanceled(InputAction.CallbackContext _)
+    {
+        SetMovementEnabled(false);
     }
 
     private void SetMovementEnabled(bool enabled)

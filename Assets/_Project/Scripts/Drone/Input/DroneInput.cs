@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DroneInput : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class DroneInput : MonoBehaviour
 
     void Awake()
     {
-        input = new Input();
+        input = InputModeController.Instance.Input;
 
         droneControlAuthority = GetComponent<DroneControlAuthority>();
         if (droneControlAuthority == null)
@@ -32,17 +33,24 @@ public class DroneInput : MonoBehaviour
 
     private void OnEnable()
     {
-        input.Enable();
-        input.DroneControl.DebugUI.performed += _ => debugUI.ToggleVisibility();
-        input.DroneControl.SwitchCamera.performed += _ => cameraSwitcher.NextCamera();
+        input.DroneControl.DebugUI.performed += OnDebugUI;
+        input.DroneControl.SwitchCamera.performed += OnSwitchCamera;
     }
 
     private void OnDisable()
     {
-        input.DroneControl.DebugUI.performed -= _ => debugUI.ToggleVisibility();
-        input.DroneControl.SwitchCamera.performed -= _ => cameraSwitcher.NextCamera();
+        input.DroneControl.DebugUI.performed -= OnDebugUI;
+        input.DroneControl.SwitchCamera.performed -= OnSwitchCamera;
+    }
 
-        input.Disable();
+    private void OnDebugUI(InputAction.CallbackContext _)
+    {
+        debugUI.ToggleVisibility();
+    }
+
+    private void OnSwitchCamera(InputAction.CallbackContext _)
+    {
+        cameraSwitcher.NextCamera();
     }
 
     void Update()

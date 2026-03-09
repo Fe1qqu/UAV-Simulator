@@ -1720,7 +1720,7 @@ GameObject:
   - component: {fileID: 448596097}
   - component: {fileID: 448596098}
   m_Layer: 0
-  m_Name: EditorSessionDebugUI
+  m_Name: LevelEditorSessionDebugUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1910,7 +1910,6 @@ Transform:
   m_Children:
   - {fileID: 1546385268}
   - {fileID: 352228356}
-  - {fileID: 536828112}
   - {fileID: 1709345288}
   - {fileID: 1916523440}
   - {fileID: 423472487}
@@ -2073,51 +2072,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2809944382108909174, guid: 08b576e8bcb23c74088dc4d5f52d0515, type: 3}
   m_PrefabInstance: {fileID: 474499538}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &536828111
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 536828112}
-  - component: {fileID: 536828113}
-  m_Layer: 0
-  m_Name: BackDispatcher
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &536828112
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536828111}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 465102117}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &536828113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536828111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adda1664dac26a943b5f859c4e7fa9d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackDispatcher
-  enableDebugLogging: 0
 --- !u!1 &552144913
 GameObject:
   m_ObjectHideFlags: 0
@@ -8160,8 +8114,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuContext
   levelFileManager: {fileID: 652211447}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  scenariosDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
 --- !u!1 &1726979489
 GameObject:
   m_ObjectHideFlags: 0

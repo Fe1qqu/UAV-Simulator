@@ -3,8 +3,8 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Transform levelRoot;
-    [SerializeField] private LocationDatabase locationDatabase;
-    [SerializeField] private PlaceableObjectDatabase placeableObjectDatabase;
+    [SerializeField] private LocationsDatabase locationsDatabase;
+    [SerializeField] private PlaceableObjectsDatabase placeableObjectsDatabase;
 
     private void Awake()
     {
@@ -13,14 +13,14 @@ public class LevelLoader : MonoBehaviour
             Debug.LogError("[LevelLoader] LevelRoot is not assigned.");
         }
 
-        if (locationDatabase == null)
+        if (locationsDatabase == null)
         {
-            Debug.LogError("[LevelLoader] LocationDatabase is not assigned.");
+            Debug.LogError("[LevelLoader] LocationsDatabase is not assigned.");
         }
 
-        if (placeableObjectDatabase == null)
+        if (placeableObjectsDatabase == null)
         {
-            Debug.LogError("[LevelLoader] PlaceableObjectDatabase is not assigned.");
+            Debug.LogError("[LevelLoader] PlaceableObjectsDatabase is not assigned.");
         }
     }
 
@@ -47,17 +47,17 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLocation(string locationId)
     {
-        LocationDefinition location = locationDatabase.locations.Find(location => location.locationId == locationId);
+        LocationDefinition location = locationsDatabase.locations.Find(location => location.locationId == locationId);
 
         if (location == null)
         {
-            if (locationDatabase.locations == null || locationDatabase.locations.Count == 0)
+            if (locationsDatabase.locations == null || locationsDatabase.locations.Count == 0)
             {
-                Debug.LogError("[LevelLoader] LocationDatabase is empty.");
+                Debug.LogError("[LevelLoader] LocationsDatabase is empty.");
                 return;
             }
 
-            location = locationDatabase.locations[0];
+            location = locationsDatabase.locations[0];
 
             Debug.LogWarning($"[LevelLoader] Location '{locationId}' not found. Falling back to default location '{location.locationId}'.");
         }
@@ -69,7 +69,7 @@ public class LevelLoader : MonoBehaviour
     {
         foreach (LevelObjectData levelObjectData in levelData.objects)
         {
-            PlaceableObjectDefinition placeableObject = placeableObjectDatabase.GetById(levelObjectData.objectId);
+            PlaceableObjectDefinition placeableObject = placeableObjectsDatabase.GetById(levelObjectData.objectId);
             if (placeableObject == null)
             {
                 Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");

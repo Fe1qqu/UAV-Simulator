@@ -1,11 +1,19 @@
 using UnityEngine;
 
+public enum PauseCloseMode
+{
+    ResumeGameplay,
+    SceneExit
+}
+
 public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
 {
     [SerializeField] protected GameObject pauseMenuRoot;
 
     protected bool isOpen;
-    public bool IsOpen => isOpen; 
+    public bool IsOpen => isOpen;
+
+    private InputMode previousInputMode;
 
     protected virtual void Awake()
     {
@@ -26,16 +34,21 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
         }
 
         isOpen = true;
-        pauseMenuRoot.SetActive(true);
+
+        previousInputMode = InputModeController.Instance.CurrentMode;
 
         PauseManager.SetPaused(true);
 
+        InputModeController.Instance.SetMode(InputMode.UI);
+
         BackDispatcher.RegisterHandler(this);
+
+        pauseMenuRoot.SetActive(true);
 
         OnOpened();
     }
 
-    public virtual void Close()
+    public virtual void Close(PauseCloseMode mode = PauseCloseMode.ResumeGameplay)
     {
         if (!isOpen)
         {
@@ -43,22 +56,23 @@ public abstract class PauseMenuBase : MonoBehaviour, IBackHandler
         }
 
         isOpen = false;
-        pauseMenuRoot.SetActive(false);
 
         PauseManager.SetPaused(false);
 
         BackDispatcher.UnregisterHandler(this);
+
+        if (mode == PauseCloseMode.ResumeGameplay)
+        {
+            pauseMenuRoot.SetActive(false);
+
+            InputModeController.Instance.SetMode(previousInputMode);
+        }
 
         OnClosed();
     }
 
     public bool OnBack()
     {
-        if (!isOpen)
-        {
-            return false;
-        }
-
         Close();
         return true;
     }

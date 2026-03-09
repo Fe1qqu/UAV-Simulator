@@ -12,7 +12,7 @@ public class Step_ScenarioSelect : LevelCreationWizardStepBase
             scenarioSelection = GetComponent<ScenarioSelection>();
         }
 
-        scenarioSelection.SetDatabase(MainMenuContext.ScenarioDatabase);
+        scenarioSelection.SetDatabase(MainMenuContext.ScenariosDatabase);
     }
 
     public override void OnStepShown()
@@ -29,7 +29,7 @@ public class Step_ScenarioSelect : LevelCreationWizardStepBase
             return false;
         }
 
-        GameSettings.Instance.CurrentEditorSession.SelectedScenarioId = scenario.scenarioId;
+        GameSettings.Instance.CurrentLevelEditorSession.SelectedScenarioId = scenario.scenarioId;
         return true;
     }
 }

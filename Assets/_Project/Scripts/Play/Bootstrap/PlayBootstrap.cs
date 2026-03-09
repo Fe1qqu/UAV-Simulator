@@ -4,10 +4,12 @@ public class PlayBootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        GameModeContext.Current = GameMode.Play;
+        GameModeManager.SetMode(GameMode.Play);
 
-        QualitySettings.SetQualityLevel(1, false);
-        GameSettings.Instance.ApplyCurrentGraphicsSettings();
+        GameStateManager.SetState(GameState.Gameplay);
+
+        InputModeController.Instance.SetMode(InputMode.Play);
+
         //Debug.Log("[GameMode] Play.");
     }
 }

@@ -523,7 +523,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Editor"",
+            ""name"": ""LevelEditor"",
             ""id"": ""0560722f-3fd3-400f-9ae8-0e71d49cb6af"",
             ""actions"": [
                 {
@@ -551,7 +551,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""EditorCamera"",
+            ""name"": ""LevelEditorCamera"",
             ""id"": ""fab95a40-713e-4753-9b86-da0369cb9feb"",
             ""actions"": [
                 {
@@ -723,15 +723,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_DroneCamera = asset.FindActionMap("DroneCamera", throwIfNotFound: true);
         m_DroneCamera_Look = m_DroneCamera.FindAction("Look", throwIfNotFound: true);
         m_DroneCamera_EnableMovement = m_DroneCamera.FindAction("EnableMovement", throwIfNotFound: true);
-        // Editor
-        m_Editor = asset.FindActionMap("Editor", throwIfNotFound: true);
-        m_Editor_Delete = m_Editor.FindAction("Delete", throwIfNotFound: true);
-        // EditorCamera
-        m_EditorCamera = asset.FindActionMap("EditorCamera", throwIfNotFound: true);
-        m_EditorCamera_Look = m_EditorCamera.FindAction("Look", throwIfNotFound: true);
-        m_EditorCamera_Move = m_EditorCamera.FindAction("Move", throwIfNotFound: true);
-        m_EditorCamera_UpDown = m_EditorCamera.FindAction("UpDown", throwIfNotFound: true);
-        m_EditorCamera_EnableMovement = m_EditorCamera.FindAction("EnableMovement", throwIfNotFound: true);
+        // LevelEditor
+        m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
+        m_LevelEditor_Delete = m_LevelEditor.FindAction("Delete", throwIfNotFound: true);
+        // LevelEditorCamera
+        m_LevelEditorCamera = asset.FindActionMap("LevelEditorCamera", throwIfNotFound: true);
+        m_LevelEditorCamera_Look = m_LevelEditorCamera.FindAction("Look", throwIfNotFound: true);
+        m_LevelEditorCamera_Move = m_LevelEditorCamera.FindAction("Move", throwIfNotFound: true);
+        m_LevelEditorCamera_UpDown = m_LevelEditorCamera.FindAction("UpDown", throwIfNotFound: true);
+        m_LevelEditorCamera_EnableMovement = m_LevelEditorCamera.FindAction("EnableMovement", throwIfNotFound: true);
     }
 
     ~@Input()
@@ -740,8 +740,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Play.enabled, "This will cause a leak and performance issues, Input.Play.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_DroneControl.enabled, "This will cause a leak and performance issues, Input.DroneControl.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_DroneCamera.enabled, "This will cause a leak and performance issues, Input.DroneCamera.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Editor.enabled, "This will cause a leak and performance issues, Input.Editor.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_EditorCamera.enabled, "This will cause a leak and performance issues, Input.EditorCamera.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_LevelEditor.enabled, "This will cause a leak and performance issues, Input.LevelEditor.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_LevelEditorCamera.enabled, "This will cause a leak and performance issues, Input.LevelEditorCamera.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1242,29 +1242,29 @@ public partial class @Input: IInputActionCollection2, IDisposable
     /// </summary>
     public DroneCameraActions @DroneCamera => new DroneCameraActions(this);
 
-    // Editor
-    private readonly InputActionMap m_Editor;
-    private List<IEditorActions> m_EditorActionsCallbackInterfaces = new List<IEditorActions>();
-    private readonly InputAction m_Editor_Delete;
+    // LevelEditor
+    private readonly InputActionMap m_LevelEditor;
+    private List<ILevelEditorActions> m_LevelEditorActionsCallbackInterfaces = new List<ILevelEditorActions>();
+    private readonly InputAction m_LevelEditor_Delete;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Editor".
+    /// Provides access to input actions defined in input action map "LevelEditor".
     /// </summary>
-    public struct EditorActions
+    public struct LevelEditorActions
     {
         private @Input m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public EditorActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public LevelEditorActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Editor/Delete".
+        /// Provides access to the underlying input action "LevelEditor/Delete".
         /// </summary>
-        public InputAction @Delete => m_Wrapper.m_Editor_Delete;
+        public InputAction @Delete => m_Wrapper.m_LevelEditor_Delete;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Editor; }
+        public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1272,9 +1272,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="EditorActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="LevelEditorActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(EditorActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(LevelEditorActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1282,11 +1282,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="EditorActions" />
-        public void AddCallbacks(IEditorActions instance)
+        /// <seealso cref="LevelEditorActions" />
+        public void AddCallbacks(ILevelEditorActions instance)
         {
-            if (instance == null || m_Wrapper.m_EditorActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_EditorActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_LevelEditorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_LevelEditorActionsCallbackInterfaces.Add(instance);
             @Delete.started += instance.OnDelete;
             @Delete.performed += instance.OnDelete;
             @Delete.canceled += instance.OnDelete;
@@ -1298,8 +1298,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="EditorActions" />
-        private void UnregisterCallbacks(IEditorActions instance)
+        /// <seealso cref="LevelEditorActions" />
+        private void UnregisterCallbacks(ILevelEditorActions instance)
         {
             @Delete.started -= instance.OnDelete;
             @Delete.performed -= instance.OnDelete;
@@ -1307,12 +1307,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="EditorActions.UnregisterCallbacks(IEditorActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="LevelEditorActions.UnregisterCallbacks(ILevelEditorActions)" />.
         /// </summary>
-        /// <seealso cref="EditorActions.UnregisterCallbacks(IEditorActions)" />
-        public void RemoveCallbacks(IEditorActions instance)
+        /// <seealso cref="LevelEditorActions.UnregisterCallbacks(ILevelEditorActions)" />
+        public void RemoveCallbacks(ILevelEditorActions instance)
         {
-            if (m_Wrapper.m_EditorActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_LevelEditorActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1322,60 +1322,60 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="EditorActions.AddCallbacks(IEditorActions)" />
-        /// <seealso cref="EditorActions.RemoveCallbacks(IEditorActions)" />
-        /// <seealso cref="EditorActions.UnregisterCallbacks(IEditorActions)" />
-        public void SetCallbacks(IEditorActions instance)
+        /// <seealso cref="LevelEditorActions.AddCallbacks(ILevelEditorActions)" />
+        /// <seealso cref="LevelEditorActions.RemoveCallbacks(ILevelEditorActions)" />
+        /// <seealso cref="LevelEditorActions.UnregisterCallbacks(ILevelEditorActions)" />
+        public void SetCallbacks(ILevelEditorActions instance)
         {
-            foreach (var item in m_Wrapper.m_EditorActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_LevelEditorActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_EditorActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_LevelEditorActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="EditorActions" /> instance referencing this action map.
+    /// Provides a new <see cref="LevelEditorActions" /> instance referencing this action map.
     /// </summary>
-    public EditorActions @Editor => new EditorActions(this);
+    public LevelEditorActions @LevelEditor => new LevelEditorActions(this);
 
-    // EditorCamera
-    private readonly InputActionMap m_EditorCamera;
-    private List<IEditorCameraActions> m_EditorCameraActionsCallbackInterfaces = new List<IEditorCameraActions>();
-    private readonly InputAction m_EditorCamera_Look;
-    private readonly InputAction m_EditorCamera_Move;
-    private readonly InputAction m_EditorCamera_UpDown;
-    private readonly InputAction m_EditorCamera_EnableMovement;
+    // LevelEditorCamera
+    private readonly InputActionMap m_LevelEditorCamera;
+    private List<ILevelEditorCameraActions> m_LevelEditorCameraActionsCallbackInterfaces = new List<ILevelEditorCameraActions>();
+    private readonly InputAction m_LevelEditorCamera_Look;
+    private readonly InputAction m_LevelEditorCamera_Move;
+    private readonly InputAction m_LevelEditorCamera_UpDown;
+    private readonly InputAction m_LevelEditorCamera_EnableMovement;
     /// <summary>
-    /// Provides access to input actions defined in input action map "EditorCamera".
+    /// Provides access to input actions defined in input action map "LevelEditorCamera".
     /// </summary>
-    public struct EditorCameraActions
+    public struct LevelEditorCameraActions
     {
         private @Input m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public EditorCameraActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public LevelEditorCameraActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "EditorCamera/Look".
+        /// Provides access to the underlying input action "LevelEditorCamera/Look".
         /// </summary>
-        public InputAction @Look => m_Wrapper.m_EditorCamera_Look;
+        public InputAction @Look => m_Wrapper.m_LevelEditorCamera_Look;
         /// <summary>
-        /// Provides access to the underlying input action "EditorCamera/Move".
+        /// Provides access to the underlying input action "LevelEditorCamera/Move".
         /// </summary>
-        public InputAction @Move => m_Wrapper.m_EditorCamera_Move;
+        public InputAction @Move => m_Wrapper.m_LevelEditorCamera_Move;
         /// <summary>
-        /// Provides access to the underlying input action "EditorCamera/UpDown".
+        /// Provides access to the underlying input action "LevelEditorCamera/UpDown".
         /// </summary>
-        public InputAction @UpDown => m_Wrapper.m_EditorCamera_UpDown;
+        public InputAction @UpDown => m_Wrapper.m_LevelEditorCamera_UpDown;
         /// <summary>
-        /// Provides access to the underlying input action "EditorCamera/EnableMovement".
+        /// Provides access to the underlying input action "LevelEditorCamera/EnableMovement".
         /// </summary>
-        public InputAction @EnableMovement => m_Wrapper.m_EditorCamera_EnableMovement;
+        public InputAction @EnableMovement => m_Wrapper.m_LevelEditorCamera_EnableMovement;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_EditorCamera; }
+        public InputActionMap Get() { return m_Wrapper.m_LevelEditorCamera; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1383,9 +1383,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="EditorCameraActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="LevelEditorCameraActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(EditorCameraActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(LevelEditorCameraActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1393,11 +1393,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="EditorCameraActions" />
-        public void AddCallbacks(IEditorCameraActions instance)
+        /// <seealso cref="LevelEditorCameraActions" />
+        public void AddCallbacks(ILevelEditorCameraActions instance)
         {
-            if (instance == null || m_Wrapper.m_EditorCameraActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_EditorCameraActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_LevelEditorCameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_LevelEditorCameraActionsCallbackInterfaces.Add(instance);
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -1418,8 +1418,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="EditorCameraActions" />
-        private void UnregisterCallbacks(IEditorCameraActions instance)
+        /// <seealso cref="LevelEditorCameraActions" />
+        private void UnregisterCallbacks(ILevelEditorCameraActions instance)
         {
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
@@ -1436,12 +1436,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="EditorCameraActions.UnregisterCallbacks(IEditorCameraActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="LevelEditorCameraActions.UnregisterCallbacks(ILevelEditorCameraActions)" />.
         /// </summary>
-        /// <seealso cref="EditorCameraActions.UnregisterCallbacks(IEditorCameraActions)" />
-        public void RemoveCallbacks(IEditorCameraActions instance)
+        /// <seealso cref="LevelEditorCameraActions.UnregisterCallbacks(ILevelEditorCameraActions)" />
+        public void RemoveCallbacks(ILevelEditorCameraActions instance)
         {
-            if (m_Wrapper.m_EditorCameraActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_LevelEditorCameraActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1451,21 +1451,21 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="EditorCameraActions.AddCallbacks(IEditorCameraActions)" />
-        /// <seealso cref="EditorCameraActions.RemoveCallbacks(IEditorCameraActions)" />
-        /// <seealso cref="EditorCameraActions.UnregisterCallbacks(IEditorCameraActions)" />
-        public void SetCallbacks(IEditorCameraActions instance)
+        /// <seealso cref="LevelEditorCameraActions.AddCallbacks(ILevelEditorCameraActions)" />
+        /// <seealso cref="LevelEditorCameraActions.RemoveCallbacks(ILevelEditorCameraActions)" />
+        /// <seealso cref="LevelEditorCameraActions.UnregisterCallbacks(ILevelEditorCameraActions)" />
+        public void SetCallbacks(ILevelEditorCameraActions instance)
         {
-            foreach (var item in m_Wrapper.m_EditorCameraActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_LevelEditorCameraActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_EditorCameraActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_LevelEditorCameraActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="EditorCameraActions" /> instance referencing this action map.
+    /// Provides a new <see cref="LevelEditorCameraActions" /> instance referencing this action map.
     /// </summary>
-    public EditorCameraActions @EditorCamera => new EditorCameraActions(this);
+    public LevelEditorCameraActions @LevelEditorCamera => new LevelEditorCameraActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
     /// </summary>
@@ -1555,11 +1555,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         void OnEnableMovement(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Editor" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "LevelEditor" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="EditorActions.AddCallbacks(IEditorActions)" />
-    /// <seealso cref="EditorActions.RemoveCallbacks(IEditorActions)" />
-    public interface IEditorActions
+    /// <seealso cref="LevelEditorActions.AddCallbacks(ILevelEditorActions)" />
+    /// <seealso cref="LevelEditorActions.RemoveCallbacks(ILevelEditorActions)" />
+    public interface ILevelEditorActions
     {
         /// <summary>
         /// Method invoked when associated input action "Delete" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -1570,11 +1570,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         void OnDelete(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "EditorCamera" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "LevelEditorCamera" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="EditorCameraActions.AddCallbacks(IEditorCameraActions)" />
-    /// <seealso cref="EditorCameraActions.RemoveCallbacks(IEditorCameraActions)" />
-    public interface IEditorCameraActions
+    /// <seealso cref="LevelEditorCameraActions.AddCallbacks(ILevelEditorCameraActions)" />
+    /// <seealso cref="LevelEditorCameraActions.RemoveCallbacks(ILevelEditorCameraActions)" />
+    public interface ILevelEditorCameraActions
     {
         /// <summary>
         /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.

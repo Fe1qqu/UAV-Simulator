@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UavSim.Core.Protocol.Drone;
+using UavSim.Drone.Protocol;
 
 public class DroneTcpServer : MonoBehaviour
 {

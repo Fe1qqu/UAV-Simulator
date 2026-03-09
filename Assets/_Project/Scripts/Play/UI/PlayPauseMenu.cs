@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PlayPauseMenu : PauseMenuBase
 {
@@ -57,14 +56,13 @@ public class PlayPauseMenu : PauseMenuBase
 
     public void OnRestartClicked()
     {
-        PauseManager.SetPaused(false);
-        playManager.RestartLevel();
         Close();
+        playManager.RestartLevel();
     }
 
     public void OnExitClicked()
     {
-        PauseManager.SetPaused(false);
-        SceneManager.LoadScene("MainMenu");
+        Close(PauseCloseMode.SceneExit);
+        SceneLoader.LoadMainMenu();
     }
 }

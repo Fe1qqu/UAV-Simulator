@@ -2097,51 +2097,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 268848616}
   m_CullTransparentMesh: 1
---- !u!1 &271739612
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 271739613}
-  - component: {fileID: 271739614}
-  m_Layer: 0
-  m_Name: BackDispatcher
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &271739613
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271739612}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 905371459}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &271739614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271739612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adda1664dac26a943b5f859c4e7fa9d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackDispatcher
-  enableDebugLogging: 0
 --- !u!1 &280731668
 GameObject:
   m_ObjectHideFlags: 0
@@ -3049,8 +3004,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
   levelRoot: {fileID: 1078942368}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  placeableObjectsDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
 --- !u!1 &366945400
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,7 +3798,7 @@ GameObject:
   - component: {fileID: 480836486}
   - component: {fileID: 480836487}
   m_Layer: 0
-  m_Name: EditorLevelDataBuilder
+  m_Name: LevelEditorLevelDataBuilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4457,7 +4412,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820032608}
   m_HandleRect: {fileID: 1820032607}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8627,7 +8582,7 @@ GameObject:
   - component: {fileID: 614972946}
   - component: {fileID: 614972949}
   m_Layer: 0
-  m_Name: EditorManager
+  m_Name: LevelEditorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8648,16 +8603,16 @@ MonoBehaviour:
   levelFileManager: {fileID: 511035851}
   levelLoader: {fileID: 362455427}
   loadingScreen: {fileID: 876399158}
-  pauseMenu: {fileID: 702272468}
+  levelEditorPauseMenu: {fileID: 702272468}
   categoryListContainer: {fileID: 1070251984}
   objectListContainer: {fileID: 1865750589}
   currentCategoryLocalizeEvent: {fileID: 1872083171}
   categoryButtonPrefab: {fileID: 1833584260}
   placeableObjectButtonPrefab: {fileID: 74227642}
-  locationDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
-  placeableObjectDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
-  categoryDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
-  scenarioDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
+  locationsDatabase: {fileID: 11400000, guid: df0d553c2c3a6f04687e60d2b5c8fb3e, type: 2}
+  placeableObjectsDatabase: {fileID: 11400000, guid: 1d8001a527c792a439972914771a77e9, type: 2}
+  categoriesDatabase: {fileID: 11400000, guid: afd9fbff88f223f4e92aa492efcc11ef, type: 2}
+  scenariosDatabase: {fileID: 11400000, guid: af297218caafc6a48b920f0df6e117c8, type: 2}
   levelRoot: {fileID: 1078942368}
   localizationPreloader: {fileID: 1632345560}
 --- !u!4 &614972947
@@ -9128,7 +9083,7 @@ MonoBehaviour:
   scrollRect: {fileID: 1349913557}
   itemPrefab: {fileID: 2128374757}
   levelObjectRegistry: {fileID: 627597777}
-  editorDeleteController: {fileID: 2027232544}
+  levelEditorDeleteController: {fileID: 2027232544}
   selectionManager: {fileID: 1179576270}
 --- !u!1 &659072429
 GameObject:
@@ -10103,7 +10058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorPauseMenu
   pauseMenuRoot: {fileID: 352434003}
-  editorManager: {fileID: 614972946}
+  levelEditorManager: {fileID: 614972946}
   levelDataBuilder: {fileID: 480836487}
   continueButton: {fileID: 362032311}
   saveButton: {fileID: 1682855472}
@@ -10430,7 +10385,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 715833496}
   m_HandleRect: {fileID: 715833495}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11874,7 +11829,6 @@ Transform:
   m_Children:
   - {fileID: 2042731140}
   - {fileID: 863683307}
-  - {fileID: 271739613}
   - {fileID: 1962120559}
   - {fileID: 1632345559}
   - {fileID: 614972947}
@@ -15281,7 +15235,7 @@ GameObject:
   - component: {fileID: 1482045264}
   - component: {fileID: 1482045265}
   m_Layer: 0
-  m_Name: EditorSessionDebugUI
+  m_Name: LevelEditorSessionDebugUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16075,8 +16029,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1994954575}
   m_HandleRect: {fileID: 1994954574}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19684,7 +19638,7 @@ GameObject:
   - component: {fileID: 2027232543}
   - component: {fileID: 2027232544}
   m_Layer: 0
-  m_Name: EditorDeleteController
+  m_Name: LevelEditorDeleteController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19717,7 +19671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6178ebb65f3b72a418bd35aba90a72f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorDeleteController
-  editorInput: {fileID: 1640637207}
+  levelEditorInput: {fileID: 1640637207}
   selectionManager: {fileID: 1179576270}
 --- !u!1 &2030815114
 GameObject:

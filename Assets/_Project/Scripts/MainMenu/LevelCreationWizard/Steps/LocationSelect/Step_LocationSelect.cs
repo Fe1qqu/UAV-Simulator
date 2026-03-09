@@ -12,7 +12,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
             locationSelection = GetComponent<LocationSelection>();
         }
 
-        locationSelection.SetDatabase(MainMenuContext.LocationDatabase);
+        locationSelection.SetDatabase(MainMenuContext.LocationsDatabase);
     }
 
     public override void OnStepShown()
@@ -34,7 +34,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
             return false;
         }
 
-        GameSettings.Instance.CurrentEditorSession.SelectedLocationId = location.locationId;
+        GameSettings.Instance.CurrentLevelEditorSession.SelectedLocationId = location.locationId;
         return true;
     }
 }

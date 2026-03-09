@@ -1,13 +1,13 @@
 ﻿/*
 NOTE:
-LevelObjects in editor are SOFT-DELETED, not destroyed.
+LevelObjects in level editor are SOFT-DELETED, not destroyed.
 
 - SoftDelete → LifecycleState.SoftDeleted + SetActive(false)
 - Restore   → LifecycleState.Alive + SetActive(true)
 - HardDelete happens ONLY on scene unload or cleanup
 
 Because of this:
-- Unregister is NOT called on editor delete
+- Unregister is NOT called on level editor delete
 - ObjectHierarchyList MUST react to LifecycleChanged
 - LevelRuntimeRegistry always contains ALL objects (including deleted ones)
 */
@@ -23,7 +23,7 @@ public class ObjectHierarchyList : MonoBehaviour
     [SerializeField] private GameObject itemPrefab;
 
     [SerializeField] private LevelObjectRegistry levelObjectRegistry;
-    [SerializeField] private EditorDeleteController editorDeleteController;
+    [SerializeField] private LevelEditorDeleteController levelEditorDeleteController;
     [SerializeField] private SelectionManager selectionManager;
 
     // UI items
@@ -55,9 +55,9 @@ public class ObjectHierarchyList : MonoBehaviour
             Debug.LogError("[ObjectHierarchyList] LevelObjectRegistry is not assigned.");
         }
 
-        if (editorDeleteController == null)
+        if (levelEditorDeleteController == null)
         {
-            Debug.LogError("[ObjectHierarchyList] EditorDeleteController is not assigned.");
+            Debug.LogError("[ObjectHierarchyList] LevelEditorDeleteController is not assigned.");
         }
 
         if (selectionManager == null)
@@ -190,7 +190,7 @@ public class ObjectHierarchyList : MonoBehaviour
 
     private void OnDeleteRequested(LevelObject levelObject)
     {
-        editorDeleteController.DeleteObject(levelObject);
+        levelEditorDeleteController.DeleteObject(levelObject);
     }
 
     private void OnSelectRequested(LevelObject levelObject)

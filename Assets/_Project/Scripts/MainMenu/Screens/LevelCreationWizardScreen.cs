@@ -14,9 +14,9 @@ public class LevelCreationWizardScreen : MainMenuScreenBase
 
     protected override void OnShowInternal()
     {
-        GameSettings.Instance.ClearEditorSession();
+        GameSettings.Instance.ClearLevelEditorSession();
 
-        levelCreationWizard.OnExit = ExitToEditorMenu;
+        levelCreationWizard.OnExit = ExitToLevelEditorMenu;
         levelCreationWizard.OnExitToMainMenu = ExitToMainMenu;
 
         _ = levelCreationWizard.StartWizardAsync();
@@ -30,7 +30,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase
         levelCreationWizard.OnExitToMainMenu = null;
     }
 
-    private void ExitToEditorMenu()
+    private void ExitToLevelEditorMenu()
     {
         stateMachine.Show<LevelEditorMenuScreen>();
     }
@@ -47,7 +47,7 @@ public class LevelCreationWizardScreen : MainMenuScreenBase
             return true;
         }
 
-        ExitToEditorMenu();
+        ExitToLevelEditorMenu();
         return true;
     }
 }
