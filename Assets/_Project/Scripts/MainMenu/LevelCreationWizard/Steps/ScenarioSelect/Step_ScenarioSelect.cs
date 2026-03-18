@@ -29,7 +29,7 @@ public class Step_ScenarioSelect : LevelCreationWizardStepBase
             return false;
         }
 
-        GameSettings.Instance.CurrentLevelEditorSession.SelectedScenarioId = scenario.scenarioId;
+        LevelCreationWizard.Data.ScenarioId = scenario.scenarioId;
         return true;
     }
 }

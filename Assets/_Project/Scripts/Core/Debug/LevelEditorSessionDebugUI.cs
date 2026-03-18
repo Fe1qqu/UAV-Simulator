@@ -19,18 +19,18 @@ public class LevelEditorSessionDebugUI : MonoBehaviour
     {
         GUILayout.BeginVertical();
 
-        if (GameSettings.Instance == null || GameSettings.Instance.CurrentLevelEditorSession == null)
+        if (GameSession.Instance == null || GameSession.Instance.LevelEditor == null)
         {
             GUILayout.Label("LevelEditorSession is null.");
         }
         else
         {
-            LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
+            LevelEditorSession levelEditorSession = GameSession.Instance.LevelEditor;
 
             GUILayout.Label($"LevelName: {levelEditorSession.LevelName ?? "null"}");
-            GUILayout.Label($"SelectedLocationId: {levelEditorSession.SelectedLocationId ?? "null"}");
-            GUILayout.Label($"SelectedScenarioId: {levelEditorSession.SelectedScenarioId ?? "null"}");
-            GUILayout.Label($"SelectedLevelFilePath: {levelEditorSession.SelectedLevelFilePath ?? "null"}");
+            GUILayout.Label($"LocationId: {levelEditorSession.LocationId ?? "null"}");
+            GUILayout.Label($"ScenarioId: {levelEditorSession.ScenarioId ?? "null"}");
+            GUILayout.Label($"LevelFilePath: {levelEditorSession.LevelFilePath ?? "null"}");
         }
 
         GUILayout.Space(5);

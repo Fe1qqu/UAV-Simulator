@@ -76,8 +76,8 @@ public class LevelLoader : MonoBehaviour
                 continue;
             }
 
-            GameObject instance = Instantiate(placeableObject.prefab, levelRoot);
-            LevelObject levelObject = instance.GetComponent<LevelObject>();
+            GameObject placeableObjectInstance = Instantiate(placeableObject.prefab, levelRoot);
+            LevelObject levelObject = placeableObjectInstance.GetComponent<LevelObject>();
 
             levelObject.Initialize(placeableObject);
             levelObject.FromData(levelObjectData);

@@ -1,6 +1,7 @@
 using UnityEngine;
+using System.Threading.Tasks;
 
-public class PlayManager : MonoBehaviour, IBackHandler
+public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 {
     [Header("Core")]
     [SerializeField] private PlayInput playInput;
@@ -14,6 +15,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
 
     [Header("Runtime")]
     [SerializeField] private DroneControllerBase dronePrefab;
+    [SerializeField] private Transform droneRoot;
 
     private DroneControllerBase spawnedDrone;
     private IScenarioRuntime scenarioRuntime;
@@ -55,6 +57,11 @@ public class PlayManager : MonoBehaviour, IBackHandler
         {
             Debug.LogError("[PlayManager] DronePrefab is not assigned.");
         }
+        
+        if (droneRoot == null)
+        {
+            Debug.LogError("[PlayManager] DroneRoot is not assigned.");
+        }
     }
 
     private void OnEnable()
@@ -67,11 +74,18 @@ public class PlayManager : MonoBehaviour, IBackHandler
         playInput.RestartRequested -= OnRestartRequested;
     }
 
-    private void Start()
+    public async Task InitializeAsync()
+    {
+        await InitializePlayAsync();
+    }
+
+    private async Task InitializePlayAsync()
     {
         LoadLevel();
         SpawnDrone();
         StartScenario();
+
+        await Task.CompletedTask;
     }
 
     private void Update()
@@ -86,7 +100,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
 
     private void LoadLevel()
     {
-        PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
+        PlaySession playSession = GameSession.Instance.Play;
 
         loadedLevelData = levelFileManager.LoadByPath(playSession.LevelFilePath);
         if (loadedLevelData == null)
@@ -107,7 +121,7 @@ public class PlayManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        spawnedDrone = Instantiate(dronePrefab, droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation);
+        spawnedDrone = Instantiate(dronePrefab, droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation, droneRoot);
     }
 
     private void StartScenario()

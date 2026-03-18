@@ -20,13 +20,13 @@ public class LevelEditorLevelDataBuilder : MonoBehaviour
 
     public LevelData CollectLevelData()
     {
-        LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
+        LevelEditorSession levelEditorSession = GameSession.Instance.LevelEditor;
 
         LevelData data = new()
         {
             levelName = levelEditorSession.LevelName,
-            locationId = levelEditorSession.SelectedLocationId,
-            scenarioId = levelEditorSession.SelectedScenarioId
+            locationId = levelEditorSession.LocationId,
+            scenarioId = levelEditorSession.ScenarioId
         };
 
         foreach (LevelObject levelObject in levelObjectRegistry.LevelObjects)

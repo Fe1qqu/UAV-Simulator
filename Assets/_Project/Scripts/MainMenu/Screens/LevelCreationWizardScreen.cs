@@ -14,8 +14,6 @@ public class LevelCreationWizardScreen : MainMenuScreenBase
 
     protected override void OnShowInternal()
     {
-        GameSettings.Instance.ClearLevelEditorSession();
-
         levelCreationWizard.OnExit = ExitToLevelEditorMenu;
         levelCreationWizard.OnExitToMainMenu = ExitToMainMenu;
 

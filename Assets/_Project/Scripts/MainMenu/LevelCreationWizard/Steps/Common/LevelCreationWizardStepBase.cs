@@ -6,13 +6,15 @@ using UnityEngine;
 public abstract class LevelCreationWizardStepBase : MonoBehaviour
 {
     protected MainMenuContext MainMenuContext { get; private set; }
+    protected LevelCreationWizard LevelCreationWizard { get; private set; }
 
     /// <summary>
     /// Called once by the wizard to inject dependencies.
     /// </summary>
-    public void Initialize(MainMenuContext mainMenuContext)
+    public void Initialize(MainMenuContext mainMenuContext, LevelCreationWizard levelCreationWizard)
     {
         MainMenuContext = mainMenuContext;
+        LevelCreationWizard = levelCreationWizard;
         OnInitialized();
     }
 

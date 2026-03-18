@@ -24,7 +24,6 @@ public class BackDispatcher : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public static void DispatchBack()

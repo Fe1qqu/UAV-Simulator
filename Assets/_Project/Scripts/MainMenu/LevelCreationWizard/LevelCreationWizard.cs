@@ -31,6 +31,8 @@ public class LevelCreationWizard : MonoBehaviour
     [Header("Context")]
     [SerializeField] private MainMenuContext mainMenuContext;
 
+    public LevelCreationWizardData Data { get; private set; } = new();
+
     private int currentStep = 0;
 
     private LocalizeStringEvent nextButtonLocalization;
@@ -91,7 +93,7 @@ public class LevelCreationWizard : MonoBehaviour
     {
         foreach (LevelCreationWizardStepBase step in steps)
         {
-            step.Initialize(mainMenuContext);
+            step.Initialize(mainMenuContext, this);
         }
 
         nextButton.onClick.AddListener(OnNextClicked);
@@ -132,6 +134,8 @@ public class LevelCreationWizard : MonoBehaviour
 
         wizardPanel.SetActive(false);
         localizationPreloader.Unload();
+
+        Data.Clear();
     }
 
     /// <summary>
@@ -212,9 +216,11 @@ public class LevelCreationWizard : MonoBehaviour
     /// <summary>
     /// Loads the LevelEditor scene to create the level.
     /// </summary>
-    private void CreateLevel()
+    private async void CreateLevel()
     {
+        GameSession.Instance.LevelEditor.Setup(Data.LevelName, Data.LocationId, Data.ScenarioId);
+
         localizationPreloader.Unload();
-        SceneLoader.LoadLevelEditor();
+        await SceneFlow.ToLevelEditor();
     }
 }

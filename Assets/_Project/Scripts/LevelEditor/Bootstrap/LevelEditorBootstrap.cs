@@ -8,8 +8,6 @@ public class LevelEditorBootstrap : MonoBehaviour
 
         GameStateManager.SetState(GameState.Gameplay);
 
-        InputModeController.Instance.SetMode(InputMode.LevelEditor);
-
         //Debug.Log("[GameMode] LevelEditor.");
     }
 }

@@ -60,9 +60,9 @@ public class PlayPauseMenu : PauseMenuBase
         playManager.RestartLevel();
     }
 
-    public void OnExitClicked()
+    public async void OnExitClicked()
     {
         Close(PauseCloseMode.SceneExit);
-        SceneLoader.LoadMainMenu();
+        await SceneFlow.ToMainMenu();
     }
 }

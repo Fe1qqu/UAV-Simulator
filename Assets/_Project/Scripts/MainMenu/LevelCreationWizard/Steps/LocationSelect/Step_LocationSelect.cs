@@ -22,7 +22,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
 
     /// <summary>
     /// Validates the step. Returns true if a location is selected.
-    /// Saves the selected location to <see cref="GameSettings"/> if valid.
+    /// Saves the selected location to <see cref="GameSession"/> if valid.
     /// </summary>
     /// <returns>True if a location is selected, false otherwise.</returns>
     public override bool ValidateStep()
@@ -34,7 +34,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
             return false;
         }
 
-        GameSettings.Instance.CurrentLevelEditorSession.SelectedLocationId = location.locationId;
+        LevelCreationWizard.Data.LocationId = location.locationId;
         return true;
     }
 }
