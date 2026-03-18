@@ -28,6 +28,8 @@ public class SceneController : MonoBehaviour
         {
             Debug.LogError("[SceneController] LoadingOverlay is not assigned.");
         }
+
+        loadingOverlay.gameObject.SetActive(false);
     }
 
     public async Task WaitUntilFree()
@@ -62,6 +64,7 @@ public class SceneController : MonoBehaviour
     {
         if (sceneTransitionPlan.UseOverlay)
         {
+            loadingOverlay.gameObject.SetActive(true);
             await loadingOverlay.FadeInAsync();
         }
 
@@ -88,6 +91,7 @@ public class SceneController : MonoBehaviour
         if (sceneTransitionPlan.UseOverlay)
         {
             await loadingOverlay.FadeOutAsync();
+            loadingOverlay.gameObject.SetActive(false);
         }
 
         if (sceneTransitionPlan.TargetInputMode.HasValue)
