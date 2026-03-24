@@ -11,7 +11,7 @@ public class SelectableObject : MonoBehaviour, ISelectable
 
     public void OnSelected()
     {
-        foreach (var visual in visuals)
+        foreach (ISelectionVisual visual in visuals)
         {
             visual.Show();
         }
@@ -19,7 +19,7 @@ public class SelectableObject : MonoBehaviour, ISelectable
 
     public void OnDeselected()
     {
-        foreach (var visual in visuals)
+        foreach (ISelectionVisual visual in visuals)
         {
             visual.Hide();
         }

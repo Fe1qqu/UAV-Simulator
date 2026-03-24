@@ -110,7 +110,7 @@ namespace RTG
 
         public GameObject[] GetSceneObjects()
         {
-            return GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            return GameObject.FindObjectsByType<GameObject>();
         }
 
         public bool OverlapBox(OBB obb, List<GameObject> gameObjects)

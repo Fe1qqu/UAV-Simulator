@@ -25,7 +25,7 @@ namespace RTG
                     lock (_singletonLock)
                     {
                         // Retrieve the instance from the scene.
-                        T[] singletonInstances = FindObjectsByType(typeof(T), FindObjectsSortMode.None) as T[];
+                        T[] singletonInstances = FindObjectsByType(typeof(T)) as T[];
 
                         // No instance? Return null.
                         if (singletonInstances.Length == 0) return null;
