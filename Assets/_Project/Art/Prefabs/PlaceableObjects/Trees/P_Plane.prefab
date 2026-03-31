@@ -71,6 +71,9 @@ PrefabInstance:
       addedObject: {fileID: 9034332191021832914}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8115948542104693442}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5666291062716643146}
   m_SourcePrefab: {fileID: 100100000, guid: 360d63ff187ba564781abb91ac9735f1, type: 3}
 --- !u!1 &1325102438002783170 stripped
@@ -112,29 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1903b00e9e95e2b46b6911d18d70a008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelObject
-  sourceData:
-    objectId: 
-    localizationKey:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    icon: {fileID: 0}
-    prefab: {fileID: 0}
-    type: 0
-    propertyDefinitions: []
-    previewMaterialMode: 0
-    previewMaterialOverride: {fileID: 0}
-    useTooltipSettingsOverride: 0
-    tooltipSettingsOverride: {fileID: 0}
+  sourcePlaceableObject: {fileID: 0}
   properties: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &9034332191021832914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +129,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a46d5eb772879c41b0449132c888694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableGroup
+--- !u!114 &8115948542104693442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325102438002783170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad457e6fccd2ee144855c0b21a3ed432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LayerOutlineVisual
+  highlightLayer: 6
 --- !u!114 &5666291062716643146
 MonoBehaviour:
   m_ObjectHideFlags: 0
