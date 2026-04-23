@@ -124,7 +124,7 @@ public class LevelSelectScreen : MainMenuScreenBase
         confirmButton.interactable = true;
     }
 
-    private void OnConfirmClicked()
+    private async void OnConfirmClicked()
     {
         if (selectedItem == null)
         {
@@ -136,15 +136,13 @@ public class LevelSelectScreen : MainMenuScreenBase
 
         if (mode == LevelSelectMode.LevelEditor)
         {
-            GameSettings.Instance.CurrentLevelEditorSession.SelectedLevelFilePath = filePath;
-            SceneLoader.LoadLevelEditor();
+            GameSession.Instance.LevelEditor.SetLevelFilePath(filePath);
+            await SceneFlow.ToLevelEditor();
         }
         else
         {
-            PlaySession playSession = GameSettings.Instance.CurrentPlaySession;
-            playSession.Clear();
-            playSession.LevelFilePath = filePath;
-            SceneLoader.LoadPlay();
+            GameSession.Instance.Play.SetLevelFilePath(filePath);
+            await SceneFlow.ToPlay();
         }
     }
 

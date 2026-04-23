@@ -1,44 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlaySession
-{
-    public string LevelFilePath;
-
-    public void Clear()
-    {
-        LevelFilePath = null;
-    }
-}
-
-public class LevelEditorSession
-{
-    public string LevelName;
-    public string SelectedLocationId;
-    public string SelectedScenarioId;
-    public string SelectedLevelFilePath;
-
-    public void Clear()
-    {
-        LevelName = null;
-        SelectedLocationId = null;
-        SelectedScenarioId = null;
-        SelectedLevelFilePath = null;
-    }
-}
-
 /// <summary>
 /// Centralized settings manager for game-wide data.
 /// </summary>
 public class GameSettings : MonoBehaviour
 {
+    public static GameSettings Instance { get; private set; }
+
     [SerializeField] private SettingsDatabase settingsDatabase;
 
     [Header("Quality Levels")]
     [SerializeField] private int mainMenuQualityLevel = 0;
     [SerializeField] private int gameplayQualityLevel = 1;
-
-    public static GameSettings Instance { get; private set; }
 
     private readonly Dictionary<string, SettingInstance> settings = new();
     private readonly Dictionary<SettingAutoApply, List<SettingInstance>> settingsByAutoApply = new();
@@ -55,7 +29,6 @@ public class GameSettings : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         if (settingsDatabase == null)
         {
@@ -71,11 +44,6 @@ public class GameSettings : MonoBehaviour
         GameStateManager.StateChanged += OnGameStateChanged;
     }
 
-    private void Start()
-    {
-        ApplyAuto(SettingAutoApply.OnAppBoot);
-    }
-
     private void OnDisable()
     {
         GameStateManager.StateChanged -= OnGameStateChanged;
@@ -88,16 +56,6 @@ public class GameSettings : MonoBehaviour
 
     //    print(Application.targetFrameRate);
     //}
-
-    #endregion
-
-    #region Runtime Sessions (Not Persisted)
-
-    public PlaySession CurrentPlaySession { get; private set; } = new();
-    public LevelEditorSession CurrentLevelEditorSession { get; private set; } = new();
-
-    public void ClearPlaySession() => CurrentPlaySession.Clear();
-    public void ClearLevelEditorSession() => CurrentLevelEditorSession.Clear();
 
     #endregion
 

@@ -20,11 +20,8 @@ public class InputModeController : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         input = new Input();
-
-        SetMode(InputMode.None);
     }
 
     public void SetMode(InputMode mode)

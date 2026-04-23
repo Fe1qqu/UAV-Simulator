@@ -7,14 +7,12 @@ using System.IO;
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
 /// </summary>
-public class LevelEditorManager : MonoBehaviour, IBackHandler
+public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializable
 {
     [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
 
     [Header("UI References")]
-    [SerializeField] private GameObject loadingScreen;
-
     [SerializeField] private LevelEditorPauseMenu levelEditorPauseMenu;
 
     [Tooltip("Parent transform where category buttons will be instantiated.")]
@@ -57,11 +55,9 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
 
     private CategoryDefinition currentCategory;
 
-    private FadeManager loadingScreenFader;
-
     public LevelFileManager LevelFileManager => levelFileManager;
 
-    public ScenarioDefinition CurrentScenario => scenariosDatabase.GetById(GameSettings.Instance.CurrentLevelEditorSession.SelectedScenarioId);
+    public ScenarioDefinition CurrentScenario => scenariosDatabase.GetById(GameSession.Instance.LevelEditor.ScenarioId);
 
     private void Awake()
     {
@@ -73,11 +69,6 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
         if (levelLoader == null)
         {
             Debug.LogError("[LevelEditorManager] LevelLoader is not assigned.");
-        }
-   
-        if (loadingScreen == null)
-        {
-            Debug.LogError("[LevelEditorManager] LoadingScreen is not assigned.");
         }
 
         if (levelEditorPauseMenu == null)
@@ -139,46 +130,21 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
         {
             Debug.LogError("[LevelEditorManager] LocalizationPreloader is not assigned.");
         }
-
-        loadingScreenFader = loadingScreen.GetComponent<FadeManager>();
-        if (loadingScreenFader == null)
-        {
-            Debug.LogError("[LevelEditorManager] FadeManager not found on loadingScreen.");
-        }
     }
 
-    private void Start()
+    public async Task InitializeAsync()
     {
-        _ = StartAsync();
-    }
-
-    private async Task StartAsync()
-    {
-        InputModeController.Instance.SetMode(InputMode.Loading);
-
-        loadingScreen.SetActive(true);
-
-        try
-        {
-            await InitializeLevelEditorAsync();
-            await loadingScreenFader.FadeOutAsync(0.35f, destroyCancellationToken);
-        }
-        finally
-        {
-            loadingScreen.SetActive(false);
-
-            InputModeController.Instance.SetMode(InputMode.LevelEditor);
-        }
+        await InitializeLevelEditorAsync();
     }
 
     private async Task InitializeLevelEditorAsync()
     {
-        Task loadTask = localizationPreloader.Load();
+        Task localizationTask = localizationPreloader.Load();
 
         LoadLevelOrEmpty();
         SetupCategories();
 
-        await loadTask;
+        await localizationTask;
     }
 
     /// <summary>
@@ -191,13 +157,12 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
             Destroy(child.gameObject);
         }
 
-        ScenarioDefinition scenario = CurrentScenario;
-        if (scenario == null)
+        if (CurrentScenario == null)
         {
             Debug.LogWarning("[LevelEditorManager] No scenario selected. Showing all categories.");
         }
 
-        List<CategoryDefinition> categoriesToShow = GetAvailableCategories(scenario);
+        List<CategoryDefinition> categoriesToShow = GetAvailableCategories(CurrentScenario);
 
         // Create category buttons
         foreach (CategoryDefinition category in categoriesToShow)
@@ -286,10 +251,9 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        ScenarioDefinition scenario = CurrentScenario;
-        if (scenario != null)
+        if (CurrentScenario != null)
         {
-            ScenarioCategoryRule rule = scenario.availableCategories.Find(rule => rule.category == currentCategory);
+            ScenarioCategoryRule rule = CurrentScenario.availableCategories.Find(rule => rule.category == currentCategory);
             filteredPlaceableObjects = FilterObjectsByScenarioRule(filteredPlaceableObjects, rule);
         }
 
@@ -349,8 +313,8 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
 
     private void LoadLevelOrEmpty()
     {
-        LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
-        string levelFilePath = levelEditorSession.SelectedLevelFilePath;
+        LevelEditorSession levelEditorSession = GameSession.Instance.LevelEditor;
+        string levelFilePath = levelEditorSession.LevelFilePath;
 
         if (string.IsNullOrEmpty(levelFilePath) || !File.Exists(levelFilePath))
         {
@@ -359,22 +323,21 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler
             return;
         }
 
-        LevelData levelData = levelFileManager.LoadByPath(levelEditorSession.SelectedLevelFilePath);
+        LevelData levelData = levelFileManager.LoadByPath(levelEditorSession.LevelFilePath);
         levelLoader.Load(levelData);
 
-        levelEditorSession.LevelName = levelData.levelName;
-        levelEditorSession.SelectedScenarioId = levelData.scenarioId;
+        levelEditorSession.Setup(levelData.levelName, levelData.locationId, levelData.scenarioId);
     }
 
     private void LoadEmptyLevel()
     {
-        LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
+        LevelEditorSession levelEditorSession = GameSession.Instance.LevelEditor;
 
         LevelData empty = new()
         {
             levelName = levelEditorSession.LevelName,
-            locationId = levelEditorSession.SelectedLocationId,
-            scenarioId = levelEditorSession.SelectedScenarioId
+            locationId = levelEditorSession.LocationId,
+            scenarioId = levelEditorSession.ScenarioId
         };
 
         levelLoader.Load(empty);

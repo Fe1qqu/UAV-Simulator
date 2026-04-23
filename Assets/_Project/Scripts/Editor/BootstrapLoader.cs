@@ -17,9 +17,16 @@ public static class BootstrapLoader
         {
             var scene = EditorSceneManager.GetActiveScene();
 
+            // If the scene is NOT in BuildSettings → DO NOT touch it at all
+            if (scene.buildIndex == -1)
+            {
+                return;
+            }
+
+            // If this is NOT the first scene (Core)
             if (scene.buildIndex != 0)
             {
-                EditorPrefs.SetInt(SceneKey, scene.buildIndex);
+                EditorPrefs.SetString(SceneKey, scene.path);
 
                 EditorSceneManager.playModeStartScene =
                     AssetDatabase.LoadAssetAtPath<SceneAsset>(

@@ -17,7 +17,6 @@ public class BackInput : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         input = InputModeController.Instance.Input;
     }

@@ -58,8 +58,7 @@ public class Step_NameInput : LevelCreationWizardStepBase
 
         if (valid)
         {
-            LevelEditorSession editorSession = GameSettings.Instance.CurrentLevelEditorSession;
-            editorSession.LevelName = name;
+            LevelCreationWizard.Data.LevelName = name;
         }
 
         return valid;

@@ -72,15 +72,15 @@ public class LevelEditorPauseMenu : PauseMenuBase
 
         Debug.Log("[LevelEditorPauseMenu] Saving level...");
 
-        LevelEditorSession levelEditorSession = GameSettings.Instance.CurrentLevelEditorSession;
-        if (string.IsNullOrEmpty(levelEditorSession.SelectedLevelFilePath))
+        LevelEditorSession levelEditorSession = GameSession.Instance.LevelEditor;
+        if (string.IsNullOrEmpty(levelEditorSession.LevelFilePath))
         {
             Debug.Log("[LevelEditorPauseMenu] No level file path. Creating new one.");
             CreateNewLevelFilePath(levelEditorSession);
         }
 
         LevelData levelData = levelDataBuilder.CollectLevelData();
-        levelEditorManager.LevelFileManager.SaveByPath(levelEditorSession.SelectedLevelFilePath, levelData);
+        levelEditorManager.LevelFileManager.SaveByPath(levelEditorSession.LevelFilePath, levelData);
     }
 
     private void CreateNewLevelFilePath(LevelEditorSession levelEditorSession)
@@ -96,10 +96,10 @@ public class LevelEditorPauseMenu : PauseMenuBase
         string directory = Path.Combine(Application.persistentDataPath, "levels");
         string path = Path.Combine(directory, fileName + ".json");
 
-        levelEditorSession.SelectedLevelFilePath = path;
+        levelEditorSession.SetLevelFilePath(path);
     }
 
-    public void OnExitClicked()
+    public async void OnExitClicked()
     {
         Close(PauseCloseMode.SceneExit);
 
@@ -108,6 +108,6 @@ public class LevelEditorPauseMenu : PauseMenuBase
             levelEditorManager.UnloadLocalization();
         }
 
-        SceneLoader.LoadMainMenu();
+        await SceneFlow.ToMainMenu();
     }
 }

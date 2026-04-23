@@ -190,7 +190,7 @@ namespace RTG
             Type[] allModuleTypes = GetAppModuleTypes();
             foreach (var moduleType in allModuleTypes)
             {
-                var allModulesInScene = FindObjectsByType(moduleType, FindObjectsSortMode.None);
+                var allModulesInScene = FindObjectsByType(moduleType);
                 foreach(var module in allModulesInScene)
                 {
                     MonoBehaviour moduleMono = module as MonoBehaviour;

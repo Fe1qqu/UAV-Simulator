@@ -15,8 +15,6 @@ public class MainMenuBootstrap : MonoBehaviour
         }
 
         GameStateManager.SetState(GameState.MainMenu);
-
-        InputModeController.Instance.SetMode(InputMode.UI);
     }
 
     private void Start()

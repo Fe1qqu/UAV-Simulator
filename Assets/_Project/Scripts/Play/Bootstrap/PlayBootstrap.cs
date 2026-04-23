@@ -8,8 +8,6 @@ public class PlayBootstrap : MonoBehaviour
 
         GameStateManager.SetState(GameState.Gameplay);
 
-        InputModeController.Instance.SetMode(InputMode.Play);
-
         //Debug.Log("[GameMode] Play.");
     }
 }
