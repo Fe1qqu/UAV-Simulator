@@ -108,6 +108,6 @@ public class LevelEditorPauseMenu : PauseMenuBase
             levelEditorManager.UnloadLocalization();
         }
 
-        await SceneFlow.ToMainMenu();
+        await SceneFlow.ToMainMenu(true);
     }
 }

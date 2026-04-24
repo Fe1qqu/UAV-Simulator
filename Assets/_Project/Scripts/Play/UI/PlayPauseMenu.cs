@@ -63,6 +63,6 @@ public class PlayPauseMenu : PauseMenuBase
     public async void OnExitClicked()
     {
         Close(PauseCloseMode.SceneExit);
-        await SceneFlow.ToMainMenu();
+        await SceneFlow.ToMainMenu(true);
     }
 }
