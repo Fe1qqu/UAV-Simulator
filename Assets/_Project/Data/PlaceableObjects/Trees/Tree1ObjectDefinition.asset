@@ -15,9 +15,9 @@ MonoBehaviour:
   objectId: tree1
   localizedString:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:d7821e5eea5fd8741a742285a5215172
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 38193973970493440
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
