@@ -9,20 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfcd2788ef922de4f91cdaa850b2296c, type: 3}
-  m_Name: BuildingCategoryDefinition
-  m_EditorClassIdentifier: Assembly-CSharp::CategoryDefinition
-  categoryId: building
+  m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
+  m_Name: ToplaryTreeObjectDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
+  objectId: apple_tree
   localizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
     m_TableEntryReference:
-      m_KeyId: 368491782144
+      m_KeyId: 57969378549981184
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   icon: {fileID: 21300000, guid: bd6a584664d99904ca913b8235e0735d, type: 3}
+  prefab: {fileID: 6478709745904454254, guid: fe21e66777708314e83e082ae1eb7c14, type: 3}
+  category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
+  properties: []
+  previewMaterialMode: 0
+  previewMaterialOverride: {fileID: 0}
   useTooltipSettingsOverride: 0
   tooltipSettingsOverride: {fileID: 0}
   references:

@@ -16,23 +16,15 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: 279f89454a8844f4a8d2b8dbdd79510a
   m_Entries:
   - m_Id: 368491782144
-    m_Key: building
+    m_Key: buildings
     m_Metadata:
       m_Items: []
-  - m_Id: 130448252928
-    m_Key: generic
+  - m_Id: 57963091116318720
+    m_Key: nature
     m_Metadata:
       m_Items: []
-  - m_Id: 552449761280
-    m_Key: light
-    m_Metadata:
-      m_Items: []
-  - m_Id: 287118090240
-    m_Key: tree
-    m_Metadata:
-      m_Items: []
-  - m_Id: 14975682787565568
-    m_Key: gameplay
+  - m_Id: 57963852193751040
+    m_Key: scenario_objects
     m_Metadata:
       m_Items: []
   m_Metadata:

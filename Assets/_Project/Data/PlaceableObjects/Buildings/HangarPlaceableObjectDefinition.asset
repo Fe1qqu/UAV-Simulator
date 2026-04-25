@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
-  m_Name: PlanePlaceableObjectDefinition
+  m_Name: HangarPlaceableObjectDefinition
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
-  objectId: plane
+  objectId: hangar
   localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
     m_TableEntryReference:
-      m_KeyId: 72772378624
+      m_KeyId: 36164493312
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: a9e9fe0ebf5cb364bb79dded2680e48c, type: 3}
-  prefab: {fileID: 1325102438002783170, guid: 1c13df92af5bdb64b9fba7b9e9e12ab5, type: 3}
-  category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
-  propertyDefinitions: []
+  icon: {fileID: 21300000, guid: bd6a584664d99904ca913b8235e0735d, type: 3}
+  prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
+  category: {fileID: 11400000, guid: 41322d66ee741b445869d6b855664751, type: 2}
+  properties: []
   previewMaterialMode: 0
   previewMaterialOverride: {fileID: 0}
   useTooltipSettingsOverride: 0

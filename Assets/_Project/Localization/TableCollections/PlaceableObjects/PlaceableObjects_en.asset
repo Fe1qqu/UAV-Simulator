@@ -38,6 +38,22 @@ MonoBehaviour:
     m_Localized: Target area
     m_Metadata:
       m_Items: []
+  - m_Id: 57969378549981184
+    m_Localized: Apple tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969391497797632
+    m_Localized: Poplar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969393762721792
+    m_Localized: Spruce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969397839585280
+    m_Localized: Toplary
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

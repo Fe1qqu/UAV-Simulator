@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: PlaceableObjectsDatabase
   m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDatabase
   objects:
+  - {fileID: 11400000, guid: bb976e95c00101e479a3cc5dd249b9f4, type: 2}
   - {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
   - {fileID: 11400000, guid: f48d736678511a84a9edf88327e6fbe6, type: 2}
   - {fileID: 11400000, guid: 0989848d1ab095b4d92b28822fe78288, type: 2}
-  - {fileID: 11400000, guid: bb976e95c00101e479a3cc5dd249b9f4, type: 2}
   - {fileID: 11400000, guid: 584cbd70993256043b45a6343be237ce, type: 2}
-  - {fileID: 11400000, guid: 03e7d7311fb1bca46a5eeb083e3cfedf, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

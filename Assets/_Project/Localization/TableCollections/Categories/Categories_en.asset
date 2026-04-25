@@ -18,24 +18,16 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 130448252928
-    m_Localized: Generic
-    m_Metadata:
-      m_Items: []
-  - m_Id: 287118090240
-    m_Localized: Trees
+  - m_Id: 57963091116318720
+    m_Localized: Nature
     m_Metadata:
       m_Items: []
   - m_Id: 368491782144
     m_Localized: Buildings
     m_Metadata:
       m_Items: []
-  - m_Id: 552449761280
-    m_Localized: Lights
-    m_Metadata:
-      m_Items: []
-  - m_Id: 14975682787565568
-    m_Localized: Gameplay
+  - m_Id: 57963852193751040
+    m_Localized: Scenario objects
     m_Metadata:
       m_Items: []
   references:

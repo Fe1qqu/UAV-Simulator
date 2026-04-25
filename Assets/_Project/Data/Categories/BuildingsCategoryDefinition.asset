@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cfcd2788ef922de4f91cdaa850b2296c, type: 3}
-  m_Name: GenericCategoryDefinition
+  m_Name: BuildingsCategoryDefinition
   m_EditorClassIdentifier: Assembly-CSharp::CategoryDefinition
-  categoryId: generic
+  categoryId: buildings
   localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:279f89454a8844f4a8d2b8dbdd79510a
     m_TableEntryReference:
-      m_KeyId: 130448252928
+      m_KeyId: 368491782144
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: e65abd006f293e74ca4e394716773297, type: 3}
+  icon: {fileID: 21300000, guid: bd6a584664d99904ca913b8235e0735d, type: 3}
   useTooltipSettingsOverride: 0
   tooltipSettingsOverride: {fileID: 0}
   references:

@@ -35,6 +35,22 @@ MonoBehaviour:
     m_Key: target_area
     m_Metadata:
       m_Items: []
+  - m_Id: 57969378549981184
+    m_Key: apple_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969391497797632
+    m_Key: poplar_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969393762721792
+    m_Key: spruce_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969397839585280
+    m_Key: toplary_tree
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
