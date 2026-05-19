@@ -26,6 +26,10 @@ MonoBehaviour:
     m_Localized: Reach target
     m_Metadata:
       m_Items: []
+  - m_Id: 28746213894545408
+    m_Localized: Kamikaze
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

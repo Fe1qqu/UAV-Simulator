@@ -12,6 +12,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
     [Header("UI")]
     [SerializeField] private PlayPauseMenu pauseMenu;
+    //[SerializeField] private PlayResultMenu resultMenu;
 
     [Header("Runtime")]
     [SerializeField] private DroneControllerBase dronePrefab;
@@ -148,6 +149,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
         scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;
+        scenarioRuntime.ScenarioFailed += OnScenarioFailed;
         scenarioRuntime.StartScenario();
     }
 
@@ -201,6 +203,11 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     private void OnScenarioCompleted(IScenarioRuntime _)
     {
         Debug.Log("[PlayManager] Scenario completed!");
+    }
+
+    private void OnScenarioFailed(IScenarioRuntime _)
+    {
+        Debug.Log("[PlayManager] Scenario failed!");
     }
 
     public bool OnBack()

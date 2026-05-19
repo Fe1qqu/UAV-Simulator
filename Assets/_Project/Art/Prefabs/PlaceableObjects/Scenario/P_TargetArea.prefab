@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriggerForwarder
   receivers:
-  - {fileID: 5529553383427362917}
+  - {fileID: 0}
 --- !u!1 &4200554136025218169
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1291421216192584638}
-  - component: {fileID: 5529553383427362917}
+  - component: {fileID: 4711010710723378095}
   - component: {fileID: 479529680169253348}
   - component: {fileID: 4454238837928811047}
   m_Layer: 0
@@ -136,7 +136,7 @@ Transform:
   - {fileID: 651061556122673267}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5529553383427362917
+--- !u!114 &4711010710723378095
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4697070777710424619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3e5d9bb2cc82744294cfa8251a53c7c, type: 3}
+  m_Script: {fileID: 11500000, guid: c4cf173baa31b834b9adaa7fa9dc61b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetArea
   sourcePlaceableObject: {fileID: 0}

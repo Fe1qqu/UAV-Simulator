@@ -7,8 +7,10 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
     protected DroneControllerBase droneController;
 
     public event Action<IScenarioRuntime> ScenarioCompleted;
+    public event Action<IScenarioRuntime> ScenarioFailed;
 
     private bool isCompleted;
+    private bool isFailed;
 
     public virtual void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController)
     {
@@ -35,7 +37,6 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
         TickScenarioInternal();
     }
 
-
     public void FixedTickScenario()
     {
         if (isCompleted)
@@ -49,6 +50,7 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
     public void ResetScenario()
     {
         isCompleted = false;
+        isFailed = false;
         ResetScenarioInternal();
     }
 
@@ -60,13 +62,24 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
 
     protected void CompleteScenario()
     {
-        if (isCompleted)
+        if (isCompleted || isFailed)
         {
             return;
         }
 
         isCompleted = true;
         ScenarioCompleted?.Invoke(this);
+    }
+
+    protected void FailScenario()
+    {
+        if (isCompleted || isFailed)
+        {
+            return;
+        }
+
+        isFailed = true;
+        ScenarioFailed?.Invoke(this);
     }
 
     protected virtual void OnInitialize() { }

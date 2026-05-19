@@ -35,6 +35,10 @@ MonoBehaviour:
     m_Key: target_area
     m_Metadata:
       m_Items: []
+  - m_Id: 58062049008312320
+    m_Key: explosion_zone
+    m_Metadata:
+      m_Items: []
   - m_Id: 57969378549981184
     m_Key: apple_tree
     m_Metadata:

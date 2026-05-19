@@ -20,7 +20,7 @@ public static class SceneRegistry
             new SceneDefinition
             {
                 SceneName = SceneDatabase.Scenes.AppStart,
-                InputMode = InputMode.None,
+                InputMode = InputMode.Disabled,
                 UseOverlay = false
             }
         },

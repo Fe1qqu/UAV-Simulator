@@ -6,7 +6,7 @@ using System.Linq;
 public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 {
     private List<Checkpoint> checkpoints;
-    private TriggerArea targetArea;
+    private TargetArea targetArea;
 
     private int currentCheckpointIndex;
 
@@ -20,10 +20,10 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
             .OrderBy(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, 0))
             .ToList();
 
-        targetArea = levelObjectRegistry.FindFirstAlive<TriggerArea>();
+        targetArea = levelObjectRegistry.FindFirstAlive<TargetArea>();
         if (targetArea == null)
         {
-            Debug.LogError("[ReachTargetScenarioRuntime] TriggerArea not found.");
+            Debug.LogError("[ReachTargetScenarioRuntime] TargetArea not found.");
         }
 
         currentCheckpointIndex = 0;

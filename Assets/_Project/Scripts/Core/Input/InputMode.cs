@@ -1,6 +1,6 @@
 public enum InputMode
 {
-    None,
+    Disabled,
     Play,
     LevelEditor,
     UI,
