@@ -22,7 +22,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: c0f08c6961a8b164982cf40cf6043a74, type: 3}
   availableCategories:
   - category: {fileID: 11400000, guid: 41322d66ee741b445869d6b855664751, type: 2}
     accessMode: 0
@@ -35,17 +34,13 @@ MonoBehaviour:
     objectIds:
     - drone_spawn_point
     - checkpoint
-    - target_area
   objectRules:
   - placeableObject: {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
     minCount: 1
     maxCount: 1
   - placeableObject: {fileID: 11400000, guid: f48d736678511a84a9edf88327e6fbe6, type: 2}
-    minCount: 0
-    maxCount: -1
-  - placeableObject: {fileID: 11400000, guid: 0989848d1ab095b4d92b28822fe78288, type: 2}
     minCount: 1
-    maxCount: 1
+    maxCount: -1
   specificValidator: {fileID: 11400000, guid: f701b8dc7a475fe42a2364e8017a94f1, type: 2}
   runtime: {fileID: 11400000, guid: 4e9e31f88925f614985890da1f111434, type: 2}
   references:

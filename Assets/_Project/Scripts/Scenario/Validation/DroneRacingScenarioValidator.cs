@@ -6,26 +6,14 @@ public class DroneRacingScenarioValidator : ScenarioSpecificValidator
 {
     public override ScenarioValidationResult Validate(LevelObjectRegistry levelObjectRegistry)
     {
-        var checkpoints = levelObjectRegistry
+        var indices = levelObjectRegistry
             .EnumerateAlive<Checkpoint>()
-            .ToList();
-
-        if (checkpoints.Count == 0)
-        {
-            return ScenarioValidationResult.Ok();
-        }
-
-        var indices = checkpoints
             .Select(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, -1))
-            .OrderBy(i => i)
-            .ToList();
+            .OrderBy(i => i);
 
-        for (int i = 0; i < indices.Count; i++)
+        if (!indices.SequenceEqual(Enumerable.Range(0, indices.Count())))
         {
-            if (indices[i] != i)
-            {
-                return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "Checkpoint indices must form a continuous sequence 0..n-1");
-            }
+            return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "Checkpoint indices must form a continuous sequence 0..n-1");
         }
 
         return ScenarioValidationResult.Ok();
