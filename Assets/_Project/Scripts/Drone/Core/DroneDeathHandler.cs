@@ -32,7 +32,7 @@ public class DroneDeathHandler : MonoBehaviour
 
     private void OnExploded()
     {
-        InputModeController.Instance.SetMode(InputMode.Disabled);
+        
 
         HandleCamera();
         SpawnExplosion();

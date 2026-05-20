@@ -123,6 +123,14 @@ MonoBehaviour:
     m_Key: apply
     m_Metadata:
       m_Items: []
+  - m_Id: 67118111162261504
+    m_Key: play_result_completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67118136965619712
+    m_Key: play_result_failed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

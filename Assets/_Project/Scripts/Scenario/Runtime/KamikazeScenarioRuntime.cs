@@ -96,6 +96,8 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
 
         pendingResult = droneInsideZone ? ScenarioResult.Success : ScenarioResult.Fail;
 
+        ConcludeGameplay();
+
         droneController.Explode();
     }
 
