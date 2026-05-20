@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da6bad5e76372f6458c25fc6e890594d, type: 3}
-  m_Name: ReachTargetScenarioDefinition
+  m_Name: DroneRacingScenarioDefinition
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinition
-  scenarioId: reach_target
+  scenarioId: drone_racing
   localizedString:
     m_TableReference:
       m_TableCollectionName: GUID:a3aa967611b941544992f26420d0780c

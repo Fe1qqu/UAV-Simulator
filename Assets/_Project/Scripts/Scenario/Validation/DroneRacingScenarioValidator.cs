@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Linq;
 
-[CreateAssetMenu(menuName = "Game Data/Scenario Validators/Reach Target")]
-public class ReachTargetScenarioValidator : ScenarioSpecificValidator
+[CreateAssetMenu(menuName = "Game Data/Scenario Validators/Drone Racing")]
+public class DroneRacingScenarioValidator : ScenarioSpecificValidator
 {
     public override ScenarioValidationResult Validate(LevelObjectRegistry levelObjectRegistry)
     {

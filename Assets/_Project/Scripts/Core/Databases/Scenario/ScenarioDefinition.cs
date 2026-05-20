@@ -8,7 +8,6 @@ public class ScenarioDefinition : ScriptableObject
     [Header("Identity")]
     public string scenarioId;
     public LocalizedString localizedString;
-    public Sprite icon;
 
     [Header("Level Editor Availability")]
     public List<ScenarioCategoryRule> availableCategories = new();

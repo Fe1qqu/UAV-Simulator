@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2eefb126f2b236d4bacfe3e7d03a18f4, type: 3}
-  m_Name: ReachTargetScenarioRuntime
-  m_EditorClassIdentifier: Assembly-CSharp::ReachTargetScenarioRuntime
+  m_Script: {fileID: 11500000, guid: dc3470f2caccfac4fbb043b325338e14, type: 3}
+  m_Name: DroneRacingScenarioValidator
+  m_EditorClassIdentifier: Assembly-CSharp::ReachTargetScenarioValidator

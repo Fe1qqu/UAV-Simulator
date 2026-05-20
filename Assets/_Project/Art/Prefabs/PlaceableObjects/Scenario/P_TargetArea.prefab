@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriggerForwarder
   receivers:
-  - {fileID: 0}
+  - {fileID: 4711010710723378095}
 --- !u!1 &4200554136025218169
 GameObject:
   m_ObjectHideFlags: 0

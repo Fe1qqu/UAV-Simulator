@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-[CreateAssetMenu(menuName = "Game Data/Scenario Runtime/Reach Target")]
-public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
+[CreateAssetMenu(menuName = "Game Data/Scenario Runtime/Drone Racing")]
+public class DroneRacingScenarioRuntime : ScenarioRuntimeBase
 {
     private List<Checkpoint> checkpoints;
     private TargetArea targetArea;
@@ -23,7 +23,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
         targetArea = levelObjectRegistry.FindFirstAlive<TargetArea>();
         if (targetArea == null)
         {
-            Debug.LogError("[ReachTargetScenarioRuntime] TargetArea not found.");
+            Debug.LogError("[DroneRacingScenarioRuntime] TargetArea not found.");
         }
 
         currentCheckpointIndex = 0;
@@ -108,7 +108,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 
         checkpoint.MarkPassed();
 
-        Debug.Log($"[ReachTargetScenarioRuntime] Checkpoint {currentCheckpointIndex} passed.");
+        Debug.Log($"[DroneRacingScenarioRuntime] Checkpoint {currentCheckpointIndex} passed.");
         currentCheckpointIndex++;
 
         if (currentCheckpointIndex >= checkpoints.Count)
@@ -129,7 +129,7 @@ public class ReachTargetScenarioRuntime : ScenarioRuntimeBase
 
         if (!allCheckpointsPassed)
         {
-            Debug.Log("[ReachTargetScenarioRuntime] Target reached before checkpoints.");
+            Debug.Log("[DroneRacingScenarioRuntime] Target reached before checkpoints.");
         }
     }
 

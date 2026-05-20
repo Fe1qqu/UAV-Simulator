@@ -96,27 +96,6 @@ public class ScenarioSelection : MonoBehaviour
                 Debug.LogWarning($"[ScenarioSelection] LocalizeStringEvent not found for scenario button.");
             }
 
-            Transform iconTransform = scenarioButtonInstance.transform.Find("Icon");
-            if (iconTransform == null)
-            {
-                Debug.LogWarning($"[ScenarioSelection] Icon transform not found for scenario '{scenario.scenarioId}'.");
-            }
-            else
-            {
-                if (!iconTransform.TryGetComponent<Image>(out var icon))
-                {
-                    Debug.LogWarning($"[ScenarioSelection] Image component missing on Icon for scenario '{scenario.scenarioId}'.");
-                }
-                else if (scenario.icon == null)
-                {
-                    Debug.LogWarning($"[ScenarioSelection] Scenario '{scenario.scenarioId}' has no icon assigned.");
-                }
-                else
-                {
-                    icon.sprite = scenario.icon;
-                }
-            }
-
             GameObject checkmarkGameObject = null;
             Transform checkmarkTransform = scenarioButtonInstance.transform.Find("Checkmark");
             if (checkmarkTransform == null)
