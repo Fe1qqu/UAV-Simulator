@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Collections.Generic;
 
 public class Checkpoint : LevelObject, ITriggerReceiver
 {
@@ -9,10 +10,14 @@ public class Checkpoint : LevelObject, ITriggerReceiver
     [SerializeField] private Renderer meshRenderer;
     [SerializeField] private Material unpassedMaterial;
     [SerializeField] private Material passedMaterial;
-
     [SerializeField] private TMP_Text indexNumberText;
 
+    [Header("Direction")]
+    [SerializeField] private float maxApproachAngle = 60f;
+
     private bool isPassed;
+
+    private readonly HashSet<Transform> dronesInTrigger = new();
 
     private void Awake()
     {
@@ -98,8 +103,41 @@ public class Checkpoint : LevelObject, ITriggerReceiver
             return;
         }
 
+        Transform droneTransform = ((MonoBehaviour)drone).transform;
+        
+        if (dronesInTrigger.Contains(droneTransform))
+        {
+            return;
+        }
+
+        dronesInTrigger.Add(droneTransform);
+
+        if (!IsApproachValid(droneTransform))
+        {
+            Debug.Log($"[Checkpoint] Wrong direction approach on checkpoint {name}.");
+            return;
+        }
+
         OnEntered?.Invoke(this);
     }
 
-    public void OnTriggerExited(Collider collider) { }
+    public void OnTriggerExited(Collider collider)
+    {
+        var drone = collider.GetComponentInParent<IDroneActor>();
+        if (drone == null)
+        {
+            return;
+        }
+
+        Transform droneTransform = ((MonoBehaviour)drone).transform;
+
+        dronesInTrigger.Remove(droneTransform);
+    }
+
+    private bool IsApproachValid(Transform droneTransform)
+    {
+        float angle = Vector3.Angle(droneTransform.forward, transform.forward);
+
+        return angle <= maxApproachAngle;
+    }
 }

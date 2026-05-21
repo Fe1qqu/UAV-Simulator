@@ -17,6 +17,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     [Header("Runtime")]
     [SerializeField] private DroneControllerBase dronePrefab;
     [SerializeField] private Transform droneRoot;
+    [SerializeField] private CheckpointPath checkpointPath;
 
     private DroneDeathHandler droneDeathHandler;
     private DroneControllerBase spawnedDrone;
@@ -69,6 +70,11 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         {
             Debug.LogError("[PlayManager] DroneRoot is not assigned.");
         }
+
+        if (checkpointPath == null)
+        {
+            Debug.LogError("[PlayManager] СheckpointPath is not assigned.");
+        }
     }
 
     private void OnEnable()
@@ -89,6 +95,9 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     private async Task InitializePlayAsync()
     {
         LoadLevel();
+
+        ConfigureScenarioVisuals();
+
         SpawnDrone();
         StartScenario();
 
@@ -117,6 +126,13 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         }
 
         levelLoader.Load(loadedLevelData);
+    }
+
+    private void ConfigureScenarioVisuals()
+    {
+        ScenarioDefinition scenario = scenariosDatabase.GetById(loadedLevelData.scenarioId);
+        bool usesCheckpointPath = scenario != null && scenario.usesCheckpointPath;
+        checkpointPath.SetScenarioActive(usesCheckpointPath);
     }
 
     private void SpawnDrone()

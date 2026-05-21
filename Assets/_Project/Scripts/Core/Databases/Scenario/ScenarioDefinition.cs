@@ -18,4 +18,7 @@ public class ScenarioDefinition : ScriptableObject
 
     [Header("Runtime")]
     public ScenarioRuntimeBase runtime;
+
+    [Header("Visual Features")]
+    public bool usesCheckpointPath;
 }
