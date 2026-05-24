@@ -15,21 +15,30 @@ public abstract class MainMenuScreenBase : MonoBehaviour, IBackHandler
     {
         BackDispatcher.RegisterHandler(this);
         OnShowInternal();
+
+        OnAfterShown();
     }
 
     public void OnShow(object context)
     {
         BackDispatcher.RegisterHandler(this);
         OnShowInternal(context);
+
+        OnAfterShown();
     }
 
     public void OnHide()
     {
+        OnBeforeHide();
+
         OnHideInternal();
         BackDispatcher.UnregisterHandler(this);
     }
 
     // === EXTENSION POINTS ===
+
+    protected virtual void OnAfterShown() { }
+    protected virtual void OnBeforeHide() => UINavigatorContext.Instance.ResetSelection();
     protected virtual void OnShowInternal() { }
     protected virtual void OnShowInternal(object context) => OnShowInternal();
     protected virtual void OnHideInternal() { }

@@ -19,8 +19,7 @@ public class LocationSelection : MonoBehaviour
     // Currently selected location data
     private LocationDefinition selectedLocation;
 
-    // List of created buttons and their checkmarks
-    private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
+    private readonly List<(Button button, UISelectionButtonVisual visual)> createdButtons = new();
 
     private LocationsDatabase locationsDatabase;
     private bool isBuilt;
@@ -96,41 +95,16 @@ public class LocationSelection : MonoBehaviour
                 Debug.LogWarning($"[LocationSelection] LocalizeStringEvent not found for location button.");
             }
 
-            Transform iconTransform = locationButtonInstance.transform.Find("Icon");
-            if (iconTransform == null)
+            if (!locationButtonInstance.TryGetComponent(out UISelectionButtonVisual visual))
             {
-                Debug.LogWarning($"[LocationSelection] Icon transform not found for location '{location.locationId}'.");
-            }
-            else
-            {
-                if (!iconTransform.TryGetComponent<Image>(out var icon))
-                {
-                    Debug.LogWarning($"[LocationSelection] Image component missing on Icon for location '{location.locationId}'.");
-                }
-                else if (location.icon == null)
-                {
-                    Debug.LogWarning($"[LocationSelection] Location '{location.locationId}' has no icon assigned.");
-                }
-                else
-                {
-                    icon.sprite = location.icon;
-                }
+                Debug.LogError("[LocationSelection] UISelectionButtonVisual not found.");
+                continue;
             }
 
-            GameObject checkmarkGameObject = null;
-            Transform checkmarkTransform = locationButtonInstance.transform.Find("Checkmark");
-            if (checkmarkTransform == null)
-            {
-                Debug.LogWarning($"[LocationSelection] Checkmark object not found for location '{location.locationId}'.");
-            }
-            else
-            {
-                checkmarkGameObject = checkmarkTransform.gameObject;
-                checkmarkGameObject.SetActive(false);
-            }
+            visual.SetSelected(false);
 
             button.onClick.AddListener(() => OnLocationSelected(location, button));
-            createdButtons.Add((button, checkmarkGameObject));
+            createdButtons.Add((button, visual));
         }
     }
 
@@ -138,12 +112,9 @@ public class LocationSelection : MonoBehaviour
     {
         selectedLocation = location;
 
-        foreach (var (button, checkmark) in createdButtons)
+        foreach (var (button, visual) in createdButtons)
         {
-            if (checkmark != null)
-            {
-                checkmark.SetActive(button == clickedButton);
-            }
+            visual.SetSelected(button == clickedButton);
         }
 
         //Debug.Log($"[LocationSelection] Selected: {location.locationId}.");

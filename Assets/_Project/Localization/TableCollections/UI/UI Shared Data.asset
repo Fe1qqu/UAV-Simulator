@@ -131,6 +131,38 @@ MonoBehaviour:
     m_Key: play_result_failed
     m_Metadata:
       m_Items: []
+  - m_Id: 67783745021829120
+    m_Key: mission_editor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68176160555687936
+    m_Key: mission
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68176536503738368
+    m_Key: scenario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68177027879034880
+    m_Key: location
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68484226186633216
+    m_Key: position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68484228095041536
+    m_Key: rotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68484229441413120
+    m_Key: scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68625278247788544
+    m_Key: pause
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -7,12 +7,13 @@ public class UIObjectHierarchyItem : MonoBehaviour
     public event System.Action<LevelObject> OnDeleteRequested;
     public event System.Action<LevelObject> OnSelectRequested;
 
+    [Header("References")]
     [SerializeField] private Button selectButton;
     [SerializeField] private Button deleteButton;
     [SerializeField] private TMP_Text nameText;
 
-    [Header("Selection")]
-    [SerializeField] private GameObject selectionHighlight;
+    [Header("Visual")]
+    [SerializeField] private UISelectionButtonVisual visual;
 
     private LevelObject boundLevelObject;
 
@@ -33,9 +34,9 @@ public class UIObjectHierarchyItem : MonoBehaviour
             Debug.LogError("[UIObjectHierarchyItem] NameText is not assigned.");
         }
 
-        if (selectionHighlight == null)
+        if (visual == null)
         {
-            Debug.LogError("[UIObjectHierarchyItem] SelectionHighlight is not assigned.");
+            Debug.LogError("[UIObjectHierarchyItem] UISelectionButtonVisual is not assigned.");
         }
     }
 
@@ -91,10 +92,7 @@ public class UIObjectHierarchyItem : MonoBehaviour
 
     public void SetSelected(bool selected)
     {
-        if (selectionHighlight != null)
-        {
-            selectionHighlight.SetActive(selected);
-        }
+        visual.SetSelected(selected);
     }
 
     public void SetVisible(bool visible)

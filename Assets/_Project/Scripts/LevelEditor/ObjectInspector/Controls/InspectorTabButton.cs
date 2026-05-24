@@ -5,9 +5,12 @@ using UnityEngine.Localization;
 
 public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ITooltipSource
 {
-    [SerializeField] private ObjectInspectorTab tab;
-    [SerializeField] private GameObject selectionHighlight;
+    [Header("References")]
     [SerializeField] private Button button;
+    [SerializeField] private UISelectionButtonVisual visual;
+
+    [Header("Tab")]
+    [SerializeField] private ObjectInspectorTab tab;
 
     [Header("Tooltip")]
     [SerializeField] private RectTransform tooltipAnchor;
@@ -17,14 +20,14 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private void Awake()
     {
-        if (selectionHighlight == null)
-        {
-            Debug.LogError("[InspectorTabButton] SelectionHighlight is not assigned.");
-        }
-
         if (button == null)
         {
             Debug.LogError("[InspectorTabButton] Button is not assigned.");
+        }
+
+        if (visual == null)
+        {
+            Debug.LogError("[InspectorTabButton] Visual is not assigned.");
         }
 
         if (tooltipAnchor == null)
@@ -51,10 +54,7 @@ public class InspectorTabButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void SetSelected(bool selected)
     {
-        if (selectionHighlight != null)
-        {
-            selectionHighlight.SetActive(selected);
-        }
+        visual.SetSelected(selected);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

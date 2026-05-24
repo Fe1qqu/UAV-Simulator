@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using UnityEngine.Localization.Components;
 
 [RequireComponent(typeof(Button))]
-[RequireComponent(typeof(CanvasGroup))]
 public class SettingsTabButton : MonoBehaviour
 {
     [SerializeField] private LocalizeStringEvent labelLocalizationStringEvent;
+    [SerializeField] private UISelectionButtonVisual visual;
 
-    private CanvasGroup canvasGroup;
     private Button button;
     private SettingsMenuController settingsMenuController;
 
@@ -17,11 +16,15 @@ public class SettingsTabButton : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        canvasGroup = GetComponent<CanvasGroup>();
 
         if (labelLocalizationStringEvent == null)
         {
-            Debug.LogError("[TabButton] LabelLocalizationStringEvent is not assigned.");
+            Debug.LogError("[SettingsTabButton] LabelLocalizationStringEvent is not assigned.");
+        }
+
+        if (visual == null)
+        {
+            Debug.LogError("[SettingsTabButton] Visual is not assigned.");
         }
     }
 
@@ -45,7 +48,8 @@ public class SettingsTabButton : MonoBehaviour
     {
         if (settingsMenuController == null)
         {
-            Debug.LogError("[TabButton] SettingsMenuController is null.");
+            Debug.LogError("[SettingsTabButton] SettingsMenuController is null.");
+            return;
         }
 
         settingsMenuController.SelectTab(TabId);
@@ -53,6 +57,9 @@ public class SettingsTabButton : MonoBehaviour
 
     public void SetSelected(bool selected)
     {
-        canvasGroup.alpha = selected ? 0.6f : 1.0f;
+        if (visual != null)
+        {
+            visual.SetSelected(selected);
+        }
     }
 }
