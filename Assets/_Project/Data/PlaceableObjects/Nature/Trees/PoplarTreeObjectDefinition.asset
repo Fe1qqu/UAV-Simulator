@@ -22,7 +22,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: a9e9fe0ebf5cb364bb79dded2680e48c, type: 3}
+  icon: {fileID: 21300000, guid: 4b3cf6567afcb2e4bb330c097b36ffb6, type: 3}
   prefab: {fileID: 6478709745904454254, guid: a3d3350aa411f7e4db1aa885f680ceab, type: 3}
   category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
   properties: []
