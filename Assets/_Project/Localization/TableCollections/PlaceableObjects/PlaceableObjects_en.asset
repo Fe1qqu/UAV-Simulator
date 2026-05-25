@@ -58,6 +58,22 @@ MonoBehaviour:
     m_Localized: Explosion zone
     m_Metadata:
       m_Items: []
+  - m_Id: 68862329274654720
+    m_Localized: Birch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867064782282752
+    m_Localized: Bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867088593346560
+    m_Localized: Berries bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867189235671040
+    m_Localized: Rock
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

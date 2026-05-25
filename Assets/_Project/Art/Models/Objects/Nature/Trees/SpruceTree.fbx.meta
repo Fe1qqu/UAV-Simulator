@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Green
-    second: {fileID: 2100000, guid: 6ca5cc8c184d0874dab3330de9b71277, type: 2}
+      name: SpruceLeaves
+    second: {fileID: 2100000, guid: 6de8ba95688d6bc438b26e3af1bc6d22, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Wood
-    second: {fileID: 2100000, guid: 415e9c745dcc54b4eaf0a47cb60b27f1, type: 2}
+      name: SpruceTrunk
+    second: {fileID: 2100000, guid: 17d4cb6e2328eb74a90e27915fafe4be, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

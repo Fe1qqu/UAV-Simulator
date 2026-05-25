@@ -55,6 +55,22 @@ MonoBehaviour:
     m_Key: toplary_tree
     m_Metadata:
       m_Items: []
+  - m_Id: 68862329274654720
+    m_Key: birch_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867064782282752
+    m_Key: bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867088593346560
+    m_Key: berries_bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867189235671040
+    m_Key: rock
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

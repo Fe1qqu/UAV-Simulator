@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 823f7e9d061febb45ab9fe67414ed563
+guid: 4f014a50e5db7d84ba361a8d87f33755
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Green
-    second: {fileID: 2100000, guid: 6ca5cc8c184d0874dab3330de9b71277, type: 2}
+      name: BirchLeaves
+    second: {fileID: 2100000, guid: 5124fcb6f11df214dbde6d0c635d0f1d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Wood
-    second: {fileID: 2100000, guid: 415e9c745dcc54b4eaf0a47cb60b27f1, type: 2}
+      name: birchTrunk
+    second: {fileID: 2100000, guid: 7dd43d52f907a2a488f06381f523b805, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

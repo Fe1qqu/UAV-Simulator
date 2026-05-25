@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
+  m_Name: BirchTreeObjectDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
+  objectId: birch_tree
+  localizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+    m_TableEntryReference:
+      m_KeyId: 68862329274654720
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 21300000, guid: 2912d56e6b4000e4c806998280e2b99c, type: 3}
+  prefab: {fileID: 6478709745904454254, guid: 7c2d3cf3e8e3cb947af4408143d8a18e, type: 3}
+  category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
+  properties: []
+  previewMaterialMode: 0
+  previewMaterialOverride: {fileID: 0}
+  useTooltipSettingsOverride: 0
+  tooltipSettingsOverride: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
