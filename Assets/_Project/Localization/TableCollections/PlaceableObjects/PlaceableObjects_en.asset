@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72772378624
-    m_Localized: Plane
+    m_Localized: Airplane
     m_Metadata:
       m_Items: []
   - m_Id: 14974251858812928
@@ -72,6 +72,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 68867189235671040
     m_Localized: Rock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69222474030669824
+    m_Localized: One-story house
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69222591886417920
+    m_Localized: Cottage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223226274897920
+    m_Localized: Warehouse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223607449051136
+    m_Localized: Wind turbine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223756355231744
+    m_Localized: Tank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223835484971008
+    m_Localized: Camp tent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223965852327936
+    m_Localized: Fuel tank
     m_Metadata:
       m_Items: []
   references:

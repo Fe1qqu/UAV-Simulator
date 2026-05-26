@@ -22,8 +22,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: bd6a584664d99904ca913b8235e0735d, type: 3}
-  prefab: {fileID: 8239785950786923660, guid: 6b2dc01d63bf6794ea6708cb59a5c589, type: 3}
+  icon: {fileID: 21300000, guid: cbb18208ad7ce4e4ca51b11cc2123dec, type: 3}
+  prefab: {fileID: 6279728691475582256, guid: 742c6c9ac41fa1a43b72d2b24513ef4b, type: 3}
   category: {fileID: 11400000, guid: 41322d66ee741b445869d6b855664751, type: 2}
   properties: []
   previewMaterialMode: 0

@@ -22,10 +22,10 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 21300000, guid: c0f08c6961a8b164982cf40cf6043a74, type: 3}
+  icon: {fileID: 21300000, guid: 54ddf1c1508576447b38bd0251b461ca, type: 3}
   prefab: {fileID: 4367814652480787245, guid: 75a8531a979f0bb4aa3b2da713a024b6, type: 3}
   category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
-  propertyDefinitions: []
+  properties: []
   previewMaterialMode: 2
   previewMaterialOverride: {fileID: 0}
   useTooltipSettingsOverride: 0
