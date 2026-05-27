@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 public static class SceneFlow
 {
-    public static Task ToScene(string sceneName)
+    public static Task ToScene(string sceneName, bool? forceOverlay = null)
     {
-        if (!SceneRegistry.TryGet(sceneName, out var sceneDefinition))
+        if (!SceneRegistry.TryGet(sceneName, out SceneDefinition sceneDefinition))
         {
             Debug.LogError($"[SceneFlow] Scene '{sceneName}' not registered.");
             return ToMainMenu();
@@ -16,7 +16,9 @@ public static class SceneFlow
             .Load(SceneSlot.Main, sceneDefinition.SceneName, true)
             .WithInputMode(sceneDefinition.InputMode);
 
-        if (sceneDefinition.UseOverlay)
+        bool useOverlay = forceOverlay ?? sceneDefinition.UseOverlay;
+
+        if (useOverlay)
         {
             transition.WithOverlay();
         }
@@ -25,7 +27,7 @@ public static class SceneFlow
     }
 
     public static Task ToAppStart() => ToScene(SceneDatabase.Scenes.AppStart);
-    public static Task ToMainMenu() => ToScene(SceneDatabase.Scenes.MainMenu);
-    public static Task ToPlay() => ToScene(SceneDatabase.Scenes.Play);
-    public static Task ToLevelEditor() => ToScene(SceneDatabase.Scenes.LevelEditor);
+    public static Task ToMainMenu(bool? overlay = null) => ToScene(SceneDatabase.Scenes.MainMenu, overlay);
+    public static Task ToPlay(bool? overlay = null) => ToScene(SceneDatabase.Scenes.Play, overlay);
+    public static Task ToLevelEditor(bool? overlay = null) => ToScene(SceneDatabase.Scenes.LevelEditor, overlay);
 }

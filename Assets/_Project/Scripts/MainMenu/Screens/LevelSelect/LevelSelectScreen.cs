@@ -25,6 +25,7 @@ public class LevelSelectScreen : MainMenuScreenBase
     [Header("UI")]
     [SerializeField] private Transform listRoot;
     [SerializeField] private Button confirmButton;
+    [SerializeField] private UIButtonVisual confirmButtonVisual;
     [SerializeField] private Button backButton;
 
     [Header("Prefabs")]
@@ -48,6 +49,11 @@ public class LevelSelectScreen : MainMenuScreenBase
         if (confirmButton == null)
         {
             Debug.LogError("[LevelSelectScreen] ConfirmButton is not assigned.");
+        }
+
+        if (confirmButtonVisual == null)
+        {
+            Debug.LogError("[LevelSelectScreen] ConfirmButtonVisual is not assigned.");
         }
 
         if (backButton == null)
@@ -78,7 +84,7 @@ public class LevelSelectScreen : MainMenuScreenBase
         onBackAction = ctx.onBack;
 
         selectedItem = null;
-        confirmButton.interactable = false;
+        confirmButtonVisual.SetInteractable(false);
 
         confirmButton.onClick.AddListener(OnConfirmClicked);
         backButton.onClick.AddListener(OnBackClicked);
@@ -92,7 +98,7 @@ public class LevelSelectScreen : MainMenuScreenBase
         backButton.onClick.RemoveAllListeners();
 
         selectedItem = null;
-        confirmButton.interactable = false;
+        confirmButtonVisual.SetInteractable(false);
         onBackAction = null;
     }
 
@@ -121,7 +127,7 @@ public class LevelSelectScreen : MainMenuScreenBase
         selectedItem = item;
         selectedItem.SetSelected(true);
 
-        confirmButton.interactable = true;
+        confirmButtonVisual.SetInteractable(true);
     }
 
     private async void OnConfirmClicked()

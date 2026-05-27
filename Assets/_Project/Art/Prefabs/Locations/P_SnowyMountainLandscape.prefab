@@ -1,13 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3174666209165881214
+--- !u!1 &2743386718808870682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 504637652221864663}
+  m_Layer: 0
+  m_Name: P_SnowyMountainLandscape
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &504637652221864663
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743386718808870682}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5938206206266670202}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &6188515883203566481
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 504637652221864663}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,13 +92,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
-      propertyPath: m_Name
-      value: P_SnowyMountainLandscape
+    - target: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
-      propertyPath: m_Layer
-      value: 3
+      propertyPath: m_Name
+      value: SnowyMountainLandscape
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62,20 +106,25 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6775838238158797214}
+      addedObject: {fileID: 9017217933098623162}
   m_SourcePrefab: {fileID: 100100000, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
---- !u!1 &2364327996464665135 stripped
+--- !u!4 &5938206206266670202 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+  m_PrefabInstance: {fileID: 6188515883203566481}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6423100337094862528 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
-  m_PrefabInstance: {fileID: 3174666209165881214}
+  m_PrefabInstance: {fileID: 6188515883203566481}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &6775838238158797214
+--- !u!64 &9017217933098623162
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2364327996464665135}
+  m_GameObject: {fileID: 6423100337094862528}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -90,4 +139,4 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 147211589036998625, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}
+  m_Mesh: {fileID: -462981019419857548, guid: 17240f2250bd95d45b6369c2305d50d3, type: 3}

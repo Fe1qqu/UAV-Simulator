@@ -9,7 +9,6 @@ public class LocationDefinition : ScriptableObject
 
     [Header("Presentation")]
     public LocalizedString localizedString;
-    public Sprite icon;
 
     [Header("Runtime")]
     public GameObject prefab;

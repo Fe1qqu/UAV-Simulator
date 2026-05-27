@@ -6,15 +6,22 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
     protected LevelObjectRegistry levelObjectRegistry;
     protected DroneControllerBase droneController;
 
+    public event Action<IScenarioRuntime> GameplayConcluded;
+
     public event Action<IScenarioRuntime> ScenarioCompleted;
+    public event Action<IScenarioRuntime> ScenarioFailed;
+
+    public bool IsGameplayConcluded => isGameplayConcluded;
 
     private bool isCompleted;
+    private bool isFailed;
+
+    private bool isGameplayConcluded;
 
     public virtual void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController)
     {
         this.levelObjectRegistry = levelObjectRegistry;
         this.droneController = droneController;
-        isCompleted = false;
 
         OnInitialize();
     }
@@ -22,12 +29,14 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
     public void StartScenario()
     {
         isCompleted = false;
+        isFailed = false;
+        isGameplayConcluded = false;
         StartScenarioInternal();
     }
 
     public void TickScenario()
     {
-        if (isCompleted)
+        if (isCompleted || isFailed)
         {
             return;
         }
@@ -35,10 +44,9 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
         TickScenarioInternal();
     }
 
-
     public void FixedTickScenario()
     {
-        if (isCompleted)
+        if (isCompleted || isFailed)
         {
             return;
         }
@@ -49,6 +57,8 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
     public void ResetScenario()
     {
         isCompleted = false;
+        isFailed = false;
+        isGameplayConcluded = false;
         ResetScenarioInternal();
     }
 
@@ -60,13 +70,35 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
 
     protected void CompleteScenario()
     {
-        if (isCompleted)
+        if (isCompleted || isFailed)
         {
             return;
         }
 
         isCompleted = true;
         ScenarioCompleted?.Invoke(this);
+    }
+
+    protected void FailScenario()
+    {
+        if (isCompleted || isFailed)
+        {
+            return;
+        }
+
+        isFailed = true;
+        ScenarioFailed?.Invoke(this);
+    }
+
+    protected void ConcludeGameplay()
+    {
+        if (isGameplayConcluded)
+        {
+            return;
+        }
+
+        isGameplayConcluded = true;
+        GameplayConcluded?.Invoke(this);
     }
 
     protected virtual void OnInitialize() { }

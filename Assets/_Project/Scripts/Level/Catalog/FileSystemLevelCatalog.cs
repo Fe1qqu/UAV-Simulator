@@ -5,12 +5,15 @@ using System.IO;
 public sealed class FileSystemLevelCatalog : ILevelCatalog
 {
     private readonly LevelFileManager levelFileManager;
-    private readonly ScenariosDatabase scenariosDatabase;
 
-    public FileSystemLevelCatalog(LevelFileManager levelFileManager, ScenariosDatabase scenariosDatabase)
+    private readonly ScenariosDatabase scenariosDatabase;
+    private readonly LocationsDatabase locationsDatabase;
+
+    public FileSystemLevelCatalog(LevelFileManager levelFileManager, ScenariosDatabase scenariosDatabase, LocationsDatabase locationsDatabase)
     {
         this.levelFileManager = levelFileManager;
         this.scenariosDatabase = scenariosDatabase;
+        this.locationsDatabase = locationsDatabase;
     }
 
     public IReadOnlyList<LevelCatalogEntry> GetAll()
@@ -32,8 +35,9 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
             }
 
             string scenarioDisplayName = ResolveScenarioName(levelData.scenarioId);
+            string locationDisplayName = ResolveLocationName(levelData.locationId);
 
-            result.Add(new LevelCatalogEntry(filePath, levelData, scenarioDisplayName));
+            result.Add(new LevelCatalogEntry(filePath, levelData, scenarioDisplayName, locationDisplayName));
         }
 
         return result;
@@ -53,5 +57,21 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
         }
 
         return scenario.localizedString.GetLocalizedString();
+    }
+
+    private string ResolveLocationName(string locationId)
+    {
+        if (string.IsNullOrEmpty(locationId))
+        {
+            return "—";
+        }
+
+        LocationDefinition location = locationsDatabase.GetById(locationId);
+        if (location == null)
+        {
+            return "—";
+        }
+
+        return location.localizedString.GetLocalizedString();
     }
 }

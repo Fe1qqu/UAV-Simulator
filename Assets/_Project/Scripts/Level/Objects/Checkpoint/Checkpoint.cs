@@ -1,0 +1,143 @@
+using UnityEngine;
+using TMPro;
+using System;
+using System.Collections.Generic;
+
+public class Checkpoint : LevelObject, ITriggerReceiver
+{
+    public event Action<Checkpoint> OnEntered;
+
+    [SerializeField] private Renderer meshRenderer;
+    [SerializeField] private Material unpassedMaterial;
+    [SerializeField] private Material passedMaterial;
+    [SerializeField] private TMP_Text indexNumberText;
+
+    [Header("Direction")]
+    [SerializeField] private float maxApproachAngle = 60f;
+
+    private bool isPassed;
+
+    private readonly HashSet<Transform> dronesInTrigger = new();
+
+    private void Awake()
+    {
+        if (meshRenderer == null)
+        {
+            Debug.LogError("[Checkpoint] MeshRenderer is not assigned.");
+        }
+
+        if (unpassedMaterial == null)
+        {
+            Debug.LogError("[Checkpoint] UnpassedMaterial is not assigned.");
+        }
+
+        if (passedMaterial == null)
+        {
+            Debug.LogError("[Checkpoint] PassedMaterial is not assigned.");
+        }
+
+        if (indexNumberText == null)
+        {
+            Debug.LogError("[Checkpoint] IndexNumberText is not assigned.");
+        }
+
+        ResetState();
+    }
+
+    private void OnEnable()
+    {
+        PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnDisable()
+    {
+        PropertyChanged -= OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(LevelObject levelObject, PropertyKey changedKey)
+    {
+        if (changedKey == LevelPropertyKeys.Index)
+        {
+            UpdateIndexVisual();
+        }
+    }
+
+    private void UpdateIndexVisual()
+    {
+        int index = Get(LevelPropertyKeys.Index, -1);
+        indexNumberText.text = index >= 0 ? index.ToString() : "?";
+    }
+
+    public void MarkPassed()
+    {
+        if (isPassed)
+        {
+            return;
+        }
+
+        isPassed = true;
+        meshRenderer.material = passedMaterial;
+    }
+
+    public void ResetState()
+    {
+        isPassed = false;
+        meshRenderer.sharedMaterial = unpassedMaterial;
+    }
+
+    public void OnTriggerEntered(Collider collider)
+    {
+        if (isPassed)
+        {
+            return;
+        }
+
+        var drone = collider.GetComponentInParent<IDroneActor>();
+        if (drone == null)
+        {
+            Debug.LogWarning(
+                $"[Checkpoint] Non-drone object entered trigger. Checkpoint: {name}, " +
+                $"Object: {collider.name}, Layer: {LayerMask.LayerToName(collider.gameObject.layer)}."
+            );
+
+            return;
+        }
+
+        Transform droneTransform = ((MonoBehaviour)drone).transform;
+        
+        if (dronesInTrigger.Contains(droneTransform))
+        {
+            return;
+        }
+
+        dronesInTrigger.Add(droneTransform);
+
+        if (!IsApproachValid(droneTransform))
+        {
+            Debug.Log($"[Checkpoint] Wrong direction approach on checkpoint {name}.");
+            return;
+        }
+
+        OnEntered?.Invoke(this);
+    }
+
+    public void OnTriggerExited(Collider collider)
+    {
+        var drone = collider.GetComponentInParent<IDroneActor>();
+        if (drone == null)
+        {
+            return;
+        }
+
+        Transform droneTransform = ((MonoBehaviour)drone).transform;
+
+        dronesInTrigger.Remove(droneTransform);
+    }
+
+    private bool IsApproachValid(Transform droneTransform)
+    {
+        float angle = Vector3.Angle(droneTransform.forward, transform.forward);
+
+        return angle <= maxApproachAngle;
+    }
+}

@@ -39,8 +39,6 @@ public static class PauseManager
             Application.targetFrameRate = PauseFpsLimit;
 
             Time.timeScale = 0f;
-
-            GameStateManager.SetState(GameState.Pause);
         }
         else
         {
@@ -51,8 +49,6 @@ public static class PauseManager
                 Application.targetFrameRate = previousTargetFps;
                 hasStoredFps = false;
             }
-
-            GameStateManager.SetState(GameState.Gameplay);
         }
 
         PauseStateChanged?.Invoke(paused);

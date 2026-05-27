@@ -35,6 +35,6 @@ public class MainMenuContext : MonoBehaviour
             return;
         }
 
-        levelCatalog = new FileSystemLevelCatalog(levelFileManager, scenariosDatabase);
+        levelCatalog = new FileSystemLevelCatalog(levelFileManager, scenariosDatabase, locationsDatabase);
     }
 }

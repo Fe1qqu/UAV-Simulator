@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
+  m_Name: CheckpointPlaceableObjectDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
+  objectId: checkpoint
+  localizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+    m_TableEntryReference:
+      m_KeyId: 31214180272070656
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 21300000, guid: 411cc9dce75aeab4e8f088183a6a8806, type: 3}
+  prefab: {fileID: 1996549352879713194, guid: 616cde5e53f42af428da1f54d24e6757, type: 3}
+  category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
+  properties:
+  - key: index
+    localizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:3eec42838b004564b98f4d912ea37f7b
+      m_TableEntryReference:
+        m_KeyId: 23136985088
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    type: 0
+    defaultValue: 0
+    useMin: 1
+    min: 0
+    useMax: 0
+    max: 0
+    enumOptions: []
+  previewMaterialMode: 2
+  previewMaterialOverride: {fileID: 0}
+  useTooltipSettingsOverride: 0
+  tooltipSettingsOverride: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

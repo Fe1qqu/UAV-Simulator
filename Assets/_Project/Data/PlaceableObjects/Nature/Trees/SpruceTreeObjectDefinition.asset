@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20501d137d73fd4e84a6a9e8dde5365, type: 3}
+  m_Name: SpruceTreeObjectDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceableObjectDefinition
+  objectId: spruce_tree
+  localizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:e3e3f17f094c3a74b8a04e24e1bcee9e
+    m_TableEntryReference:
+      m_KeyId: 57969393762721792
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 21300000, guid: ba8f27802968cc240a4bfab1d6901a14, type: 3}
+  prefab: {fileID: 6478709745904454254, guid: 2f2cfc9c22e39594882b628d371c7953, type: 3}
+  category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
+  properties: []
+  previewMaterialMode: 0
+  previewMaterialOverride: {fileID: 0}
+  useTooltipSettingsOverride: 0
+  tooltipSettingsOverride: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

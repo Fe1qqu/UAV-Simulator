@@ -19,9 +19,8 @@ public class ScenarioSelection : MonoBehaviour
     // Currently selected scenario data
     private ScenarioDefinition selectedScenario;
 
-    // List of created buttons and their checkmarks
-    private readonly List<(Button button, GameObject checkmark)> createdButtons = new();
-    
+    private readonly List<(Button button, UISelectionButtonVisual visual)> createdButtons = new();
+
     private ScenariosDatabase scenariosDatabase;
     private bool isBuilt;
 
@@ -96,41 +95,16 @@ public class ScenarioSelection : MonoBehaviour
                 Debug.LogWarning($"[ScenarioSelection] LocalizeStringEvent not found for scenario button.");
             }
 
-            Transform iconTransform = scenarioButtonInstance.transform.Find("Icon");
-            if (iconTransform == null)
+            if (!scenarioButtonInstance.TryGetComponent(out UISelectionButtonVisual visual))
             {
-                Debug.LogWarning($"[ScenarioSelection] Icon transform not found for scenario '{scenario.scenarioId}'.");
-            }
-            else
-            {
-                if (!iconTransform.TryGetComponent<Image>(out var icon))
-                {
-                    Debug.LogWarning($"[ScenarioSelection] Image component missing on Icon for scenario '{scenario.scenarioId}'.");
-                }
-                else if (scenario.icon == null)
-                {
-                    Debug.LogWarning($"[ScenarioSelection] Scenario '{scenario.scenarioId}' has no icon assigned.");
-                }
-                else
-                {
-                    icon.sprite = scenario.icon;
-                }
+                Debug.LogError("[ScenarioSelection] UISelectionButtonVisual not found.");
+                continue;
             }
 
-            GameObject checkmarkGameObject = null;
-            Transform checkmarkTransform = scenarioButtonInstance.transform.Find("Checkmark");
-            if (checkmarkTransform == null)
-            {
-                Debug.LogWarning($"[ScenarioSelection] Checkmark object not found for scenario '{scenario.scenarioId}'.");
-            }
-            else
-            {
-                checkmarkGameObject = checkmarkTransform.gameObject;
-                checkmarkGameObject.SetActive(false);
-            }
+            visual.SetSelected(false);
 
             button.onClick.AddListener(() => OnScenarioSelected(scenario, button));
-            createdButtons.Add((button, checkmarkGameObject));
+            createdButtons.Add((button, visual));
         }
     }
 
@@ -138,12 +112,9 @@ public class ScenarioSelection : MonoBehaviour
     {
         selectedScenario = scenario;
 
-        foreach (var (button, checkmark) in createdButtons)
+        foreach (var (button, visual) in createdButtons)
         {
-            if (checkmark != null)
-            {
-                checkmark.SetActive(button == clickedButton);
-            }
+            visual.SetSelected(button == clickedButton);
         }
 
         // Debug.Log($"[ScenarioSelection] Selected: {scenario.scenarioId}");

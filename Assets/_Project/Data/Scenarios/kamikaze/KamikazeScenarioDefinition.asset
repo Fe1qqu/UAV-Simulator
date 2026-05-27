@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6bad5e76372f6458c25fc6e890594d, type: 3}
+  m_Name: KamikazeScenarioDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinition
+  scenarioId: kamikaze
+  localizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:a3aa967611b941544992f26420d0780c
+    m_TableEntryReference:
+      m_KeyId: 28746213894545408
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  availableCategories:
+  - category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
+    accessMode: 1
+    objectIds:
+    - drone_spawn_point
+    - explosion_zone
+  - category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
+    accessMode: 0
+    objectIds: []
+  - category: {fileID: 11400000, guid: 41322d66ee741b445869d6b855664751, type: 2}
+    accessMode: 0
+    objectIds: []
+  - category: {fileID: 11400000, guid: 8f5e6ac59f060c6418ba6bc5e0519b71, type: 2}
+    accessMode: 0
+    objectIds: []
+  - category: {fileID: 11400000, guid: 17c43d309d3be0546a70af470d35c4a7, type: 2}
+    accessMode: 0
+    objectIds: []
+  objectRules:
+  - placeableObject: {fileID: 11400000, guid: 678cbf692aaf0eb48bc6482ef834a372, type: 2}
+    minCount: 1
+    maxCount: 1
+  - placeableObject: {fileID: 11400000, guid: 93fe8e9cdb310e14c9c3de81b5e69cab, type: 2}
+    minCount: 1
+    maxCount: 1
+  specificValidator: {fileID: 0}
+  runtime: {fileID: 11400000, guid: c76a73c43c5f0934aaba01885b9dd2c3, type: 2}
+  usesCheckpointPath: 0
+  references:
+    version: 2
+    RefIds: []

@@ -16,7 +16,7 @@ public class LanguageSettingsTab : SettingsTabBase
     private LanguageSettingDefinition languageDefinition;
     private SettingInstance languageSetting;
 
-    private readonly List<Button> languageButtons = new();
+    private readonly List<(Button button, UISelectionButtonVisual visual, Locale locale)> languageButtons = new();
 
     protected override void Awake()
     {
@@ -67,20 +67,32 @@ public class LanguageSettingsTab : SettingsTabBase
             return;
         }
 
-        Locale currentLocale = languageSetting.GetRuntimeValue() as Locale;
-        
         foreach (Locale locale in languageDefinition.AvailableLocales)
         {
             GameObject buttonInstance = Instantiate(languageButtonPrefab, buttonsContainer);
             buttonInstance.SetActive(true);
 
-            Button button = buttonInstance.GetComponent<Button>();
+            if (!buttonInstance.TryGetComponent(out Button button))
+            {
+                Debug.LogError("[LanguageSettingsTab] Button component not found.");
+                continue;
+            }
+
+            if (!buttonInstance.TryGetComponent(out UISelectionButtonVisual visual))
+            {
+                Debug.LogError("[LanguageSettingsTab] UISelectionButtonVisual component not found.");
+                continue;
+            }
+
             TMP_Text label = buttonInstance.GetComponentInChildren<TMP_Text>();
-            label.text = locale.LocaleName;
+            if (label != null)
+            {
+                label.text = locale.LocaleName;
+            }
 
             button.onClick.AddListener(() => OnLanguageSelected(locale));
 
-            languageButtons.Add(button);
+            languageButtons.Add((button, visual, locale));
         }
 
         UpdateButtonsVisual();
@@ -96,23 +108,10 @@ public class LanguageSettingsTab : SettingsTabBase
     {
         Locale currentLocale = languageSetting.GetRuntimeValue() as Locale;
 
-        foreach (Button button in languageButtons)
+        foreach (var (_, visual, locale) in languageButtons)
         {
-            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
-            bool isSelected = label.text == currentLocale.LocaleName;
-            SetVisualState(button.gameObject, isSelected);
+            bool selected = locale == currentLocale;
+            visual.SetSelected(selected);
         }
-    }
-
-    private void SetVisualState(GameObject buttonObject, bool selected)
-    {
-        Transform highlight = buttonObject.transform.Find("SelectionHighlight");
-        if (highlight == null)
-        {
-            Debug.LogError($"[LanguageSettingsTab] SelectionHighlight not found on button '{buttonObject.name}'.");
-            return;
-        }
-
-        highlight.gameObject.SetActive(selected);
     }
 }

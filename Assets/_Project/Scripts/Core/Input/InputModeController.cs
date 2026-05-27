@@ -55,7 +55,7 @@ public class InputModeController : MonoBehaviour
                 break;
 
             case InputMode.Loading:
-            case InputMode.None:
+            case InputMode.Disabled:
                 break;
         }
     }

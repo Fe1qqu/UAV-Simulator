@@ -20,7 +20,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72772378624
-    m_Key: plane
+    m_Key: airplane
     m_Metadata:
       m_Items: []
   - m_Id: 14974251858812928
@@ -33,6 +33,70 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 31872608980066304
     m_Key: target_area
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58062049008312320
+    m_Key: explosion_zone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969378549981184
+    m_Key: apple_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969391497797632
+    m_Key: poplar_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969393762721792
+    m_Key: spruce_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57969397839585280
+    m_Key: toplary_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68862329274654720
+    m_Key: birch_tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867064782282752
+    m_Key: bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867088593346560
+    m_Key: berries_bush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68867189235671040
+    m_Key: rock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69222474030669824
+    m_Key: one_story_house
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69222591886417920
+    m_Key: cottage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223226274897920
+    m_Key: warehouse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223607449051136
+    m_Key: wind_turbine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223756355231744
+    m_Key: tank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223835484971008
+    m_Key: "\u0441amp_tent"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69223965852327936
+    m_Key: fuel_tank
     m_Metadata:
       m_Items: []
   m_Metadata:

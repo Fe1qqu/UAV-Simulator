@@ -6,8 +6,9 @@ using TMPro;
 public class LevelSelectItem : MonoBehaviour
 {
     [SerializeField] private Button button;
-    [SerializeField] private TMP_Text levelNameText;
-    [SerializeField] private TMP_Text scenarioNameText;
+    [SerializeField] private TMP_Text missionText;
+    [SerializeField] private TMP_Text scenarioText;
+    [SerializeField] private TMP_Text locationText;
     [SerializeField] private GameObject selectionHighlight;
 
     private LevelCatalogEntry levelCatalogEntry;
@@ -22,14 +23,19 @@ public class LevelSelectItem : MonoBehaviour
             Debug.LogError("[LevelSelectItem] Button is not assigned.");
         }
 
-        if (levelNameText == null)
+        if (missionText == null)
         {
-            Debug.LogError("[LevelSelectItem] LevelNameText is not assigned.");
+            Debug.LogError("[LevelSelectItem] MissionText is not assigned.");
         }
 
-        if (scenarioNameText == null)
+        if (scenarioText == null)
         {
-            Debug.LogError("[LevelSelectItem] ScenarioNameText is not assigned.");
+            Debug.LogError("[LevelSelectItem] ScenarioText is not assigned.");
+        }
+
+        if (locationText == null)
+        {
+            Debug.LogError("[LevelSelectItem] LocationText is not assigned.");
         }
 
         if (selectionHighlight == null)
@@ -43,8 +49,9 @@ public class LevelSelectItem : MonoBehaviour
         this.levelCatalogEntry = levelCatalogEntry;
         this.onSelected = onSelected;
 
-        levelNameText.text = levelCatalogEntry.LevelData.levelName;
-        scenarioNameText.text = levelCatalogEntry.ScenarioDisplayName;
+        missionText.text = levelCatalogEntry.LevelData.levelName;
+        scenarioText.text = levelCatalogEntry.ScenarioDisplayName;
+        locationText.text = levelCatalogEntry.LocationDisplayName;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => onSelected(this));
@@ -53,5 +60,10 @@ public class LevelSelectItem : MonoBehaviour
     public void SetSelected(bool selected)
     {
         selectionHighlight.SetActive(selected);
+    }
+
+    private void OnDestroy()
+    {
+        button.onClick.RemoveAllListeners();
     }
 }

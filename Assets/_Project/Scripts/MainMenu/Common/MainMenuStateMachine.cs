@@ -42,6 +42,8 @@ public class MainMenuStateMachine : MonoBehaviour
             currentScreen.gameObject.SetActive(false);
         }
 
+        UINavigatorContext.Instance.ResetSelection();
+
         currentScreen = target;
         currentScreen.gameObject.SetActive(true);
 

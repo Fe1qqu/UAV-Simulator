@@ -12,11 +12,14 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
     [Header("UI")]
     [SerializeField] private PlayPauseMenu pauseMenu;
+    [SerializeField] private PlayResultMenu resultMenu;
 
     [Header("Runtime")]
     [SerializeField] private DroneControllerBase dronePrefab;
     [SerializeField] private Transform droneRoot;
+    [SerializeField] private CheckpointPath checkpointPath;
 
+    private DroneDeathHandler droneDeathHandler;
     private DroneControllerBase spawnedDrone;
     private IScenarioRuntime scenarioRuntime;
     private LevelData loadedLevelData;
@@ -53,6 +56,11 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
             Debug.LogError("[PlayManager] PauseMenu is not assigned.");
         }
 
+        if (resultMenu == null)
+        {
+            Debug.LogError("[PlayManager] ResultMenu is not assigned.");
+        }
+
         if (dronePrefab == null)
         {
             Debug.LogError("[PlayManager] DronePrefab is not assigned.");
@@ -61,6 +69,11 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         if (droneRoot == null)
         {
             Debug.LogError("[PlayManager] DroneRoot is not assigned.");
+        }
+
+        if (checkpointPath == null)
+        {
+            Debug.LogError("[PlayManager] СheckpointPath is not assigned.");
         }
     }
 
@@ -82,6 +95,9 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     private async Task InitializePlayAsync()
     {
         LoadLevel();
+
+        ConfigureScenarioVisuals();
+
         SpawnDrone();
         StartScenario();
 
@@ -110,6 +126,13 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         }
 
         levelLoader.Load(loadedLevelData);
+    }
+
+    private void ConfigureScenarioVisuals()
+    {
+        ScenarioDefinition scenario = scenariosDatabase.GetById(loadedLevelData.scenarioId);
+        bool usesCheckpointPath = scenario != null && scenario.usesCheckpointPath;
+        checkpointPath.SetScenarioActive(usesCheckpointPath);
     }
 
     private void SpawnDrone()
@@ -147,15 +170,21 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         scenarioRuntime = Instantiate(scenario.runtime);
 
         scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
+        scenarioRuntime.GameplayConcluded += OnGameplayConcluded;
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;
+        scenarioRuntime.ScenarioFailed += OnScenarioFailed;
         scenarioRuntime.StartScenario();
+
+        //InputModeController.Instance.SetMode(InputMode.Play);
     }
 
     private void OnDestroy()
     {
         if (scenarioRuntime != null)
         {
+            scenarioRuntime.GameplayConcluded -= OnGameplayConcluded;
             scenarioRuntime.ScenarioCompleted -= OnScenarioCompleted;
+            scenarioRuntime.ScenarioFailed -= OnScenarioFailed;
             scenarioRuntime.DisposeScenario();
             scenarioRuntime = null;
         }
@@ -173,8 +202,10 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
     public void RestartLevel()
     {
+        resultMenu.Close();
         ResetDrone();
         scenarioRuntime?.ResetScenario();
+        InputModeController.Instance.SetMode(InputMode.Play);
 
         Debug.Log("[PlayManager] Level restarted.");
     }
@@ -198,13 +229,33 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         spawnedDrone.ResetState(droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation);
     }
 
+    private void OnGameplayConcluded(IScenarioRuntime _)
+    {
+        InputModeController.Instance.SetMode(InputMode.Disabled);
+        Debug.Log("[PlayManager] Gameplay concluded. Disabling input.");
+    }
+
     private void OnScenarioCompleted(IScenarioRuntime _)
     {
+        resultMenu.OpenCompleted();
+        InputModeController.Instance.SetMode(InputMode.UI);
         Debug.Log("[PlayManager] Scenario completed!");
+    }
+
+    private void OnScenarioFailed(IScenarioRuntime _)
+    {
+        resultMenu.OpenFailed();
+        InputModeController.Instance.SetMode(InputMode.UI);
+        Debug.Log("[PlayManager] Scenario failed!");
     }
 
     public bool OnBack()
     {
+        if (scenarioRuntime.IsGameplayConcluded)
+        {
+            return true;
+        }
+
         //Debug.Log("[PlayManager] OnBack.");
         pauseMenu.Open();
         return true;

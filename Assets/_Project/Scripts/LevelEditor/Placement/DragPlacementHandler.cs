@@ -110,9 +110,9 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         }
 
         // Disable colliders to avoid self-intersection
-        foreach (Collider ñollider in previewInstance.GetComponentsInChildren<Collider>())
+        foreach (Collider collider in previewInstance.GetComponentsInChildren<Collider>())
         {
-            ñollider.enabled = false;
+            collider.enabled = false;
         }
 
         //Debug.Log($"[DragPlacementHandler] Drag started for '{prefabToPlace.name}'.");
@@ -159,7 +159,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         }
         else
         {
-            Debug.Log($"[DragPlacementHandler] Failed to place '{currentPlaceableObject.prefab.name}' — no valid surface at pointer.");
+            Debug.Log($"[DragPlacementHandler] Failed to place '{currentPlaceableObject.prefab.name}' ï¿½ no valid surface at pointer.");
         }
 
         UIDragContext.Instance.ResetContext();

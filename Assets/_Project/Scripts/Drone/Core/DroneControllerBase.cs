@@ -1,14 +1,21 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class DroneControllerBase : MonoBehaviour, IControllable, IDroneActor
 {
+    public event Action<Collision> CollisionHappened;
+    public event Action Exploded;
+
     public DroneControllerBase Controller => this;
 
     public abstract float ThrottleInput { get; }
     public abstract float YawInput { get; }
     public abstract float PitchInput { get; }
     public abstract float RollInput { get; }
+
+    private readonly Dictionary<Renderer, bool> rendererStates = new();
+    private readonly Dictionary<Collider, bool> colliderStates = new();
 
     /// <summary>
     /// Fully resets the drone runtime state and teleports it to the specified transform.
@@ -29,4 +36,71 @@ public abstract class DroneControllerBase : MonoBehaviour, IControllable, IDrone
     /// May be null if the drone has no rotors.
     /// </summary>
     public virtual IReadOnlyDictionary<string, float> DebugRotorRPMs => null;
+
+    protected virtual void Awake()
+    {
+        foreach (Renderer renderer in GetComponentsInChildren<Renderer>(true))
+        {
+            rendererStates[renderer] = renderer.enabled;
+        }
+
+        foreach (Collider collider in GetComponentsInChildren<Collider>(true))
+        {
+            colliderStates[collider] = collider.enabled;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        float impact = collision.relativeVelocity.magnitude;
+
+        //Debug.Log($"[DroneControllerBase] Impact: {impact}. ");
+
+        CollisionHappened?.Invoke(collision);
+    }
+
+    public void Explode()
+    {
+        Debug.Log("[DroneControllerBase] Exploded.");
+
+        Exploded?.Invoke();
+    }
+
+    public void Hide()
+    {
+        foreach (var keyValuePair in rendererStates)
+        {
+            if (keyValuePair.Key != null)
+            {
+                keyValuePair.Key.enabled = false;
+            }
+        }
+
+        foreach (var keyValuePair in colliderStates)
+        {
+            if (keyValuePair.Key != null)
+            {
+                keyValuePair.Key.enabled = false;
+            }
+        }
+    }
+
+    public void Show()
+    {
+        foreach (var keyValuePair in rendererStates)
+        {
+            if (keyValuePair.Key != null)
+            {
+                keyValuePair.Key.enabled = keyValuePair.Value;
+            }
+        }
+
+        foreach (var keyValuePair in colliderStates)
+        {
+            if (keyValuePair.Key != null)
+            {
+                keyValuePair.Key.enabled = keyValuePair.Value;
+            }
+        }
+    }
 }

@@ -23,7 +23,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1857078005227520
-    m_Localized: Reach target
+    m_Localized: Drone racing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28746213894545408
+    m_Localized: Kamikaze
     m_Metadata:
       m_Items: []
   references:

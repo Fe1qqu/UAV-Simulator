@@ -50,6 +50,9 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
     [Header("Localization")]
     [SerializeField] private LocalizationPreloader localizationPreloader;
 
+    [Header("Runtime")]
+    [SerializeField] private CheckpointPath checkpointPath;
+
     // Currently selected category button
     private UICategoryButton currentSelectedButton;
 
@@ -130,6 +133,11 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         {
             Debug.LogError("[LevelEditorManager] LocalizationPreloader is not assigned.");
         }
+
+        if (checkpointPath == null)
+        {
+            Debug.LogError("[LevelEditorManager] СheckpointPath is not assigned.");
+        }
     }
 
     public async Task InitializeAsync()
@@ -142,6 +150,9 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         Task localizationTask = localizationPreloader.Load();
 
         LoadLevelOrEmpty();
+
+        ConfigureScenarioVisuals();
+
         SetupCategories();
 
         await localizationTask;
@@ -327,6 +338,13 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         levelLoader.Load(levelData);
 
         levelEditorSession.Setup(levelData.levelName, levelData.locationId, levelData.scenarioId);
+    }
+
+    private void ConfigureScenarioVisuals()
+    {
+        bool isDroneRacing = CurrentScenario != null && CurrentScenario.usesCheckpointPath;
+
+        checkpointPath.SetScenarioActive(isDroneRacing);
     }
 
     private void LoadEmptyLevel()

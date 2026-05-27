@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public enum RotorPosition
@@ -53,8 +54,10 @@ public class QuadcopterController : DroneControllerBase
     public override float PitchInput => pitchInput;
     public override float RollInput => rollInput;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         rigidBody = GetComponent<Rigidbody>();
         if (rigidBody == null)
         {

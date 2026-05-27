@@ -2,40 +2,32 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary>
-/// UI button representing a single category inside the level editor.
-/// Handles visual selection, tooltip display, and click events.
-/// </summary>
 [RequireComponent(typeof(Button))]
-[RequireComponent(typeof(CanvasGroup))]
 public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ITooltipSource
 {
-    // Button component attached to this UI element
-    private Button button;
+    [Header("References")]
+    [SerializeField] private Image icon;
+    [SerializeField] private RectTransform tooltipAnchor;
+    [SerializeField] private UISelectionButtonVisual visual;
 
-    // Icon image shown inside the category button
-    private Image icon;
-
-    // CanvasGroup used to visually highlight selected state
-    private CanvasGroup canvasGroup;
-
-    // Category data assigned during initialization
     private CategoryDefinition linkedCategory;
 
-    // Callback invoked when this button is clicked
     private System.Action<CategoryDefinition, UICategoryButton> onClick;
 
-    [SerializeField] private RectTransform tooltipAnchor;
+    private Button button;
 
     private void Awake()
     {
         button = GetComponent<Button>();
-        canvasGroup = GetComponent<CanvasGroup>();
 
-        icon = transform.Find("Icon").GetComponent<Image>();
         if (icon == null)
         {
-            Debug.LogWarning($"[UICategoryButton] Missing icon on {name}.");
+            Debug.LogWarning($"[UICategoryButton] Icon is not assigned on '{name}'.");
+        }
+
+        if (visual == null)
+        {
+            Debug.LogWarning($"[UICategoryButton] Visual is not assigned on '{name}'.");
         }
 
         if (tooltipAnchor == null)
@@ -69,7 +61,7 @@ public class UICategoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     /// <param name="selected">Whether this category is currently selected.</param>
     public void SetSelected(bool selected)
     {
-        canvasGroup.alpha = selected ? 0.6f : 1.0f;
+        visual.SetSelected(selected);
     }
 
     /// <summary>
