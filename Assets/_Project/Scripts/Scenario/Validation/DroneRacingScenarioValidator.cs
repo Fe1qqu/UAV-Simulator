@@ -4,18 +4,19 @@ using System.Linq;
 [CreateAssetMenu(menuName = "Game Data/Scenario Validators/Drone Racing")]
 public class DroneRacingScenarioValidator : ScenarioSpecificValidator
 {
-    public override ScenarioValidationResult Validate(LevelObjectRegistry levelObjectRegistry)
+    public override void Validate(LevelObjectRegistry levelObjectRegistry, ScenarioValidationResult result)
     {
         var indices = levelObjectRegistry
             .EnumerateAlive<Checkpoint>()
-            .Select(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, -1))
-            .OrderBy(i => i);
+            .Select(x => x.Get(LevelPropertyKeys.Index, -1))
+            .OrderBy(x => x)
+            .ToArray();
 
-        if (!indices.SequenceEqual(Enumerable.Range(0, indices.Count())))
+        bool valid = indices.SequenceEqual(Enumerable.Range(0, indices.Length));
+
+        if (!valid)
         {
-            return new ScenarioValidationResult(false, ScenarioValidationErrorType.LevelInvalid, "Checkpoint indices must form a continuous sequence 0..n-1");
+            result.Add(new ValidationIssue(ScenarioValidationErrorType.LevelInvalid, "validation_checkpoint_sequence"));
         }
-
-        return ScenarioValidationResult.Ok();
     }
 }

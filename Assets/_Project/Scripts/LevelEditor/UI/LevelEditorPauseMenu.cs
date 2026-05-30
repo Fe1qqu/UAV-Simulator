@@ -1,6 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
 using System.IO;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelEditorPauseMenu : PauseMenuBase
 {
@@ -11,6 +13,9 @@ public class LevelEditorPauseMenu : PauseMenuBase
     [SerializeField] private Button continueButton;
     [SerializeField] private Button saveButton;
     [SerializeField] private Button exitButton;
+
+    [Header("Modal dialog")]
+    [SerializeField] private ModalDialogService modalDialogService;
 
     protected override void Awake()
     {
@@ -40,6 +45,11 @@ public class LevelEditorPauseMenu : PauseMenuBase
         {
             Debug.LogError("[LevelEditorPauseMenu] ExitButton is not assigned.");
         }
+
+        if (modalDialogService == null)
+        {
+            Debug.LogError("[LevelEditorPauseMenu] ModalDialogService is not assigned.");
+        }
     }
 
     private void Start()
@@ -66,7 +76,7 @@ public class LevelEditorPauseMenu : PauseMenuBase
         ScenarioValidationResult result = ScenarioValidator.Validate(levelEditorManager.CurrentScenario, LevelObjectRegistry.Instance);
         if (!result.IsValid)
         {
-            Debug.LogError($"[LevelEditorPauseMenu] {result.ErrorType}: {result.Message}.");
+            ShowValidationDialog(result);
             return;
         }
 
@@ -81,6 +91,61 @@ public class LevelEditorPauseMenu : PauseMenuBase
 
         LevelData levelData = levelDataBuilder.CollectLevelData();
         levelEditorManager.LevelFileManager.SaveByPath(levelEditorSession.LevelFilePath, levelData);
+
+        ShowSaveSuccessDialog();
+    }
+
+    private void ShowValidationDialog(ScenarioValidationResult result)
+    {
+        modalDialogService.Show(new ModalDialogConfig
+        {
+            titleLocalizationKey = "validation_save_blocked",
+
+            messageLines = ValidationMessageBuilder.Build(result),
+
+            messageAlignment = TextAlignmentOptions.TopLeft,
+
+            Buttons = new[]
+            {
+                new ModalButtonConfig
+                {
+                    localizationTableEntryKey = "ok",
+                    Result = ModalResult.Confirm,
+                    IsBackAction = true
+                }
+            }
+        });
+    }
+
+    private void ShowSaveSuccessDialog()
+    {
+        modalDialogService.Show(new ModalDialogConfig
+        {
+            titleLocalizationKey = "validation_save_success",
+
+            Buttons = new[]
+            {
+                new ModalButtonConfig
+                {
+                    localizationTableEntryKey = "to_main_menu",
+                    Result = ModalResult.Cancel
+                },
+                new ModalButtonConfig
+                {
+                    localizationTableEntryKey = "close",
+                    Result = ModalResult.Confirm,
+                    IsBackAction = true
+                }
+            },
+
+            OnResult = result =>
+            {
+                if (result == ModalResult.Cancel)
+                {
+                    OnExitClicked();
+                }
+            }
+        });
     }
 
     private void CreateNewLevelFilePath(LevelEditorSession levelEditorSession)

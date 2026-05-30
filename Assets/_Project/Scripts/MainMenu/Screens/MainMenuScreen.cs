@@ -3,11 +3,13 @@ using UnityEngine.UI;
 
 public class MainMenuScreen : MainMenuScreenBase
 {
+    [Header("Buttons")]
     [SerializeField] private Button playButton;
     [SerializeField] private Button levelEditorButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitButton;
 
+    [Header("Modal dialog")]
     [SerializeField] private ModalDialogService modalDialogService;
 
     private void Awake()
@@ -84,7 +86,8 @@ public class MainMenuScreen : MainMenuScreenBase
     {
         modalDialogService.Show(new ModalDialogConfig
         {
-            messageLocalizationTableEntryKey = "modal_exit_message",
+            messageLocalizationKey = "modal_exit_message",
+
             Buttons = new[]
             {
                 new ModalButtonConfig
@@ -99,6 +102,7 @@ public class MainMenuScreen : MainMenuScreenBase
                     IsBackAction = true
                 }
             },
+
             OnResult = result =>
             {
                 if (result == ModalResult.Confirm)

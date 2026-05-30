@@ -1,19 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Localization.Components;
+using UnityEngine.Localization;
+using TMPro;
 using System;
+using System.Linq;
 
 public class ModalDialogController : MonoBehaviour, IBackHandler
 {
     [Header("UI")]
     [SerializeField] private RectTransform windowRoot; // Window with VerticalLayoutGroup and ContentSizeFitter
-    [SerializeField] private LocalizeStringEvent messageLocalizeStringEvent;
+    [SerializeField] private TMP_Text messageText;
     [SerializeField] private Transform buttonsContainer;
     [SerializeField] private ModalButton buttonPrefab;
 
     private Action<ModalResult> onResult;
 
     private ModalButton backActionButton;
+
+    private const string Bullet = "• ";
 
     public bool IsShown => gameObject.activeSelf;
 
@@ -24,9 +28,9 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
             Debug.LogError("[ModalDialogController] WindowRoot not assigned.");
         }
 
-        if (messageLocalizeStringEvent == null)
+        if (messageText == null)
         {
-            Debug.LogError("[ModalDialogController] MessageLocalizeStringEvent not assigned.");
+            Debug.LogError("[ModalDialogController] MessageText not assigned.");
         }
 
         if (buttonsContainer == null)
@@ -48,13 +52,51 @@ public class ModalDialogController : MonoBehaviour, IBackHandler
             return;
         }
 
-        messageLocalizeStringEvent.StringReference.TableEntryReference = config.messageLocalizationTableEntryKey;
         onResult = config.OnResult;
 
         ClearButtons();
         CreateButtons(config);
 
         gameObject.SetActive(true);
+
+
+        messageText.alignment = config.messageAlignment;
+
+        var sb = new System.Text.StringBuilder();
+
+        // 1. TITLE (no bullets)
+        if (!string.IsNullOrEmpty(config.titleLocalizationKey))
+        {
+            var title = new LocalizedString("UI", config.titleLocalizationKey)
+            {
+                Arguments = config.titleArguments
+            };
+
+            sb.AppendLine(title.GetLocalizedString());
+        }
+
+        // 2. SINGLE MESSAGE (optional)
+        if (!string.IsNullOrEmpty(config.messageLocalizationKey))
+        {
+            var message = new LocalizedString("UI", config.messageLocalizationKey)
+            {
+                Arguments = config.messageArguments
+            };
+
+            sb.AppendLine(message.GetLocalizedString());
+        }
+
+        // 3. BULLET LIST (validation/errors)
+        if (config.messageLines != null && config.messageLines.Count > 0)
+        {
+            foreach (var line in config.messageLines)
+            {
+                sb.Append("• ");
+                sb.AppendLine(line);
+            }
+        }
+
+        messageText.text = sb.ToString().TrimEnd();
 
         BackDispatcher.RegisterHandler(this);
 

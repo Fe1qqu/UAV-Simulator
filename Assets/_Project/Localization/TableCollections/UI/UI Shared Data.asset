@@ -23,12 +23,16 @@ MonoBehaviour:
     m_Key: back
     m_Metadata:
       m_Items: []
-  - m_Id: 25472424758894592
-    m_Key: cancel
+  - m_Id: 70685561720037376
+    m_Key: ok
     m_Metadata:
       m_Items: []
   - m_Id: 23950719443951616
     m_Key: confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25472424758894592
+    m_Key: cancel
     m_Metadata:
       m_Items: []
   - m_Id: 24042547212083200
@@ -41,6 +45,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 13144996077568
     m_Key: enter_a_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70706933510856704
+    m_Key: close
     m_Metadata:
       m_Items: []
   - m_Id: 1986725568512
@@ -161,6 +169,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 68625278247788544
     m_Key: pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70705354045022208
+    m_Key: validation_save_success
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70693768005836800
+    m_Key: validation_save_blocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70676991901327360
+    m_Key: validation_missing_objects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70676994434686976
+    m_Key: validation_too_many_objects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70676995713949696
+    m_Key: validation_checkpoint_sequence
     m_Metadata:
       m_Items: []
   m_Metadata:

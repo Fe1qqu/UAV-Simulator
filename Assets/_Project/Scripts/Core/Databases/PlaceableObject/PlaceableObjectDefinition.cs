@@ -47,4 +47,9 @@ public class PlaceableObjectDefinition : ScriptableObject
     [ShowIf(nameof(useTooltipSettingsOverride))]
     [Tooltip("Optional override. If set, these tooltip settings will be used instead of those resolved by the TooltipSettingsPipeline.")]
     public TooltipSettings tooltipSettingsOverride;
+
+    public string GetName()
+    {
+        return localizedString?.GetLocalizedString();
+    }
 }

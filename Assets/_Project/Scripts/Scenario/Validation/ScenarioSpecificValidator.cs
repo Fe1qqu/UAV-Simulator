@@ -2,5 +2,5 @@ using UnityEngine;
 
 public abstract class ScenarioSpecificValidator : ScriptableObject
 {
-    public abstract ScenarioValidationResult Validate(LevelObjectRegistry levelObjectRegistry);
+    public abstract void Validate(LevelObjectRegistry levelObjectRegistry, ScenarioValidationResult result);
 }

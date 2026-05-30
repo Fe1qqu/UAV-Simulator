@@ -166,6 +166,34 @@ MonoBehaviour:
     m_Localized: Pause
     m_Metadata:
       m_Items: []
+  - m_Id: 70676991901327360
+    m_Localized: Required at least {1} object(s) of type "{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70676995713949696
+    m_Localized: Checkpoint indices must form a continuous sequence 0..n-1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70676994434686976
+    m_Localized: Allowed at most {1} object(s) of type "{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70685561720037376
+    m_Localized: Ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70693768005836800
+    m_Localized: Can't save level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70705354045022208
+    m_Localized: Level saved successfully
+    m_Metadata:
+      m_Items: []
+  - m_Id: 70706933510856704
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ModalDialogController
   windowRoot: {fileID: 6850373291232503673}
-  messageLocalizeStringEvent: {fileID: 803021388876788852}
+  messageText: {fileID: 3030736741396676069}
   buttonsContainer: {fileID: 1167822089710082387}
   buttonPrefab: {fileID: 8636271046284634667}
 --- !u!1 &4602031169924274202
