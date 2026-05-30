@@ -6,15 +6,9 @@ public class DroneRacingScenarioValidator : ScenarioSpecificValidator
 {
     public override void Validate(LevelObjectRegistry levelObjectRegistry, ScenarioValidationResult result)
     {
-        var indices = levelObjectRegistry
-            .EnumerateAlive<Checkpoint>()
-            .Select(x => x.Get(LevelPropertyKeys.Index, -1))
-            .OrderBy(x => x)
-            .ToArray();
+        var checkpoints = levelObjectRegistry.EnumerateAlive<Checkpoint>();
 
-        bool valid = indices.SequenceEqual(Enumerable.Range(0, indices.Length));
-
-        if (!valid)
+        if (!CheckpointSequenceService.TryGetValidSequence(checkpoints, out var _))
         {
             result.Add(new ValidationIssue(ScenarioValidationErrorType.LevelInvalid, "validation_checkpoint_sequence"));
         }

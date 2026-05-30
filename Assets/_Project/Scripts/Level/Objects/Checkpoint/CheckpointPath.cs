@@ -1,18 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 [RequireComponent(typeof(LineRenderer))]
 public class CheckpointPath : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private LevelObjectRegistry levelObjectRegistry;
-    [SerializeField] private int pointsPerSegment = 20;
+    [SerializeField, Min(1)] private int pointsPerSegment = 20;
 
     private LineRenderer lineRenderer;
 
     private readonly List<Checkpoint> allCheckpoints = new();
-    private List<Checkpoint> checkpoints = new();
+    private List<Checkpoint> orderedValidCheckpoints = new();
 
     private bool scenarioActive;
     private bool rebuilding;
@@ -30,58 +29,6 @@ public class CheckpointPath : MonoBehaviour
     private void OnDisable()
     {
         Deactivate();
-    }
-
-    private void OnLifecycleChanged(LevelObject levelObject)
-    {
-        if (levelObject is Checkpoint)
-        {
-            RebuildPath();
-        }
-    }
-
-    private void UnsubscribeFromCheckpoints()
-    {
-        foreach (Checkpoint checkpoint in allCheckpoints)
-        {
-            if (checkpoint != null)
-            {
-                checkpoint.TransformChanged -= OnCheckpointTransformChanged;
-                checkpoint.PropertyChanged -= OnCheckpointPropertyChanged;
-            }
-        }
-    }
-
-    private void SubscribeToCheckpoints()
-    {
-        foreach (Checkpoint checkpoint in allCheckpoints)
-        {
-            checkpoint.TransformChanged += OnCheckpointTransformChanged;
-            checkpoint.PropertyChanged += OnCheckpointPropertyChanged;
-        }
-    }
-
-    private void OnCheckpointTransformChanged(LevelObject _)
-    {
-        if (!scenarioActive)
-        {
-            return;
-        }
-
-        UpdateLinePositions();
-    }
-
-    private void OnCheckpointPropertyChanged(LevelObject _, PropertyKey changedKey)
-    {
-        if (!scenarioActive)
-        {
-            return;
-        }
-
-        if (changedKey == LevelPropertyKeys.Index)
-        {
-            RebuildPath();
-        }
     }
 
     public void SetScenarioActive(bool active)
@@ -105,11 +52,13 @@ public class CheckpointPath : MonoBehaviour
 
     private void Activate()
     {
-        if (levelObjectRegistry != null)
+        if (levelObjectRegistry == null)
         {
-            levelObjectRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
+            ClearPath();
+            return;
         }
 
+        levelObjectRegistry.LevelObjectLifecycleChanged += OnLifecycleChanged;
         RebuildPath();
     }
 
@@ -123,70 +72,112 @@ public class CheckpointPath : MonoBehaviour
         UnsubscribeFromCheckpoints();
 
         allCheckpoints.Clear();
-        checkpoints.Clear();
+        orderedValidCheckpoints.Clear();
 
-        lineRenderer.positionCount = 0;
+        ClearPath();
     }
 
-    public void RebuildPath()
+    private void OnLifecycleChanged(LevelObject levelObject)
+    {
+        if (levelObject is Checkpoint)
+        {
+            RebuildPath();
+        }
+    }
+
+    private void OnCheckpointTransformChanged(LevelObject _)
     {
         if (!scenarioActive)
         {
             return;
         }
 
-        if (rebuilding)
+        // The validity of the sequence does not change depending on the position,
+        // so we simply update the geometry if the path is already valid.
+        UpdateLinePositions();
+    }
+
+    private void OnCheckpointPropertyChanged(LevelObject _, PropertyKey changedKey)
+    {
+        if (!scenarioActive)
         {
+            return;
+        }
+
+        if (changedKey == LevelPropertyKeys.Index)
+        {
+            RebuildPath();
+        }
+    }
+
+    public void RebuildPath()
+    {
+        if (!scenarioActive || rebuilding)
+        {
+            return;
+        }
+
+        if (levelObjectRegistry == null)
+        {
+            ClearPath();
             return;
         }
 
         rebuilding = true;
 
-        UnsubscribeFromCheckpoints();
+        try
+        {
+            UnsubscribeFromCheckpoints();
 
-        allCheckpoints.Clear();
+            allCheckpoints.Clear();
+            allCheckpoints.AddRange(levelObjectRegistry.EnumerateAlive<Checkpoint>());
 
-        allCheckpoints.AddRange(
-            levelObjectRegistry.EnumerateAlive<Checkpoint>()
-        );
+            // Subscribe to all checkpoints, even if the sequence is not yet valid.
+            // Then, after the indexes are corrected, the path will automatically appear.
+            SubscribeToCheckpoints();
 
-        checkpoints = allCheckpoints
-            .GroupBy(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, 0))
-            .Select(group => group.First())
-            .OrderBy(checkpoint => checkpoint.Get(LevelPropertyKeys.Index, 0))
-            .ToList();
+            if (!CheckpointSequenceService.TryGetValidSequence(allCheckpoints, out var ordered))
+            {
+                orderedValidCheckpoints.Clear();
+                ClearPath();
+                return;
+            }
 
-        SubscribeToCheckpoints();
-
-        UpdateLinePositions();
-
-        rebuilding = false;
+            orderedValidCheckpoints = ordered;
+            UpdateLinePositions();
+        }
+        finally
+        {
+            rebuilding = false;
+        }
     }
 
     private void UpdateLinePositions()
     {
-        if (checkpoints.Count < 2)
+        if (orderedValidCheckpoints.Count < 2)
         {
-            lineRenderer.positionCount = 0;
+            ClearPath();
             return;
         }
 
-        List<Vector3> points = new();
+        List<Vector3> points = new((orderedValidCheckpoints.Count - 1) * pointsPerSegment + 1);
 
-        for (int i = 0; i < checkpoints.Count - 1; i++)
+        for (int i = 0; i < orderedValidCheckpoints.Count - 1; i++)
         {
-            Vector3 p0 = checkpoints[i].transform.position;
-            Vector3 p1 = checkpoints[i + 1].transform.position;
+            Transform from = orderedValidCheckpoints[i].transform;
+            Transform to = orderedValidCheckpoints[i + 1].transform;
+
+            Vector3 p0 = from.position;
+            Vector3 p1 = to.position;
 
             float segmentLength = Vector3.Distance(p0, p1);
             float tangentStrength = segmentLength * 0.33f;
 
-            Vector3 t0 = p0 + checkpoints[i].transform.forward * tangentStrength;
-            Vector3 t1 = p1 - checkpoints[i + 1].transform.forward * tangentStrength;
+            Vector3 t0 = p0 + from.forward * tangentStrength;
+            Vector3 t1 = p1 - to.forward * tangentStrength;
 
             for (int j = 0; j <= pointsPerSegment; j++)
             {
-                // Skip the first point of the segment if it is not the first segment in order to avoid duplicating points at the joints
                 if (i > 0 && j == 0)
                 {
                     continue;
@@ -199,6 +190,39 @@ public class CheckpointPath : MonoBehaviour
 
         lineRenderer.positionCount = points.Count;
         lineRenderer.SetPositions(points.ToArray());
+    }
+
+    private void ClearPath()
+    {
+        lineRenderer.positionCount = 0;
+    }
+
+    private void SubscribeToCheckpoints()
+    {
+        foreach (Checkpoint checkpoint in allCheckpoints)
+        {
+            if (checkpoint == null)
+            {
+                continue;
+            }
+
+            checkpoint.TransformChanged += OnCheckpointTransformChanged;
+            checkpoint.PropertyChanged += OnCheckpointPropertyChanged;
+        }
+    }
+
+    private void UnsubscribeFromCheckpoints()
+    {
+        foreach (Checkpoint checkpoint in allCheckpoints)
+        {
+            if (checkpoint == null)
+            {
+                continue;
+            }
+
+            checkpoint.TransformChanged -= OnCheckpointTransformChanged;
+            checkpoint.PropertyChanged -= OnCheckpointPropertyChanged;
+        }
     }
 
     private static Vector3 CubicBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
