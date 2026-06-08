@@ -6,7 +6,7 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
     [SerializeField] private float minImpactForce = 5f;
 
     private ExplosionZone explosionZone;
-    private bool droneInsideZone;
+    private bool uavInsideZone;
 
     private ScenarioResult pendingResult;
 
@@ -19,26 +19,26 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
             return;
         }
 
-        droneController.CollisionHappened += OnDroneCollisionHappened;
+        uavController.CollisionHappened += OnUAVCollisionHappened;
 
         explosionZone.ObjectEntered += OnExplosionZoneObjectEntered;
         explosionZone.ObjectExited += OnExplosionZoneObjectExited;
 
-        if (droneController.TryGetComponent<DroneDeathHandler>(out var droneDeathHandler))
+        if (uavController.TryGetComponent<UAVDeathHandler>(out var uavDeathHandler))
         {
-            droneDeathHandler.ExplosionSpawned += OnExplosionSpawned;
+            uavDeathHandler.ExplosionSpawned += OnExplosionSpawned;
         }
     }
 
     protected override void ResetScenarioInternal()
     {
-        droneInsideZone = false;
+        uavInsideZone = false;
         pendingResult = ScenarioResult.None;
 
-        // Recovering a drone if it was hidden
-        if (droneController.TryGetComponent<DroneDeathHandler>(out var droneDeathHandler))
+        // Recovering a uav if it was hidden
+        if (uavController.TryGetComponent<UAVDeathHandler>(out var uavDeathHandler))
         {
-            droneDeathHandler.Restore();
+            uavDeathHandler.Restore();
         }
     }
 
@@ -50,11 +50,11 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
             explosionZone.ObjectExited -= OnExplosionZoneObjectExited;
         }
 
-        if (droneController != null)
+        if (uavController != null)
         {
-            droneController.CollisionHappened -= OnDroneCollisionHappened;
+            uavController.CollisionHappened -= OnUAVCollisionHappened;
 
-            if (droneController.TryGetComponent<DroneDeathHandler>(out var deathHandler))
+            if (uavController.TryGetComponent<UAVDeathHandler>(out var deathHandler))
             {
                 deathHandler.ExplosionSpawned -= OnExplosionSpawned;
             }
@@ -63,27 +63,27 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
 
     private void OnExplosionZoneObjectEntered(Collider collider)
     {
-        var drone = collider.GetComponentInParent<IDroneActor>();
-        if (drone is MonoBehaviour monoBehaviour && monoBehaviour.gameObject != droneController.gameObject)
+        var uav = collider.GetComponentInParent<IUAVActor>();
+        if (uav is MonoBehaviour monoBehaviour && monoBehaviour.gameObject != uavController.gameObject)
         {
             return;
         }
 
-        droneInsideZone = true;
+        uavInsideZone = true;
     }
 
     private void OnExplosionZoneObjectExited(Collider collider)
     {
-        var drone = collider.GetComponentInParent<IDroneActor>();
-        if (drone is MonoBehaviour monoBehaviour && monoBehaviour.gameObject != droneController.gameObject)
+        var uav = collider.GetComponentInParent<IUAVActor>();
+        if (uav is MonoBehaviour monoBehaviour && monoBehaviour.gameObject != uavController.gameObject)
         {
             return;
         }
 
-        droneInsideZone = false;
+        uavInsideZone = false;
     }
 
-    private void OnDroneCollisionHappened(Collision collision)
+    private void OnUAVCollisionHappened(Collision collision)
     {
         float impact = collision.relativeVelocity.magnitude;
 
@@ -94,11 +94,11 @@ public class KamikazeScenarioRuntime : ScenarioRuntimeBase
             return;
         }
 
-        pendingResult = droneInsideZone ? ScenarioResult.Success : ScenarioResult.Fail;
+        pendingResult = uavInsideZone ? ScenarioResult.Success : ScenarioResult.Fail;
 
         ConcludeGameplay();
 
-        droneController.Explode();
+        uavController.Explode();
     }
 
     private void OnExplosionSpawned(ExplosionEffect effect)

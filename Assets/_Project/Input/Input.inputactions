@@ -81,7 +81,7 @@
             ]
         },
         {
-            "name": "DroneControl",
+            "name": "UAVControl",
             "id": "8c9d2c0d-82f7-403d-ac89-f051158a1046",
             "actions": [
                 {
@@ -389,7 +389,7 @@
             ]
         },
         {
-            "name": "DroneCamera",
+            "name": "UAVCamera",
             "id": "ea8ee5f9-60dc-4cb6-9b9f-174f09baee4f",
             "actions": [
                 {

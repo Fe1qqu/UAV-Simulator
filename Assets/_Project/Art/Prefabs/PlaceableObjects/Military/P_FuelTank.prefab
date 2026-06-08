@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6681577926671992387}
   - component: {fileID: 7710619351582245846}
   - component: {fileID: 4639729801709783848}
+  - component: {fileID: -3923901059592839623}
   m_Layer: 0
   m_Name: P_FuelTank
   m_TagString: Untagged
@@ -73,6 +74,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3f3163a8fe2b44791e877519f35d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformableObject
+--- !u!114 &-3923901059592839623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6279728691475582256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eaddec69ebe8a340a2468afe54c6166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PreviewObject
 --- !u!1001 &1610411840601758640
 PrefabInstance:
   m_ObjectHideFlags: 0

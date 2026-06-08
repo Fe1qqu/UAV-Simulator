@@ -15,12 +15,12 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     [SerializeField] private PlayResultMenu resultMenu;
 
     [Header("Runtime")]
-    [SerializeField] private DroneControllerBase dronePrefab;
-    [SerializeField] private Transform droneRoot;
+    [SerializeField] private UAVControllerBase uavPrefab;
+    [SerializeField] private Transform uavRoot;
     [SerializeField] private CheckpointPath checkpointPath;
 
-    private DroneDeathHandler droneDeathHandler;
-    private DroneControllerBase spawnedDrone;
+    private UAVDeathHandler uavDeathHandler;
+    private UAVControllerBase spawnedUAV;
     private IScenarioRuntime scenarioRuntime;
     private LevelData loadedLevelData;
 
@@ -61,14 +61,14 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
             Debug.LogError("[PlayManager] ResultMenu is not assigned.");
         }
 
-        if (dronePrefab == null)
+        if (uavPrefab == null)
         {
-            Debug.LogError("[PlayManager] DronePrefab is not assigned.");
+            Debug.LogError("[PlayManager] UAVPrefab is not assigned.");
         }
         
-        if (droneRoot == null)
+        if (uavRoot == null)
         {
-            Debug.LogError("[PlayManager] DroneRoot is not assigned.");
+            Debug.LogError("[PlayManager] UAVRoot is not assigned.");
         }
 
         if (checkpointPath == null)
@@ -98,7 +98,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
         ConfigureScenarioVisuals();
 
-        SpawnDrone();
+        SpawnUAV();
         StartScenario();
 
         await Task.CompletedTask;
@@ -135,16 +135,16 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         checkpointPath.SetScenarioActive(usesCheckpointPath);
     }
 
-    private void SpawnDrone()
+    private void SpawnUAV()
     {
-        DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
-        if (droneSpawnPoint == null)
+        UAVSpawnPoint uavSpawnPoint = levelObjectRegistry.FindFirstAlive<UAVSpawnPoint>();
+        if (uavSpawnPoint == null)
         {
-            Debug.LogError("[PlayManager] Alive DroneSpawnPoint not found.");
+            Debug.LogError("[PlayManager] Alive UAVSpawnPoint not found.");
             return;
         }
 
-        spawnedDrone = Instantiate(dronePrefab, droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation, droneRoot);
+        spawnedUAV = Instantiate(uavPrefab, uavSpawnPoint.transform.position, uavSpawnPoint.transform.rotation, uavRoot);
     }
 
     private void StartScenario()
@@ -169,7 +169,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         }
         scenarioRuntime = Instantiate(scenario.runtime);
 
-        scenarioRuntime.Initialize(levelObjectRegistry, spawnedDrone);
+        scenarioRuntime.Initialize(levelObjectRegistry, spawnedUAV);
         scenarioRuntime.GameplayConcluded += OnGameplayConcluded;
         scenarioRuntime.ScenarioCompleted += OnScenarioCompleted;
         scenarioRuntime.ScenarioFailed += OnScenarioFailed;
@@ -203,30 +203,30 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     public void RestartLevel()
     {
         resultMenu.Close();
-        ResetDrone();
+        ResetUAV();
         scenarioRuntime?.ResetScenario();
         InputModeController.Instance.SetMode(InputMode.Play);
 
         Debug.Log("[PlayManager] Level restarted.");
     }
 
-    public void ResetDrone()
+    public void ResetUAV()
     {
-        if (spawnedDrone == null)
+        if (spawnedUAV == null)
         {
-            Debug.LogWarning("[PlayManager] Cannot reset drone: drone is null.");
+            Debug.LogWarning("[PlayManager] Cannot reset uav: uav is null.");
             return;
         }
 
-        DroneSpawnPoint droneSpawnPoint = levelObjectRegistry.FindFirstAlive<DroneSpawnPoint>();
-        if (droneSpawnPoint == null)
+        UAVSpawnPoint uavSpawnPoint = levelObjectRegistry.FindFirstAlive<UAVSpawnPoint>();
+        if (uavSpawnPoint == null)
         {
-            Debug.LogError("[PlayManager] Alive DroneSpawnPoint not found.");
+            Debug.LogError("[PlayManager] Alive UAVSpawnPoint not found.");
             return;
         }
 
-        // Resetting the drone's internal state
-        spawnedDrone.ResetState(droneSpawnPoint.transform.position, droneSpawnPoint.transform.rotation);
+        // Resetting the uav's internal state
+        spawnedUAV.ResetState(uavSpawnPoint.transform.position, uavSpawnPoint.transform.rotation);
     }
 
     private void OnGameplayConcluded(IScenarioRuntime _)

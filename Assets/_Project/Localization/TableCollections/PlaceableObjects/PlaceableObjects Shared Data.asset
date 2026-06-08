@@ -24,7 +24,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 14974251858812928
-    m_Key: drone_spawn_point
+    m_Key: uav_spawn_point
     m_Metadata:
       m_Items: []
   - m_Id: 31214180272070656

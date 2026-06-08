@@ -167,7 +167,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""DroneControl"",
+            ""name"": ""UAVControl"",
             ""id"": ""8c9d2c0d-82f7-403d-ac89-f051158a1046"",
             ""actions"": [
                 {
@@ -475,7 +475,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""DroneCamera"",
+            ""name"": ""UAVCamera"",
             ""id"": ""ea8ee5f9-60dc-4cb6-9b9f-174f09baee4f"",
             ""actions"": [
                 {
@@ -713,16 +713,16 @@ public partial class @Input: IInputActionCollection2, IDisposable
         // Play
         m_Play = asset.FindActionMap("Play", throwIfNotFound: true);
         m_Play_RestartLevel = m_Play.FindAction("RestartLevel", throwIfNotFound: true);
-        // DroneControl
-        m_DroneControl = asset.FindActionMap("DroneControl", throwIfNotFound: true);
-        m_DroneControl_ThrottleAndYaw = m_DroneControl.FindAction("Throttle And Yaw", throwIfNotFound: true);
-        m_DroneControl_PitchAndRoll = m_DroneControl.FindAction("Pitch And Roll", throwIfNotFound: true);
-        m_DroneControl_SwitchCamera = m_DroneControl.FindAction("SwitchCamera", throwIfNotFound: true);
-        m_DroneControl_DebugUI = m_DroneControl.FindAction("DebugUI", throwIfNotFound: true);
-        // DroneCamera
-        m_DroneCamera = asset.FindActionMap("DroneCamera", throwIfNotFound: true);
-        m_DroneCamera_Look = m_DroneCamera.FindAction("Look", throwIfNotFound: true);
-        m_DroneCamera_EnableMovement = m_DroneCamera.FindAction("EnableMovement", throwIfNotFound: true);
+        // UAVControl
+        m_UAVControl = asset.FindActionMap("UAVControl", throwIfNotFound: true);
+        m_UAVControl_ThrottleAndYaw = m_UAVControl.FindAction("Throttle And Yaw", throwIfNotFound: true);
+        m_UAVControl_PitchAndRoll = m_UAVControl.FindAction("Pitch And Roll", throwIfNotFound: true);
+        m_UAVControl_SwitchCamera = m_UAVControl.FindAction("SwitchCamera", throwIfNotFound: true);
+        m_UAVControl_DebugUI = m_UAVControl.FindAction("DebugUI", throwIfNotFound: true);
+        // UAVCamera
+        m_UAVCamera = asset.FindActionMap("UAVCamera", throwIfNotFound: true);
+        m_UAVCamera_Look = m_UAVCamera.FindAction("Look", throwIfNotFound: true);
+        m_UAVCamera_EnableMovement = m_UAVCamera.FindAction("EnableMovement", throwIfNotFound: true);
         // LevelEditor
         m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
         m_LevelEditor_Delete = m_LevelEditor.FindAction("Delete", throwIfNotFound: true);
@@ -738,8 +738,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
     {
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, Input.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Play.enabled, "This will cause a leak and performance issues, Input.Play.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_DroneControl.enabled, "This will cause a leak and performance issues, Input.DroneControl.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_DroneCamera.enabled, "This will cause a leak and performance issues, Input.DroneCamera.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UAVControl.enabled, "This will cause a leak and performance issues, Input.UAVControl.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UAVCamera.enabled, "This will cause a leak and performance issues, Input.UAVCamera.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_LevelEditor.enabled, "This will cause a leak and performance issues, Input.LevelEditor.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_LevelEditorCamera.enabled, "This will cause a leak and performance issues, Input.LevelEditorCamera.Disable() has not been called.");
     }
@@ -1006,44 +1006,44 @@ public partial class @Input: IInputActionCollection2, IDisposable
     /// </summary>
     public PlayActions @Play => new PlayActions(this);
 
-    // DroneControl
-    private readonly InputActionMap m_DroneControl;
-    private List<IDroneControlActions> m_DroneControlActionsCallbackInterfaces = new List<IDroneControlActions>();
-    private readonly InputAction m_DroneControl_ThrottleAndYaw;
-    private readonly InputAction m_DroneControl_PitchAndRoll;
-    private readonly InputAction m_DroneControl_SwitchCamera;
-    private readonly InputAction m_DroneControl_DebugUI;
+    // UAVControl
+    private readonly InputActionMap m_UAVControl;
+    private List<IUAVControlActions> m_UAVControlActionsCallbackInterfaces = new List<IUAVControlActions>();
+    private readonly InputAction m_UAVControl_ThrottleAndYaw;
+    private readonly InputAction m_UAVControl_PitchAndRoll;
+    private readonly InputAction m_UAVControl_SwitchCamera;
+    private readonly InputAction m_UAVControl_DebugUI;
     /// <summary>
-    /// Provides access to input actions defined in input action map "DroneControl".
+    /// Provides access to input actions defined in input action map "UAVControl".
     /// </summary>
-    public struct DroneControlActions
+    public struct UAVControlActions
     {
         private @Input m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public DroneControlActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public UAVControlActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "DroneControl/ThrottleAndYaw".
+        /// Provides access to the underlying input action "UAVControl/ThrottleAndYaw".
         /// </summary>
-        public InputAction @ThrottleAndYaw => m_Wrapper.m_DroneControl_ThrottleAndYaw;
+        public InputAction @ThrottleAndYaw => m_Wrapper.m_UAVControl_ThrottleAndYaw;
         /// <summary>
-        /// Provides access to the underlying input action "DroneControl/PitchAndRoll".
+        /// Provides access to the underlying input action "UAVControl/PitchAndRoll".
         /// </summary>
-        public InputAction @PitchAndRoll => m_Wrapper.m_DroneControl_PitchAndRoll;
+        public InputAction @PitchAndRoll => m_Wrapper.m_UAVControl_PitchAndRoll;
         /// <summary>
-        /// Provides access to the underlying input action "DroneControl/SwitchCamera".
+        /// Provides access to the underlying input action "UAVControl/SwitchCamera".
         /// </summary>
-        public InputAction @SwitchCamera => m_Wrapper.m_DroneControl_SwitchCamera;
+        public InputAction @SwitchCamera => m_Wrapper.m_UAVControl_SwitchCamera;
         /// <summary>
-        /// Provides access to the underlying input action "DroneControl/DebugUI".
+        /// Provides access to the underlying input action "UAVControl/DebugUI".
         /// </summary>
-        public InputAction @DebugUI => m_Wrapper.m_DroneControl_DebugUI;
+        public InputAction @DebugUI => m_Wrapper.m_UAVControl_DebugUI;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_DroneControl; }
+        public InputActionMap Get() { return m_Wrapper.m_UAVControl; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1051,9 +1051,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="DroneControlActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="UAVControlActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(DroneControlActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(UAVControlActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1061,11 +1061,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="DroneControlActions" />
-        public void AddCallbacks(IDroneControlActions instance)
+        /// <seealso cref="UAVControlActions" />
+        public void AddCallbacks(IUAVControlActions instance)
         {
-            if (instance == null || m_Wrapper.m_DroneControlActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_DroneControlActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_UAVControlActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UAVControlActionsCallbackInterfaces.Add(instance);
             @ThrottleAndYaw.started += instance.OnThrottleAndYaw;
             @ThrottleAndYaw.performed += instance.OnThrottleAndYaw;
             @ThrottleAndYaw.canceled += instance.OnThrottleAndYaw;
@@ -1086,8 +1086,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="DroneControlActions" />
-        private void UnregisterCallbacks(IDroneControlActions instance)
+        /// <seealso cref="UAVControlActions" />
+        private void UnregisterCallbacks(IUAVControlActions instance)
         {
             @ThrottleAndYaw.started -= instance.OnThrottleAndYaw;
             @ThrottleAndYaw.performed -= instance.OnThrottleAndYaw;
@@ -1104,12 +1104,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DroneControlActions.UnregisterCallbacks(IDroneControlActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UAVControlActions.UnregisterCallbacks(IUAVControlActions)" />.
         /// </summary>
-        /// <seealso cref="DroneControlActions.UnregisterCallbacks(IDroneControlActions)" />
-        public void RemoveCallbacks(IDroneControlActions instance)
+        /// <seealso cref="UAVControlActions.UnregisterCallbacks(IUAVControlActions)" />
+        public void RemoveCallbacks(IUAVControlActions instance)
         {
-            if (m_Wrapper.m_DroneControlActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_UAVControlActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1119,50 +1119,50 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="DroneControlActions.AddCallbacks(IDroneControlActions)" />
-        /// <seealso cref="DroneControlActions.RemoveCallbacks(IDroneControlActions)" />
-        /// <seealso cref="DroneControlActions.UnregisterCallbacks(IDroneControlActions)" />
-        public void SetCallbacks(IDroneControlActions instance)
+        /// <seealso cref="UAVControlActions.AddCallbacks(IUAVControlActions)" />
+        /// <seealso cref="UAVControlActions.RemoveCallbacks(IUAVControlActions)" />
+        /// <seealso cref="UAVControlActions.UnregisterCallbacks(IUAVControlActions)" />
+        public void SetCallbacks(IUAVControlActions instance)
         {
-            foreach (var item in m_Wrapper.m_DroneControlActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_UAVControlActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_DroneControlActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_UAVControlActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="DroneControlActions" /> instance referencing this action map.
+    /// Provides a new <see cref="UAVControlActions" /> instance referencing this action map.
     /// </summary>
-    public DroneControlActions @DroneControl => new DroneControlActions(this);
+    public UAVControlActions @UAVControl => new UAVControlActions(this);
 
-    // DroneCamera
-    private readonly InputActionMap m_DroneCamera;
-    private List<IDroneCameraActions> m_DroneCameraActionsCallbackInterfaces = new List<IDroneCameraActions>();
-    private readonly InputAction m_DroneCamera_Look;
-    private readonly InputAction m_DroneCamera_EnableMovement;
+    // UAVCamera
+    private readonly InputActionMap m_UAVCamera;
+    private List<IUAVCameraActions> m_UAVCameraActionsCallbackInterfaces = new List<IUAVCameraActions>();
+    private readonly InputAction m_UAVCamera_Look;
+    private readonly InputAction m_UAVCamera_EnableMovement;
     /// <summary>
-    /// Provides access to input actions defined in input action map "DroneCamera".
+    /// Provides access to input actions defined in input action map "UAVCamera".
     /// </summary>
-    public struct DroneCameraActions
+    public struct UAVCameraActions
     {
         private @Input m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public DroneCameraActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public UAVCameraActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "DroneCamera/Look".
+        /// Provides access to the underlying input action "UAVCamera/Look".
         /// </summary>
-        public InputAction @Look => m_Wrapper.m_DroneCamera_Look;
+        public InputAction @Look => m_Wrapper.m_UAVCamera_Look;
         /// <summary>
-        /// Provides access to the underlying input action "DroneCamera/EnableMovement".
+        /// Provides access to the underlying input action "UAVCamera/EnableMovement".
         /// </summary>
-        public InputAction @EnableMovement => m_Wrapper.m_DroneCamera_EnableMovement;
+        public InputAction @EnableMovement => m_Wrapper.m_UAVCamera_EnableMovement;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_DroneCamera; }
+        public InputActionMap Get() { return m_Wrapper.m_UAVCamera; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1170,9 +1170,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="DroneCameraActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="UAVCameraActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(DroneCameraActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(UAVCameraActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1180,11 +1180,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="DroneCameraActions" />
-        public void AddCallbacks(IDroneCameraActions instance)
+        /// <seealso cref="UAVCameraActions" />
+        public void AddCallbacks(IUAVCameraActions instance)
         {
-            if (instance == null || m_Wrapper.m_DroneCameraActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_DroneCameraActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_UAVCameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UAVCameraActionsCallbackInterfaces.Add(instance);
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -1199,8 +1199,8 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="DroneCameraActions" />
-        private void UnregisterCallbacks(IDroneCameraActions instance)
+        /// <seealso cref="UAVCameraActions" />
+        private void UnregisterCallbacks(IUAVCameraActions instance)
         {
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
@@ -1211,12 +1211,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DroneCameraActions.UnregisterCallbacks(IDroneCameraActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UAVCameraActions.UnregisterCallbacks(IUAVCameraActions)" />.
         /// </summary>
-        /// <seealso cref="DroneCameraActions.UnregisterCallbacks(IDroneCameraActions)" />
-        public void RemoveCallbacks(IDroneCameraActions instance)
+        /// <seealso cref="UAVCameraActions.UnregisterCallbacks(IUAVCameraActions)" />
+        public void RemoveCallbacks(IUAVCameraActions instance)
         {
-            if (m_Wrapper.m_DroneCameraActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_UAVCameraActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1226,21 +1226,21 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="DroneCameraActions.AddCallbacks(IDroneCameraActions)" />
-        /// <seealso cref="DroneCameraActions.RemoveCallbacks(IDroneCameraActions)" />
-        /// <seealso cref="DroneCameraActions.UnregisterCallbacks(IDroneCameraActions)" />
-        public void SetCallbacks(IDroneCameraActions instance)
+        /// <seealso cref="UAVCameraActions.AddCallbacks(IUAVCameraActions)" />
+        /// <seealso cref="UAVCameraActions.RemoveCallbacks(IUAVCameraActions)" />
+        /// <seealso cref="UAVCameraActions.UnregisterCallbacks(IUAVCameraActions)" />
+        public void SetCallbacks(IUAVCameraActions instance)
         {
-            foreach (var item in m_Wrapper.m_DroneCameraActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_UAVCameraActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_DroneCameraActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_UAVCameraActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="DroneCameraActions" /> instance referencing this action map.
+    /// Provides a new <see cref="UAVCameraActions" /> instance referencing this action map.
     /// </summary>
-    public DroneCameraActions @DroneCamera => new DroneCameraActions(this);
+    public UAVCameraActions @UAVCamera => new UAVCameraActions(this);
 
     // LevelEditor
     private readonly InputActionMap m_LevelEditor;
@@ -1497,11 +1497,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         void OnRestartLevel(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DroneControl" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UAVControl" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="DroneControlActions.AddCallbacks(IDroneControlActions)" />
-    /// <seealso cref="DroneControlActions.RemoveCallbacks(IDroneControlActions)" />
-    public interface IDroneControlActions
+    /// <seealso cref="UAVControlActions.AddCallbacks(IUAVControlActions)" />
+    /// <seealso cref="UAVControlActions.RemoveCallbacks(IUAVControlActions)" />
+    public interface IUAVControlActions
     {
         /// <summary>
         /// Method invoked when associated input action "Throttle And Yaw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -1533,11 +1533,11 @@ public partial class @Input: IInputActionCollection2, IDisposable
         void OnDebugUI(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DroneCamera" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UAVCamera" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="DroneCameraActions.AddCallbacks(IDroneCameraActions)" />
-    /// <seealso cref="DroneCameraActions.RemoveCallbacks(IDroneCameraActions)" />
-    public interface IDroneCameraActions
+    /// <seealso cref="UAVCameraActions.AddCallbacks(IUAVCameraActions)" />
+    /// <seealso cref="UAVCameraActions.RemoveCallbacks(IUAVCameraActions)" />
+    public interface IUAVCameraActions
     {
         /// <summary>
         /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.

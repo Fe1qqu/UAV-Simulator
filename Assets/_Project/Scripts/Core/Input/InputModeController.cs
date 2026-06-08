@@ -39,8 +39,8 @@ public class InputModeController : MonoBehaviour
         {
             case InputMode.Play:
                 input.Play.Enable();
-                input.DroneControl.Enable();
-                input.DroneCamera.Enable();
+                input.UAVControl.Enable();
+                input.UAVCamera.Enable();
                 input.UI.Enable();
                 break;
 

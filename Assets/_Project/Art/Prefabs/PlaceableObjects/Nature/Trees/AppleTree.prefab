@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4197682546928849919}
   - component: {fileID: 5893761833263875869}
   - component: {fileID: 8330619114163291818}
+  - component: {fileID: 7040063807565866451}
   m_Layer: 0
   m_Name: AppleTree
   m_TagString: Untagged
@@ -73,6 +74,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3f3163a8fe2b44791e877519f35d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformableObject
+--- !u!114 &7040063807565866451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478709745904454254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eaddec69ebe8a340a2468afe54c6166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PreviewObject
 --- !u!1001 &1466370772361727213
 PrefabInstance:
   m_ObjectHideFlags: 0

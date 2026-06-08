@@ -4,7 +4,7 @@ using System;
 public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
 {
     protected LevelObjectRegistry levelObjectRegistry;
-    protected DroneControllerBase droneController;
+    protected UAVControllerBase uavController;
 
     public event Action<IScenarioRuntime> GameplayConcluded;
 
@@ -18,10 +18,10 @@ public abstract class ScenarioRuntimeBase : ScriptableObject, IScenarioRuntime
 
     private bool isGameplayConcluded;
 
-    public virtual void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController)
+    public virtual void Initialize(LevelObjectRegistry levelObjectRegistry, UAVControllerBase uavController)
     {
         this.levelObjectRegistry = levelObjectRegistry;
-        this.droneController = droneController;
+        this.uavController = uavController;
 
         OnInitialize();
     }

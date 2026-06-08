@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Linq;
 
 [CreateAssetMenu(menuName = "Game Data/Scenario Validators/Drone Racing")]
 public class DroneRacingScenarioValidator : ScenarioSpecificValidator

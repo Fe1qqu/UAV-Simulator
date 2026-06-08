@@ -26,7 +26,7 @@ MonoBehaviour:
   - category: {fileID: 11400000, guid: 1f5df623da1e08b418487a7c5260c746, type: 2}
     accessMode: 1
     objectIds:
-    - drone_spawn_point
+    - uav_spawn_point
   - category: {fileID: 11400000, guid: 833bbb49d3059604ca5786623730f89f, type: 2}
     accessMode: 0
     objectIds: []

@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 1010834662907873890}
   - component: {fileID: 479529680169253348}
   - component: {fileID: 4454238837928811047}
+  - component: {fileID: -905587043164445011}
   m_Layer: 0
   m_Name: P_ExplosionZone
   m_TagString: Untagged
@@ -174,6 +175,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3f3163a8fe2b44791e877519f35d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformableObject
+--- !u!114 &-905587043164445011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4697070777710424619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eaddec69ebe8a340a2468afe54c6166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PreviewObject
 --- !u!1 &5062714083168942331
 GameObject:
   m_ObjectHideFlags: 0

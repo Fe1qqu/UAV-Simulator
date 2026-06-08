@@ -17,7 +17,7 @@ public class Checkpoint : LevelObject, ITriggerReceiver
 
     private bool isPassed;
 
-    private readonly HashSet<Transform> dronesInTrigger = new();
+    private readonly HashSet<Transform> uavsInTrigger = new();
 
     private void Awake()
     {
@@ -92,27 +92,27 @@ public class Checkpoint : LevelObject, ITriggerReceiver
             return;
         }
 
-        var drone = collider.GetComponentInParent<IDroneActor>();
-        if (drone == null)
+        var uav = collider.GetComponentInParent<IUAVActor>();
+        if (uav == null)
         {
             Debug.LogWarning(
-                $"[Checkpoint] Non-drone object entered trigger. Checkpoint: {name}, " +
+                $"[Checkpoint] Non-uav object entered trigger. Checkpoint: {name}, " +
                 $"Object: {collider.name}, Layer: {LayerMask.LayerToName(collider.gameObject.layer)}."
             );
 
             return;
         }
 
-        Transform droneTransform = ((MonoBehaviour)drone).transform;
+        Transform uavTransform = ((MonoBehaviour)uav).transform;
         
-        if (dronesInTrigger.Contains(droneTransform))
+        if (uavsInTrigger.Contains(uavTransform))
         {
             return;
         }
 
-        dronesInTrigger.Add(droneTransform);
+        uavsInTrigger.Add(uavTransform);
 
-        if (!IsApproachValid(droneTransform))
+        if (!IsApproachValid(uavTransform))
         {
             Debug.Log($"[Checkpoint] Wrong direction approach on checkpoint {name}.");
             return;
@@ -123,21 +123,20 @@ public class Checkpoint : LevelObject, ITriggerReceiver
 
     public void OnTriggerExited(Collider collider)
     {
-        var drone = collider.GetComponentInParent<IDroneActor>();
-        if (drone == null)
+        var uav = collider.GetComponentInParent<IUAVActor>();
+        if (uav == null)
         {
             return;
         }
 
-        Transform droneTransform = ((MonoBehaviour)drone).transform;
+        Transform uavTransform = ((MonoBehaviour)uav).transform;
 
-        dronesInTrigger.Remove(droneTransform);
+        uavsInTrigger.Remove(uavTransform);
     }
 
-    private bool IsApproachValid(Transform droneTransform)
+    private bool IsApproachValid(Transform uavTransform)
     {
-        float angle = Vector3.Angle(droneTransform.forward, transform.forward);
-
+        float angle = Vector3.Angle(uavTransform.forward, transform.forward);
         return angle <= maxApproachAngle;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Localization.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 /// <summary>
 /// Manages level editor UI: category list, placeable object list, and scene loading.
@@ -335,16 +335,19 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         }
 
         LevelData levelData = levelFileManager.LoadByPath(levelEditorSession.LevelFilePath);
+
+        //System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
         levelLoader.Load(levelData);
+        //stopwatch.Stop();
+        //Debug.Log($"[LevelEditorManager] Level load time: {stopwatch.ElapsedMilliseconds} ms.");
 
         levelEditorSession.Setup(levelData.levelName, levelData.locationId, levelData.scenarioId);
     }
 
     private void ConfigureScenarioVisuals()
     {
-        bool isDroneRacing = CurrentScenario != null && CurrentScenario.usesCheckpointPath;
-
-        checkpointPath.SetScenarioActive(isDroneRacing);
+        bool isScenarioUsesCheckpointPath = CurrentScenario != null && CurrentScenario.usesCheckpointPath;
+        checkpointPath.SetScenarioActive(isScenarioUsesCheckpointPath);
     }
 
     private void LoadEmptyLevel()

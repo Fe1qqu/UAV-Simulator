@@ -34,8 +34,8 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     [SerializeField] private float rayLength = 100000f;
 
     private PlaceableObjectDefinition currentPlaceableObject;
+    private PreviewObject previewObject;
     private GameObject previewInstance;
-    private Renderer[] previewRenderers;
     private bool isVisible;
 
     /// <summary>
@@ -79,41 +79,23 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         currentPlaceableObject = placeableObject;
 
         previewInstance = Instantiate(placeableObject.prefab);
-        previewRenderers = previewInstance.GetComponentsInChildren<Renderer>();
+
+        if (!previewInstance.TryGetComponent(out previewObject))
+        {
+            Debug.LogError($"[DragPlacementHandler] {previewInstance.name} has no PreviewObject component.");
+
+            Destroy(previewInstance);
+
+            previewInstance = null;
+            previewObject = null;
+            currentPlaceableObject = null;
+
+            return;
+        }
+
+        previewObject.EnablePreviewMode(placeableObject.previewMaterialMode, defaultPreviewMaterial, placeableObject.previewMaterialOverride);
+
         isVisible = false;
-
-        foreach (Renderer renderer in previewRenderers)
-        {
-            switch (placeableObject.previewMaterialMode)
-            {
-                case PreviewMaterialMode.UseDefault:
-                    renderer.material = defaultPreviewMaterial;
-                    break;
-
-                case PreviewMaterialMode.Override:
-                    if (placeableObject.previewMaterialOverride != null)
-                    {
-                        renderer.material = placeableObject.previewMaterialOverride;
-                    }
-                    else
-                    {
-                        Debug.LogError("[DragPlacementHandler] PreviewMaterialOverride is not assigned.");
-                    }
-                    break;
-
-                case PreviewMaterialMode.None:
-                    // Do nothing - leave the original prefab material
-                    break;
-            }
-
-            renderer.enabled = false;
-        }
-
-        // Disable colliders to avoid self-intersection
-        foreach (Collider collider in previewInstance.GetComponentsInChildren<Collider>())
-        {
-            collider.enabled = false;
-        }
 
         //Debug.Log($"[DragPlacementHandler] Drag started for '{prefabToPlace.name}'.");
     }
@@ -125,7 +107,8 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     {
         if (currentPlaceableObject == null)
         {
-            Cleanup();
+            Debug.LogWarning("[DragPlacementHandler] CurrentPlaceableObject is null.");
+            CancelDrag();
             return;
         }
         
@@ -134,12 +117,22 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
 
         if (Physics.Raycast(ray, out RaycastHit hit, rayLength, placementLayerMask))
         {
-            GameObject instance = Instantiate(currentPlaceableObject.prefab, hit.point, Quaternion.identity, levelRoot);
+            previewInstance.transform.position = hit.point;
+            previewInstance.transform.rotation = Quaternion.identity;
+            previewInstance.transform.SetParent(levelRoot);
+
+            previewObject.DisablePreviewMode();
+
+            GameObject instance = previewInstance;
+
             if (!instance.TryGetComponent<LevelObject>(out var levelObject))
             {
                 Debug.LogError($"[DragPlacementHandler] {instance.name} has no LevelObject component.");
             }
-            levelObject.Initialize(currentPlaceableObject);
+            else
+            {
+                levelObject.Initialize(currentPlaceableObject);
+            }
 
             // Create an undo/redo action
             RTG.PostObjectSpawnAction spawnAction = new(new List<GameObject> { instance });
@@ -163,7 +156,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         }
 
         UIDragContext.Instance.ResetContext();
-        Cleanup();
+        FinishPlacement();
     }
 
     /// <summary>
@@ -175,22 +168,20 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
 
         OnDragCancelled?.Invoke();
         UIDragContext.Instance.ResetContext();
-        Cleanup();
-    }
 
-    /// <summary>
-    /// Destroys preview, clears drag state.
-    /// </summary>
-    private void Cleanup()
-    {
         if (previewInstance != null)
         {
             Destroy(previewInstance);
         }
 
+        FinishPlacement();
+    }
+
+    private void FinishPlacement()
+    {
         currentPlaceableObject = null;
         previewInstance = null;
-        previewRenderers = null;
+        previewObject = null;
 
         TooltipManager.Instance.Hide();
     }
@@ -200,7 +191,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
     /// </summary>
     private void SetObjectPreviewVisible(bool visible)
     {
-        if (previewRenderers == null)
+        if (previewObject == null)
         {
             return;
         }
@@ -211,14 +202,7 @@ public class DragPlacementHandler : MonoBehaviour, IBackHandler
         }
 
         isVisible = visible;
-
-        foreach (Renderer renderer in previewRenderers)
-        {
-            if (renderer != null)
-            {
-                renderer.enabled = visible;
-            }
-        }
+        previewObject.SetVisible(visible);
     }
 
     private void Update()

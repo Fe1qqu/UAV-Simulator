@@ -13,7 +13,7 @@ public interface IScenarioRuntime
 
     bool IsGameplayConcluded { get; }
 
-    void Initialize(LevelObjectRegistry levelObjectRegistry, DroneControllerBase droneController);
+    void Initialize(LevelObjectRegistry levelObjectRegistry, UAVControllerBase uavController);
     void StartScenario();
     void TickScenario();
     void FixedTickScenario();
