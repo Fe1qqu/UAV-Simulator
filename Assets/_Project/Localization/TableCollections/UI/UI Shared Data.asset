@@ -191,6 +191,10 @@ MonoBehaviour:
     m_Key: validation_checkpoint_sequence
     m_Metadata:
       m_Items: []
+  - m_Id: 77521844971986944
+    m_Key: delete_level_message
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

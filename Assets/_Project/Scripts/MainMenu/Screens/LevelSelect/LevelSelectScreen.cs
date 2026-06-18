@@ -34,6 +34,9 @@ public class LevelSelectScreen : MainMenuScreenBase
     [Header("Context")]
     [SerializeField] private MainMenuContext mainMenuContext;
 
+    [Header("Modal dialog")]
+    [SerializeField] private ModalDialogService modalDialogService;
+
     private LevelSelectMode mode;
     private Action onBackAction;
 
@@ -69,6 +72,11 @@ public class LevelSelectScreen : MainMenuScreenBase
         if (mainMenuContext == null)
         {
             Debug.LogError("[LevelSelectScreen] MainMenuContext is not assigned.");
+        }
+
+        if (modalDialogService == null)
+        {
+            Debug.LogError("[LevelEditorPauseMenu] ModalDialogService is not assigned.");
         }
     }
 
@@ -113,7 +121,7 @@ public class LevelSelectScreen : MainMenuScreenBase
         {
             LevelSelectItem levelSelectItemInstance = Instantiate(levelSelectItemPrefab, listRoot);
             levelSelectItemInstance.gameObject.SetActive(true);
-            levelSelectItemInstance.Setup(levelCatalogEntry, OnItemSelected);
+            levelSelectItemInstance.Setup(levelCatalogEntry, OnItemSelected, OnItemDeleted);
         }
     }
 
@@ -128,6 +136,64 @@ public class LevelSelectScreen : MainMenuScreenBase
         selectedItem.SetSelected(true);
 
         confirmButtonVisual.SetInteractable(true);
+    }
+
+    private void OnItemDeleted(LevelSelectItem item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+
+        modalDialogService.Show(new ModalDialogConfig
+        {
+            messageLocalizationKey = "delete_level_message",
+
+            messageArguments = new object[]
+            {
+                item.Entry.LevelData.levelName
+            },
+
+            Buttons = new[]
+            {
+                new ModalButtonConfig
+                {
+                    localizationTableEntryKey = "confirm",
+                    Result = ModalResult.Confirm
+                },
+                new ModalButtonConfig
+                {
+                    localizationTableEntryKey = "cancel",
+                    Result = ModalResult.Cancel,
+                    IsBackAction = true
+                }
+            },
+
+            OnResult = result =>
+            {
+                if (result != ModalResult.Confirm)
+                {
+                    return;
+                }
+
+                DeleteLevel(item);
+            }
+        });
+    }
+
+    private void DeleteLevel(LevelSelectItem item)
+    {
+        string filePath = item.Entry.FilePath;
+
+        mainMenuContext.LevelFileManager.DeleteByPath(filePath);
+
+        if (selectedItem == item)
+        {
+            selectedItem = null;
+            confirmButtonVisual.SetInteractable(false);
+        }
+
+        Destroy(item.gameObject);
     }
 
     private async void OnConfirmClicked()

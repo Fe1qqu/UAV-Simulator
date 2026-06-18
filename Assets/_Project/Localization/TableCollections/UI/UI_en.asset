@@ -194,6 +194,10 @@ MonoBehaviour:
     m_Localized: Close
     m_Metadata:
       m_Items: []
+  - m_Id: 77521844971986944
+    m_Localized: Are you sure you want to delete level "{0}"?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

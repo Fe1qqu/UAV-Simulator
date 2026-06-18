@@ -29,4 +29,15 @@ public class LevelFileManager : MonoBehaviour
         string json = File.ReadAllText(path);
         return JsonUtility.FromJson<LevelData>(json);
     }
+
+    public bool DeleteByPath(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
+        File.Delete(filePath);
+        return true;
+    }
 }

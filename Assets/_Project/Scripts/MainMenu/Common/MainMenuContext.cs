@@ -12,6 +12,9 @@ public class MainMenuContext : MonoBehaviour
     public LocationsDatabase LocationsDatabase => locationsDatabase;
     public ScenariosDatabase ScenariosDatabase => scenariosDatabase;
 
+    public LevelFileManager LevelFileManager => levelFileManager;
+
+
     private ILevelCatalog levelCatalog;
     public ILevelCatalog LevelCatalog => levelCatalog;
 

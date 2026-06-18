@@ -9,12 +9,13 @@ public class LevelSelectItem : MonoBehaviour
     [SerializeField] private TMP_Text missionText;
     [SerializeField] private TMP_Text scenarioText;
     [SerializeField] private TMP_Text locationText;
+    [SerializeField] private Button deleteButton;
     [SerializeField] private GameObject selectionHighlight;
 
     private LevelCatalogEntry levelCatalogEntry;
     public LevelCatalogEntry Entry => levelCatalogEntry;
 
-    private Action<LevelSelectItem> onSelected;
+    //private Action<LevelSelectItem> onSelected;
 
     private void Awake()
     {
@@ -38,16 +39,21 @@ public class LevelSelectItem : MonoBehaviour
             Debug.LogError("[LevelSelectItem] LocationText is not assigned.");
         }
 
+        if (deleteButton == null)
+        {
+            Debug.LogError("[LevelSelectItem] DeleteButton is not assigned.");
+        }
+
         if (selectionHighlight == null)
         {
             Debug.LogError("[LevelSelectItem] SelectionHighlight is not assigned.");
         }
     }
 
-    public void Setup(LevelCatalogEntry levelCatalogEntry, Action<LevelSelectItem> onSelected)
+    public void Setup(LevelCatalogEntry levelCatalogEntry, Action<LevelSelectItem> onSelected, Action<LevelSelectItem> onDelete)
     {
         this.levelCatalogEntry = levelCatalogEntry;
-        this.onSelected = onSelected;
+        //this.onSelected = onSelected;
 
         missionText.text = levelCatalogEntry.LevelData.levelName;
         scenarioText.text = levelCatalogEntry.ScenarioDisplayName;
@@ -55,6 +61,9 @@ public class LevelSelectItem : MonoBehaviour
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => onSelected(this));
+
+        deleteButton.onClick.RemoveAllListeners();
+        deleteButton.onClick.AddListener(() => onDelete(this));
     }
 
     public void SetSelected(bool selected)
