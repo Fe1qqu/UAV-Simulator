@@ -7,12 +7,7 @@ public class Step_LocationSelect : LevelCreationWizardStepBase
 
     protected override void OnInitialized()
     {
-        if (locationSelection == null)
-        {
-            locationSelection = GetComponent<LocationSelection>();
-        }
-
-        locationSelection.SetDatabase(MainMenuContext.LocationsDatabase);
+        locationSelection = GetComponent<LocationSelection>();
     }
 
     public override void OnStepShown()

@@ -3,24 +3,12 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Transform levelRoot;
-    [SerializeField] private LocationsDatabase locationsDatabase;
-    [SerializeField] private PlaceableObjectsDatabase placeableObjectsDatabase;
 
     private void Awake()
     {
         if (levelRoot == null)
         {
             Debug.LogError("[LevelLoader] LevelRoot is not assigned.");
-        }
-
-        if (locationsDatabase == null)
-        {
-            Debug.LogError("[LevelLoader] LocationsDatabase is not assigned.");
-        }
-
-        if (placeableObjectsDatabase == null)
-        {
-            Debug.LogError("[LevelLoader] PlaceableObjectsDatabase is not assigned.");
         }
     }
 
@@ -47,17 +35,11 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLocation(string locationId)
     {
-        LocationDefinition location = locationsDatabase.locations.Find(location => location.locationId == locationId);
+        LocationDefinition location = GameDataManager.Instance.Locations.GetById(locationId);
 
         if (location == null)
         {
-            if (locationsDatabase.locations == null || locationsDatabase.locations.Count == 0)
-            {
-                Debug.LogError("[LevelLoader] LocationsDatabase is empty.");
-                return;
-            }
-
-            location = locationsDatabase.locations[0];
+            location = GameDataManager.Instance.Locations.locations[0];
 
             Debug.LogWarning($"[LevelLoader] Location '{locationId}' not found. Falling back to default location '{location.locationId}'.");
         }
@@ -69,7 +51,7 @@ public class LevelLoader : MonoBehaviour
     {
         foreach (LevelObjectData levelObjectData in levelData.objects)
         {
-            PlaceableObjectDefinition placeableObject = placeableObjectsDatabase.GetById(levelObjectData.objectId);
+            PlaceableObjectDefinition placeableObject = GameDataManager.Instance.PlaceableObjects.GetById(levelObjectData.objectId);
             if (placeableObject == null)
             {
                 Debug.LogError($"[LevelLoader] Missing object: {levelObjectData.objectId}.");

@@ -21,7 +21,6 @@ public class LocationSelection : MonoBehaviour
 
     private readonly List<(Button button, UISelectionButtonVisual visual)> createdButtons = new();
 
-    private LocationsDatabase locationsDatabase;
     private bool isBuilt;
 
     private void Awake()
@@ -37,10 +36,6 @@ public class LocationSelection : MonoBehaviour
         }
     }
 
-    public void SetDatabase(LocationsDatabase locationsDatabase)
-    {
-        this.locationsDatabase = locationsDatabase;
-    }
 
     public void BuildIfNeeded()
     {
@@ -56,7 +51,7 @@ public class LocationSelection : MonoBehaviour
 
     private void SelectDefault()
     {
-        OnLocationSelected(locationsDatabase.locations[0], createdButtons[0].button);
+        OnLocationSelected(GameDataManager.Instance.Locations.locations[0], createdButtons[0].button);
     }
 
     private void PopulateList()
@@ -67,7 +62,7 @@ public class LocationSelection : MonoBehaviour
         }
         createdButtons.Clear();
 
-        foreach (LocationDefinition location in locationsDatabase.locations)
+        foreach (LocationDefinition location in GameDataManager.Instance.Locations.locations)
         {
             GameObject locationButtonInstance = Instantiate(locationButtonPrefab, contentParent);
             if (locationButtonInstance == null)

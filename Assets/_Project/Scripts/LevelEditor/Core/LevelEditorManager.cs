@@ -31,18 +31,6 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
     [Tooltip("Prefab used for constructing a placeable object button in the object list.")]
     [SerializeField] private GameObject placeableObjectButtonPrefab;
 
-    [Header("Databases")]
-    [Tooltip("Database containing all available locations.")]
-    [SerializeField] private LocationsDatabase locationsDatabase;
-
-    [Tooltip("Database that stores all placeable objects available to the level editor.")]
-    [SerializeField] private PlaceableObjectsDatabase placeableObjectsDatabase;
-
-    [Tooltip("Database that stores object categories and their icons.")]
-    [SerializeField] private CategoriesDatabase categoriesDatabase;
-
-    [SerializeField] private ScenariosDatabase scenariosDatabase;
-
     [Header("Scene Root")]
     [Tooltip("Parent under which the level and placed objects will be instantiated.")]
     [SerializeField] private Transform levelRoot;
@@ -60,7 +48,7 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
 
     public LevelFileManager LevelFileManager => levelFileManager;
 
-    public ScenarioDefinition CurrentScenario => scenariosDatabase.GetById(GameSession.Instance.LevelEditor.ScenarioId);
+    public ScenarioDefinition CurrentScenario => GameDataManager.Instance.Scenarios.GetById(GameSession.Instance.LevelEditor.ScenarioId);
 
     private void Awake()
     {
@@ -102,26 +90,6 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         if (placeableObjectButtonPrefab == null)
         {
             Debug.LogError("[LevelEditorManager] PlaceableObjectButtonPrefab is not assigned.");
-        }
-
-        if (locationsDatabase == null || locationsDatabase.locations.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] LocationsDatabase is missing or empty.");
-        }
-
-        if (placeableObjectsDatabase == null || placeableObjectsDatabase.objects.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] PlaceableObjectsDatabase is missing or empty.");
-        }
-
-        if (categoriesDatabase == null || categoriesDatabase.categories.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] CategoriesDatabase is missing or empty.");
-        }
-
-        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
-        {
-            Debug.LogError("[LevelEditorManager] ScenariosDatabase is missing or empty.");
         }
 
         if (levelRoot == null)
@@ -202,7 +170,7 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
     {
         List<CategoryDefinition> categoriesToShow = new();
 
-        foreach (CategoryDefinition category in categoriesDatabase.categories)
+        foreach (CategoryDefinition category in GameDataManager.Instance.Categories.categories)
         {
             // If the scenario is selected, check the rules
             if (scenario != null)
@@ -255,7 +223,7 @@ public class LevelEditorManager : MonoBehaviour, IBackHandler, ISceneInitializab
         }
 
         // Take all objects of the selected category
-        List<PlaceableObjectDefinition> filteredPlaceableObjects = placeableObjectsDatabase.GetByCategory(currentCategory);
+        List<PlaceableObjectDefinition> filteredPlaceableObjects = GameDataManager.Instance.PlaceableObjects.GetByCategory(currentCategory);
         if (filteredPlaceableObjects == null || filteredPlaceableObjects.Count == 0)
         {
             Debug.LogWarning($"[LevelEditorManager] No objects found for category '{currentCategory}'.");

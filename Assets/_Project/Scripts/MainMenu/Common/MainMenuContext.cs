@@ -4,14 +4,6 @@ public class MainMenuContext : MonoBehaviour
 {
     [Header("Persistence")]
     [SerializeField] private LevelFileManager levelFileManager;
-
-    [Header("Databases")]
-    [SerializeField] private LocationsDatabase locationsDatabase;
-    [SerializeField] private ScenariosDatabase scenariosDatabase;
-
-    public LocationsDatabase LocationsDatabase => locationsDatabase;
-    public ScenariosDatabase ScenariosDatabase => scenariosDatabase;
-
     public LevelFileManager LevelFileManager => levelFileManager;
 
 
@@ -26,18 +18,6 @@ public class MainMenuContext : MonoBehaviour
             return;
         }
 
-        if (locationsDatabase == null || locationsDatabase.locations.Count == 0)
-        {
-            Debug.LogError("[MainMenuContext] LocationsDatabase is missing or empty.");
-            return;
-        }
-
-        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
-        {
-            Debug.LogError("[MainMenuContext] ScenariosDatabase is missing or empty.");
-            return;
-        }
-
-        levelCatalog = new FileSystemLevelCatalog(levelFileManager, scenariosDatabase, locationsDatabase);
+        levelCatalog = new FileSystemLevelCatalog(levelFileManager);
     }
 }

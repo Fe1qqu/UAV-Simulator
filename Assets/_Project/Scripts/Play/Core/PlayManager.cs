@@ -8,7 +8,6 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
     [SerializeField] private LevelFileManager levelFileManager;
     [SerializeField] private LevelLoader levelLoader;
     [SerializeField] private LevelObjectRegistry levelObjectRegistry;
-    [SerializeField] private ScenariosDatabase scenariosDatabase;
 
     [Header("UI")]
     [SerializeField] private PlayPauseMenu pauseMenu;
@@ -44,11 +43,6 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
         if (levelObjectRegistry == null)
         {
             Debug.LogError("[PlayManager] LevelObjectRegistry is not assigned.");
-        }
-
-        if (scenariosDatabase == null || scenariosDatabase.scenarios.Count == 0)
-        {
-            Debug.LogError("[PlayManager] ScenariosDatabase is missing or empty.");
         }
 
         if (pauseMenu == null)
@@ -130,7 +124,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
 
     private void ConfigureScenarioVisuals()
     {
-        ScenarioDefinition scenario = scenariosDatabase.GetById(loadedLevelData.scenarioId);
+        ScenarioDefinition scenario = GameDataManager.Instance.Scenarios.GetById(loadedLevelData.scenarioId);
         bool usesCheckpointPath = scenario != null && scenario.usesCheckpointPath;
         checkpointPath.SetScenarioActive(usesCheckpointPath);
     }
@@ -155,7 +149,7 @@ public class PlayManager : MonoBehaviour, IBackHandler, ISceneInitializable
             return;
         }
 
-        ScenarioDefinition scenario = scenariosDatabase.GetById(loadedLevelData.scenarioId);
+        ScenarioDefinition scenario = GameDataManager.Instance.Scenarios.GetById(loadedLevelData.scenarioId);
         if (scenario == null)
         {
             Debug.LogError($"[PlayManager] Scenario '{loadedLevelData.scenarioId}' not found in database.");

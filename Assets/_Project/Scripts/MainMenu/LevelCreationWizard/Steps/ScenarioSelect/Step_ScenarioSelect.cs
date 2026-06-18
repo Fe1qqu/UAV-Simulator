@@ -7,12 +7,7 @@ public class Step_ScenarioSelect : LevelCreationWizardStepBase
 
     protected override void OnInitialized()
     {
-        if (scenarioSelection == null)
-        {
-            scenarioSelection = GetComponent<ScenarioSelection>();
-        }
-
-        scenarioSelection.SetDatabase(MainMenuContext.ScenariosDatabase);
+        scenarioSelection = GetComponent<ScenarioSelection>();
     }
 
     public override void OnStepShown()

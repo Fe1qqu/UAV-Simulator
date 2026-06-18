@@ -21,7 +21,6 @@ public class ScenarioSelection : MonoBehaviour
 
     private readonly List<(Button button, UISelectionButtonVisual visual)> createdButtons = new();
 
-    private ScenariosDatabase scenariosDatabase;
     private bool isBuilt;
 
     private void Awake()
@@ -35,11 +34,6 @@ public class ScenarioSelection : MonoBehaviour
         {
             Debug.LogError("[ScenarioSelection] ScenarioButtonPrefab is not assigned.");
         }
-    }
-
-    public void SetDatabase(ScenariosDatabase scenariosDatabase)
-    {
-        this.scenariosDatabase = scenariosDatabase;
     }
 
     public void BuildIfNeeded()
@@ -56,7 +50,7 @@ public class ScenarioSelection : MonoBehaviour
 
     private void SelectDefault()
     {
-        OnScenarioSelected(scenariosDatabase.scenarios[0], createdButtons[0].button);
+        OnScenarioSelected(GameDataManager.Instance.Scenarios.scenarios[0], createdButtons[0].button);
     }
 
     private void PopulateList()
@@ -67,7 +61,7 @@ public class ScenarioSelection : MonoBehaviour
         }
         createdButtons.Clear();
 
-        foreach (ScenarioDefinition scenario in scenariosDatabase.scenarios)
+        foreach (ScenarioDefinition scenario in GameDataManager.Instance.Scenarios.scenarios)
         {
             GameObject scenarioButtonInstance = Instantiate(scenarioButtonPrefab, contentParent);
             if (scenarioButtonInstance == null)

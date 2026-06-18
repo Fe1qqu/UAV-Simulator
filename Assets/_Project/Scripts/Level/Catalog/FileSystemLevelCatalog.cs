@@ -6,14 +6,9 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
 {
     private readonly LevelFileManager levelFileManager;
 
-    private readonly ScenariosDatabase scenariosDatabase;
-    private readonly LocationsDatabase locationsDatabase;
-
-    public FileSystemLevelCatalog(LevelFileManager levelFileManager, ScenariosDatabase scenariosDatabase, LocationsDatabase locationsDatabase)
+    public FileSystemLevelCatalog(LevelFileManager levelFileManager)
     {
         this.levelFileManager = levelFileManager;
-        this.scenariosDatabase = scenariosDatabase;
-        this.locationsDatabase = locationsDatabase;
     }
 
     public IReadOnlyList<LevelCatalogEntry> GetAll()
@@ -50,7 +45,7 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
             return "—";
         }
 
-        ScenarioDefinition scenario = scenariosDatabase.GetById(scenarioId);
+        ScenarioDefinition scenario = GameDataManager.Instance.Scenarios.GetById(scenarioId);
         if (scenario == null)
         {
             return "—";
@@ -66,7 +61,7 @@ public sealed class FileSystemLevelCatalog : ILevelCatalog
             return "—";
         }
 
-        LocationDefinition location = locationsDatabase.GetById(locationId);
+        LocationDefinition location = GameDataManager.Instance.Locations.GetById(locationId);
         if (location == null)
         {
             return "—";
