@@ -87,3 +87,7 @@ build/
 *.venv/
 venv/
 .env/
+
+# Fonts
+/Assets/_Project/Art/Fonts
+/Assets/TextMesh Pro/Fonts
