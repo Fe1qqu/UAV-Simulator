@@ -3,7 +3,7 @@ using TMPro;
 using System;
 using System.Collections.Generic;
 
-public class Checkpoint : LevelObject, ITriggerReceiver
+public class Checkpoint : TriggerArea
 {
     public event Action<Checkpoint> OnEntered;
 
@@ -16,8 +16,6 @@ public class Checkpoint : LevelObject, ITriggerReceiver
     [SerializeField] private float maxApproachAngle = 60f;
 
     private bool isPassed;
-
-    private readonly HashSet<Transform> uavsInTrigger = new();
 
     private void Awake()
     {
@@ -85,8 +83,10 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         meshRenderer.sharedMaterial = unpassedMaterial;
     }
 
-    public void OnTriggerEntered(Collider collider)
+    public override void OnTriggerEntered(Collider collider)
     {
+        base.OnTriggerEntered(collider);
+
         if (isPassed)
         {
             return;
@@ -104,13 +104,11 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         }
 
         Transform uavTransform = ((MonoBehaviour)uav).transform;
-        
-        if (uavsInTrigger.Contains(uavTransform))
+
+        if (!ObjectsInTrigger.Add(uavTransform))
         {
             return;
         }
-
-        uavsInTrigger.Add(uavTransform);
 
         if (!IsApproachValid(uavTransform))
         {
@@ -121,7 +119,7 @@ public class Checkpoint : LevelObject, ITriggerReceiver
         OnEntered?.Invoke(this);
     }
 
-    public void OnTriggerExited(Collider collider)
+    public override void OnTriggerExited(Collider collider)
     {
         var uav = collider.GetComponentInParent<IUAVActor>();
         if (uav == null)
@@ -131,7 +129,7 @@ public class Checkpoint : LevelObject, ITriggerReceiver
 
         Transform uavTransform = ((MonoBehaviour)uav).transform;
 
-        uavsInTrigger.Remove(uavTransform);
+        ObjectsInTrigger.Remove(uavTransform);
     }
 
     private bool IsApproachValid(Transform uavTransform)

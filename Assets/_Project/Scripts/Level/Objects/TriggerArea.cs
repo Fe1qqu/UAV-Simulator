@@ -1,17 +1,20 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class TriggerArea : LevelObject, ITriggerReceiver
 {
+    protected readonly HashSet<Transform> ObjectsInTrigger = new();
+
     public event Action<Collider> ObjectEntered;
     public event Action<Collider> ObjectExited;
 
-    public void OnTriggerEntered(Collider collider)
+    public virtual void OnTriggerEntered(Collider collider)
     {
         ObjectEntered?.Invoke(collider);
     }
 
-    public void OnTriggerExited(Collider collider)
+    public virtual void OnTriggerExited(Collider collider)
     {
         ObjectExited?.Invoke(collider);
     }
