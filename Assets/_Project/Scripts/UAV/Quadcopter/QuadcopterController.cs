@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +8,24 @@ public enum RotorPosition
     FrontRight,
     RearLeft,
     RearRight
+}
+
+/// <summary>
+/// Режимы полёта квадрокоптера. Переключается кнопкой M через CycleFlightMode().
+/// </summary>
+public enum FlightMode
+{
+    /// <summary>Наклоны ограничены ±maxTiltAngle. Газ ручной.</summary>
+    AngleLimited,
+
+    /// <summary>Наклоны без ограничений (акробатика). Газ ручной.</summary>
+    AngleUnlimited,
+
+    /// <summary>
+    /// Altitude Hold — газ автоматически удерживается на уровне hoverThrottle.
+    /// Наклоны ограничены, как в AngleLimited.
+    /// </summary>
+    AltHold
 }
 
 [System.Serializable]
@@ -21,7 +39,6 @@ public class Rotor
 public class QuadcopterController : UAVControllerBase
 {
     private Rigidbody rigidBody;
-    private Quaternion targetRotation;
 
     [Header("Rotors")]
     [SerializeField] private Rotor frontLeft;
@@ -31,13 +48,44 @@ public class QuadcopterController : UAVControllerBase
 
     [Header("Physics Settings")]
     [SerializeField] private float liftCoefficient = 1e-6f;
-    //[SerializeField] private float dragCoefficient = 1e-6f;
-    [SerializeField] private float maxRotorRPM = 4000f;
+    [SerializeField] private float maxRotorRPM = 3000f;
     [SerializeField] private float rotorRPMChangeRate = 0.5f;
 
     [Header("Flight Controls")]
-    [SerializeField] private float rotationSpeed = 100f;
-    [SerializeField] private float rotationLerpSpeed = 10f;
+    [SerializeField] private float rotationSpeed = 50f;
+    [SerializeField] private float yawSpeed = 30f;
+    [SerializeField] private float maxTiltAngle = 30f;
+
+    [Header("Flight Modes")]
+    [SerializeField] private FlightMode flightMode = FlightMode.AngleLimited;
+
+    /// <summary>
+    /// Целевой RPM всех роторов в режиме AltHold.
+    /// Задаётся напрямую в оборотах/мин — удобно для расчётов из кода.
+    /// Изменить из инспектора: поле hoverRPM (0..maxRotorRPM).
+    /// Изменить из кода: присвой <see cref="HoverRPM"/> или вызови <see cref="SetHoverRPM"/>.
+    /// </summary>
+    [SerializeField] private float hoverRPM = 1560f;
+
+    /// <summary>
+    /// Текущий целевой RPM удержания высоты. Можно читать и писать напрямую.
+    /// Значение зажимается в [0, maxRotorRPM] при применении.
+    /// </summary>
+    public float HoverRPM
+    {
+        get => hoverRPM;
+        set => hoverRPM = value;
+    }
+
+    /// <summary>
+    /// Задаёт целевой RPM удержания высоты. Эквивалентно <c>HoverRPM = rpm</c>.
+    /// Удобно для вызова из команд или внешних скриптов.
+    /// </summary>
+    /// <param name="rpm">Обороты в минуту (0..maxRotorRPM, обычно 0..3000).</param>
+    public void SetHoverRPM(float rpm) => hoverRPM = rpm;
+
+    /// <summary>Текущий режим полёта. Только для чтения (например, из UI).</summary>
+    public FlightMode CurrentFlightMode => flightMode;
 
     private Dictionary<RotorPosition, Rotor> rotors = new();
 
@@ -54,6 +102,17 @@ public class QuadcopterController : UAVControllerBase
     public override float PitchInput => pitchInput;
     public override float RollInput => rollInput;
 
+    // ── Текущие накопленные углы ──────────────────────────────────────────
+    private float currentPitchAngle = 0f;
+    private float currentRollAngle  = 0f;
+    private float currentYawAngle   = 0f;
+
+    // ── Режим прямого управления углами (используется командами) ─────────
+    private bool  _directAngleMode  = false;
+    private float _targetPitchAngle = 0f;
+    private float _targetRollAngle  = 0f;
+    private float _targetYawAngle   = 0f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -66,10 +125,10 @@ public class QuadcopterController : UAVControllerBase
             return;
         }
 
-        rotors[RotorPosition.FrontLeft] = frontLeft;
+        rotors[RotorPosition.FrontLeft]  = frontLeft;
         rotors[RotorPosition.FrontRight] = frontRight;
-        rotors[RotorPosition.RearLeft] = rearLeft;
-        rotors[RotorPosition.RearRight] = rearRight;
+        rotors[RotorPosition.RearLeft]   = rearLeft;
+        rotors[RotorPosition.RearRight]  = rearRight;
 
         foreach (var keyValuePair in rotors)
         {
@@ -82,13 +141,13 @@ public class QuadcopterController : UAVControllerBase
             }
         }
 
-        // Initialize target rotation
-        targetRotation = transform.rotation;
+        currentYawAngle   = transform.eulerAngles.y;
+        currentPitchAngle = 0f;
+        currentRollAngle  = 0f;
     }
 
     void Update()
     {
-        // Rotor animation
         foreach (var keyValuePair in rotors)
         {
             Rotor rotor = keyValuePair.Value;
@@ -101,15 +160,8 @@ public class QuadcopterController : UAVControllerBase
     {
         UpdateMotorSpeeds();
         ApplyRotorForces();
-
-        // Apply rotation control only when there's input
-        if (HasRotationInput())
-        {
-            UpdateTargetRotation();
-        }
-
-        // Smoothly rotate towards target rotation
-        ApplyRotationControl();
+        UpdateAnglesFromInput();
+        ApplyRotationFromAngles();
     }
 
     private void LateUpdate()
@@ -120,71 +172,72 @@ public class QuadcopterController : UAVControllerBase
         }
     }
 
-    private bool HasRotationInput()
+    // ─────────────────────────────────────────────────────────────────────
+    // Переключение мода — вызывается из UAVInput по кнопке M
+    // ─────────────────────────────────────────────────────────────────────
+    public void CycleFlightMode()
     {
-        return Mathf.Abs(yawInput) > 0.01f ||
-               Mathf.Abs(pitchInput) > 0.01f ||
-               Mathf.Abs(rollInput) > 0.01f;
+        int count = Enum.GetValues(typeof(FlightMode)).Length;
+        flightMode = (FlightMode)(((int)flightMode + 1) % count);
+        Debug.Log($"[QuadcopterController] Flight mode: {flightMode}");
     }
 
-    private void UpdateTargetRotation()
+    // ─────────────────────────────────────────────────────────────────────
+    // Накопление углов из input ИЛИ применение прямых углов от команд.
+    // ─────────────────────────────────────────────────────────────────────
+    private void UpdateAnglesFromInput()
     {
-        // Calculate rotation deltas based on input
-        float yawRotation = yawInput * rotationSpeed * Time.fixedDeltaTime;
-        float pitchRotation = pitchInput * rotationSpeed * Time.fixedDeltaTime;
-        float rollRotation = rollInput * rotationSpeed * Time.fixedDeltaTime;
+        if (_directAngleMode)
+        {
+            currentYawAngle   = _targetYawAngle;
+            currentPitchAngle = Mathf.MoveTowards(currentPitchAngle, _targetPitchAngle, rotationSpeed * Time.fixedDeltaTime);
+            currentRollAngle  = Mathf.MoveTowards(currentRollAngle,  _targetRollAngle,  rotationSpeed * Time.fixedDeltaTime);
+            return;
+        }
 
-        // Apply rotations to target
-        targetRotation *= Quaternion.Euler(pitchRotation, 0f, -rollRotation);
-        targetRotation *= Quaternion.Euler(0f, yawRotation, 0f);
+        float dt = Time.fixedDeltaTime;
+
+        currentYawAngle += yawInput * yawSpeed * dt;
+
+        currentPitchAngle += pitchInput * rotationSpeed * dt;
+        currentRollAngle  += -rollInput * rotationSpeed * dt;
+
+        // Ограничение наклонов: AngleLimited и AltHold — да, AngleUnlimited — нет
+        bool limited = (flightMode == FlightMode.AngleLimited || flightMode == FlightMode.AltHold);
+        if (limited)
+        {
+            currentPitchAngle = Mathf.Clamp(currentPitchAngle, -maxTiltAngle, maxTiltAngle);
+            currentRollAngle  = Mathf.Clamp(currentRollAngle,  -maxTiltAngle, maxTiltAngle);
+        }
     }
 
-    private void ApplyRotationControl()
+    private void ApplyRotationFromAngles()
     {
-        // Smoothly interpolate to target rotation
-        Quaternion newRotation = Quaternion.Slerp(
-            rigidBody.rotation,
-            targetRotation,
-            rotationLerpSpeed * Time.fixedDeltaTime
-        );
+        Quaternion yawQ   = Quaternion.AngleAxis(currentYawAngle,   Vector3.up);
+        Quaternion pitchQ = Quaternion.AngleAxis(currentPitchAngle, Vector3.right);
+        Quaternion rollQ  = Quaternion.AngleAxis(currentRollAngle,  Vector3.forward);
 
-        rigidBody.MoveRotation(newRotation);
+        Quaternion targetRotation = yawQ * pitchQ * rollQ;
+        rigidBody.MoveRotation(targetRotation);
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Скорости роторов.
+    // AltHold: targetRPM берётся напрямую из hoverRPM — задай его из инспектора
+    //          или кодом: SetHoverRPM(rpm) / HoverRPM = rpm.
+    // Остальные моды: gas = throttleInput [0..1] → rpm = throttleInput * maxRotorRPM.
+    // ─────────────────────────────────────────────────────────────────────
     private void UpdateMotorSpeeds()
     {
-        // Calculate the target RPM for each rotor
-        float frontLeftTarget = throttleInput - 0.4f * yawInput - 0.2f * pitchInput + 0.3f * rollInput;
-        float frontRightTarget = throttleInput + 0.4f * yawInput - 0.2f * pitchInput - 0.3f * rollInput;
-        float rearLeftTarget = throttleInput + 0.4f * yawInput + 0.2f * pitchInput + 0.3f * rollInput;
-        float rearRightTarget = throttleInput - 0.4f * yawInput + 0.2f * pitchInput - 0.3f * rollInput;
+        float targetRPM = (flightMode == FlightMode.AltHold)
+            ? Mathf.Clamp(hoverRPM, 0f, maxRotorRPM)   // ← напрямую в RPM
+            : throttleInput * maxRotorRPM;
 
-        // Apply target RPM to each rotor
-        frontLeft.CurrentRPM = Mathf.Lerp(
-            frontLeft.CurrentRPM,
-            frontLeftTarget * maxRotorRPM,
-            rotorRPMChangeRate * Time.fixedDeltaTime
-        );
+        frontLeft.CurrentRPM  = Mathf.Lerp(frontLeft.CurrentRPM,  targetRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
+        frontRight.CurrentRPM = Mathf.Lerp(frontRight.CurrentRPM, targetRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
+        rearLeft.CurrentRPM   = Mathf.Lerp(rearLeft.CurrentRPM,   targetRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
+        rearRight.CurrentRPM  = Mathf.Lerp(rearRight.CurrentRPM,  targetRPM, rotorRPMChangeRate * Time.fixedDeltaTime);
 
-        frontRight.CurrentRPM = Mathf.Lerp(
-            frontRight.CurrentRPM,
-            frontRightTarget * maxRotorRPM,
-            rotorRPMChangeRate * Time.fixedDeltaTime
-        );
-
-        rearLeft.CurrentRPM = Mathf.Lerp(
-            rearLeft.CurrentRPM,
-            rearLeftTarget * maxRotorRPM,
-            rotorRPMChangeRate * Time.fixedDeltaTime
-        );
-
-        rearRight.CurrentRPM = Mathf.Lerp(
-            rearRight.CurrentRPM,
-            rearRightTarget * maxRotorRPM,
-            rotorRPMChangeRate * Time.fixedDeltaTime
-        );
-
-        // Limiting RPM
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = Mathf.Clamp(rotor.CurrentRPM, 0, maxRotorRPM);
@@ -193,7 +246,6 @@ public class QuadcopterController : UAVControllerBase
 
     private void ApplyRotorForces()
     {
-        // Apply lift only to the throttle
         foreach (Rotor rotor in rotors.Values)
         {
             float lift = liftCoefficient * rotor.CurrentRPM * rotor.CurrentRPM;
@@ -205,39 +257,81 @@ public class QuadcopterController : UAVControllerBase
     public override void Apply(float throttle, float yaw, float pitch, float roll)
     {
         throttleInput = Mathf.Clamp01(throttle);
-        yawInput = Mathf.Clamp(yaw, -1f, 1f);
-        pitchInput = Mathf.Clamp(pitch, -1f, 1f);
-        rollInput = Mathf.Clamp(roll, -1f, 1f);
+        yawInput      = Mathf.Clamp(yaw,   -1f, 1f);
+        pitchInput    = Mathf.Clamp(pitch, -1f, 1f);
+        rollInput     = Mathf.Clamp(roll,  -1f, 1f);
     }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Публичный API для команд с точным углом
+    // ─────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Устанавливает целевые углы напрямую (используется командами для snap и удержания).
+    /// pitch и roll зажимаются только до maxTiltAngle если они задаются явно.
+    /// yawDeg — накопленный yaw (не нормализованный), float.NaN = не менять.
+    /// </summary>
+    public void SetTargetAngles(float pitchDeg, float rollDeg, float yawDeg = float.NaN)
+    {
+        _directAngleMode  = true;
+        _targetPitchAngle = Mathf.Clamp(pitchDeg, -maxTiltAngle, maxTiltAngle);
+        _targetRollAngle  = Mathf.Clamp(rollDeg,  -maxTiltAngle, maxTiltAngle);
+        _targetYawAngle   = float.IsNaN(yawDeg) ? currentYawAngle : yawDeg;
+    }
+
+    /// <summary>
+    /// Выход из режима прямого управления углами.
+    /// Синхронизирует currentYawAngle с _targetYawAngle чтобы после ClearDirectAngleMode
+    /// накопленный yaw совпадал с тем, куда повернули дрон (важно для цепочки rotate-команд).
+    /// </summary>
+    public void ClearDirectAngleMode()
+    {
+        // Синхронизируем накопленный yaw: если мы делали snap yaw через SetTargetAngles,
+        // нужно чтобы currentYawAngle отражало реальное положение после выхода из directMode
+        currentYawAngle   = _targetYawAngle;
+        currentPitchAngle = _targetPitchAngle;
+        currentRollAngle  = _targetRollAngle;
+
+        _directAngleMode = false;
+        yawInput   = 0f;
+        pitchInput = 0f;
+        rollInput  = 0f;
+    }
+
+    public float CurrentYawAngle   => currentYawAngle;
+    public float CurrentPitchAngle => currentPitchAngle;
+    public float CurrentRollAngle  => currentRollAngle;
 
     public override void ResetState(Vector3 position, Quaternion rotation)
     {
-        // Resetting control inputs
         throttleInput = 0f;
-        yawInput = 0f;
-        pitchInput = 0f;
-        rollInput = 0f;
+        yawInput      = 0f;
+        pitchInput    = 0f;
+        rollInput     = 0f;
 
-        // Resetting RPM of all rotors
+        _directAngleMode  = false;
+        _targetPitchAngle = 0f;
+        _targetRollAngle  = 0f;
+
+        Vector3 euler     = rotation.eulerAngles;
+        currentYawAngle   = euler.y;
+        currentPitchAngle = 0f;
+        currentRollAngle  = 0f;
+        _targetYawAngle   = euler.y;
+
         foreach (Rotor rotor in rotors.Values)
         {
             rotor.CurrentRPM = 0f;
         }
 
-        // RigidBody reset
         if (rigidBody != null)
         {
-            rigidBody.position = position;
-            rigidBody.rotation = rotation;
-
-            rigidBody.linearVelocity = Vector3.zero;
+            rigidBody.position        = position;
+            rigidBody.rotation        = rotation;
+            rigidBody.linearVelocity  = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
         }
 
-        // Reset target rotation
-        targetRotation = rotation;
-
-        // Clearing debug data
         rpmDebugDict.Clear();
     }
 }

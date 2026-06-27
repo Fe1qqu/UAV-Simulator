@@ -205,6 +205,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FlightMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1b2c3d4-e5f6-7890-abcd-ef1234567890"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -471,6 +480,17 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2c3d4e5-f6a7-8901-bcde-f12345678901"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FlightMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -719,6 +739,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_UAVControl_PitchAndRoll = m_UAVControl.FindAction("Pitch And Roll", throwIfNotFound: true);
         m_UAVControl_SwitchCamera = m_UAVControl.FindAction("SwitchCamera", throwIfNotFound: true);
         m_UAVControl_DebugUI = m_UAVControl.FindAction("DebugUI", throwIfNotFound: true);
+        m_UAVControl_FlightMode = m_UAVControl.FindAction("FlightMode", throwIfNotFound: true);
         // UAVCamera
         m_UAVCamera = asset.FindActionMap("UAVCamera", throwIfNotFound: true);
         m_UAVCamera_Look = m_UAVCamera.FindAction("Look", throwIfNotFound: true);
@@ -1013,6 +1034,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_UAVControl_PitchAndRoll;
     private readonly InputAction m_UAVControl_SwitchCamera;
     private readonly InputAction m_UAVControl_DebugUI;
+    private readonly InputAction m_UAVControl_FlightMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "UAVControl".
     /// </summary>
@@ -1040,6 +1062,10 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UAVControl/DebugUI".
         /// </summary>
         public InputAction @DebugUI => m_Wrapper.m_UAVControl_DebugUI;
+        /// <summary>
+        /// Provides access to the underlying input action "UAVControl/FlightMode".
+        /// </summary>
+        public InputAction @FlightMode => m_Wrapper.m_UAVControl_FlightMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1078,6 +1104,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @DebugUI.started += instance.OnDebugUI;
             @DebugUI.performed += instance.OnDebugUI;
             @DebugUI.canceled += instance.OnDebugUI;
+            @FlightMode.started += instance.OnFlightMode;
+            @FlightMode.performed += instance.OnFlightMode;
+            @FlightMode.canceled += instance.OnFlightMode;
         }
 
         /// <summary>
@@ -1101,6 +1130,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @DebugUI.started -= instance.OnDebugUI;
             @DebugUI.performed -= instance.OnDebugUI;
             @DebugUI.canceled -= instance.OnDebugUI;
+            @FlightMode.started -= instance.OnFlightMode;
+            @FlightMode.performed -= instance.OnFlightMode;
+            @FlightMode.canceled -= instance.OnFlightMode;
         }
 
         /// <summary>
@@ -1531,6 +1563,13 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDebugUI(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FlightMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFlightMode(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UAVCamera" which allows adding and removing callbacks.
