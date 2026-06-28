@@ -11,10 +11,10 @@ public class UAVCommandController : MonoBehaviour
     [SerializeField] private UAVVideoStreamer uavVideoStreamer;
 
     // QuadcopterController нужен командам, управляющим углами напрямую.
-    // Заполняется автоматически из GetComponent — если на объекте есть QuadcopterController.
     private QuadcopterController quadcopterController;
 
-    private readonly Queue<IUAVCommand> commandQueue = new();
+    // Теперь в очереди хранится пара: команда + TCS для сигнала о завершении
+    private readonly Queue<(IUAVCommand command, TaskCompletionSource<bool> tcs)> commandQueue = new();
     private readonly Dictionary<string, Func<JObject, IUAVCommand>> factory = new();
     private CancellationTokenSource cancellationTokenSource;
     private bool isExecutingQueue;
@@ -28,7 +28,6 @@ public class UAVCommandController : MonoBehaviour
         if (uavVideoStreamer == null)
             Debug.LogError("[UAVCommandController] uavVideoStreamer is not assigned.");
 
-        // Пытаемся получить QuadcopterController с того же GameObject
         quadcopterController = GetComponent<QuadcopterController>();
 
         uavCommandContext = new UAVCommandContext(
@@ -97,19 +96,28 @@ public class UAVCommandController : MonoBehaviour
         };
     }
 
-    public void EnqueueCommand(string name, JObject arguments)
+    /// <summary>
+    /// Ставит команду в очередь и возвращает Task, который завершится
+    /// когда именно эта команда выполнена. TCP-сервер ждёт его перед
+    /// отправкой ответа Python-клиенту — это гарантирует, что drone.throttle()
+    /// на стороне Python заблокирован до реального окончания газа в Unity.
+    /// </summary>
+    public Task EnqueueCommand(string name, JObject arguments)
     {
         if (!factory.TryGetValue(name, out var creator))
         {
             Debug.LogWarning($"[UAVCommandController] Unknown command: {name}.");
-            return;
+            return Task.CompletedTask;
         }
 
         IUAVCommand command = creator(arguments);
-        commandQueue.Enqueue(command);
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        commandQueue.Enqueue((command, tcs));
 
         if (!isExecutingQueue)
             _ = ExecuteQueueAsync();
+
+        return tcs.Task;
     }
 
     private async Task ExecuteQueueAsync()
@@ -120,19 +128,22 @@ public class UAVCommandController : MonoBehaviour
 
         while (commandQueue.Count > 0)
         {
-            IUAVCommand uavCommand = commandQueue.Dequeue();
+            var (uavCommand, tcs) = commandQueue.Dequeue();
             try
             {
                 await uavCommand.ExecuteAsync(uavCommandContext, cancellationTokenSource.Token);
+                tcs.TrySetResult(true);
             }
             catch (OperationCanceledException)
             {
                 Debug.Log("[UAVCommandController] Command queue cancelled.");
+                tcs.TrySetCanceled();
                 break;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[UAVCommandController] Command error: {ex}.");
+                tcs.TrySetException(ex);
             }
         }
 
