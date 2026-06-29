@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
@@ -16,7 +16,6 @@ public class UAVTcpServer : MonoBehaviour
     [SerializeField] private int port = 9000;
 
     private TcpListener tcpListener;
-
     private CancellationTokenSource cancellationTokenSource;
 
     private void Awake()
@@ -53,7 +52,6 @@ public class UAVTcpServer : MonoBehaviour
 
     private async Task AcceptClientsLoopAsync(CancellationToken cancellationToken)
     {
-        // Register the TcpListener stop once
         using (cancellationToken.Register(() => tcpListener.Stop()))
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -63,14 +61,9 @@ public class UAVTcpServer : MonoBehaviour
                 {
                     tcpClient = await tcpListener.AcceptTcpClientAsync();
                 }
-                catch (ObjectDisposedException)
-                {
-                    // Listener has been stopped, exiting
-                    break;
-                }
+                catch (ObjectDisposedException) { break; }
                 catch (InvalidOperationException)
                 {
-                    // The token may have been revoked before Accept
                     cancellationToken.ThrowIfCancellationRequested();
                     throw;
                 }
@@ -90,9 +83,7 @@ public class UAVTcpServer : MonoBehaviour
                     finally
                     {
                         Debug.Log("[UAVTcpServer] Client disconnected.");
-
                         UnityMainThreadDispatcher.Enqueue(() => uavCommandController.ResetState());
-
                         tcpClient.Close();
                     }
                 });
@@ -108,10 +99,7 @@ public class UAVTcpServer : MonoBehaviour
         while (tcpClient.Connected)
         {
             int bytesRead = await networkStream.ReadAsync(buffer, 0, buffer.Length);
-            if (bytesRead <= 0)
-            {
-                break;
-            }
+            if (bytesRead <= 0) break;
 
             string json = Encoding.UTF8.GetString(buffer, 0, bytesRead);
             JObject message = JObject.Parse(json);
@@ -131,27 +119,42 @@ public class UAVTcpServer : MonoBehaviour
         }
 
         string commandName = message["command_name"]!.ToString();
-        string commandId = message["command_id"]!.ToString();
-        JObject arguments = (JObject)(message["arguments"] ?? new JObject());
+        string commandId   = message["command_id"]!.ToString();
+        JObject arguments  = (JObject)(message["arguments"] ?? new JObject());
 
-        TaskCompletionSource<bool> completionSource = new();
+        // ── Ключевое изменение ────────────────────────────────────────────
+        // EnqueueCommand теперь возвращает Task, который завершается только
+        // когда команда полностью выполнена в Unity.
+        // Мы await-им его здесь — Python получит ответ лишь после реального
+        // окончания команды (throttle отработает, наклон вернётся к нулю и т.д.)
+        var commandCompletionTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         UnityMainThreadDispatcher.Enqueue(() =>
         {
             try
             {
-                uavCommandController.EnqueueCommand(commandName, arguments);
-                completionSource.SetResult(true);
+                Task commandTask = uavCommandController.EnqueueCommand(commandName, arguments);
+                // Пробрасываем завершение commandTask в наш TCS
+                _ = commandTask.ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                        commandCompletionTcs.TrySetException(t.Exception!.InnerExceptions);
+                    else if (t.IsCanceled)
+                        commandCompletionTcs.TrySetCanceled();
+                    else
+                        commandCompletionTcs.TrySetResult(true);
+                });
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                completionSource.SetException(exception);
+                commandCompletionTcs.TrySetException(ex);
             }
         });
 
         try
         {
-            await completionSource.Task;
+            // Блокируемся здесь пока команда не выполнена в Unity
+            await commandCompletionTcs.Task;
             await SendCommandResultAsync(stream, commandId, "ok");
         }
         catch (Exception exception)
@@ -165,10 +168,9 @@ public class UAVTcpServer : MonoBehaviour
         JObject response = new()
         {
             ["message_type"] = MessageType.CommandResult.ToWire(),
-            ["command_id"] = commandId,
-            ["status"] = status
+            ["command_id"]   = commandId,
+            ["status"]       = status
         };
-
         await SendJsonAsync(stream, response);
     }
 
@@ -176,11 +178,10 @@ public class UAVTcpServer : MonoBehaviour
     {
         JObject response = new()
         {
-            ["message_type"] = MessageType.Error.ToWire(),
-            ["command_id"] = commandId,
+            ["message_type"]  = MessageType.Error.ToWire(),
+            ["command_id"]    = commandId,
             ["error_message"] = errorMessage
         };
-
         await SendJsonAsync(stream, response);
     }
 
@@ -188,10 +189,9 @@ public class UAVTcpServer : MonoBehaviour
     {
         JObject response = new()
         {
-            ["message_type"] = MessageType.Error.ToWire(),
+            ["message_type"]  = MessageType.Error.ToWire(),
             ["error_message"] = errorMessage
         };
-
         await SendJsonAsync(stream, response);
     }
 

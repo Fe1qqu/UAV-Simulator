@@ -92,8 +92,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5685566411415042834}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25881907, y: 0.00000003721331, z: -0.000000009971277, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.8660254}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0010265778, y: 0.12793998, z: 0.059404477}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -451,8 +451,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8395993971992040114}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25881907, y: 0.000000037740914, z: -0.000000011940324, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.8660254}
+  m_LocalRotation: {x: -0.021610506, y: -0.1365286, z: -0.0029790632, w: 0.9903959}
+  m_LocalPosition: {x: 0.27030593, y: -0.043619365, z: -0.96178585}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,7 +535,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 0
+    Value: -15.697799
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -545,7 +545,7 @@ MonoBehaviour:
       Time: 0.5
     Restrictions: 0
   VerticalAxis:
-    Value: 30
+    Value: -2.4999988
     Center: 30
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -2060,10 +2060,13 @@ MonoBehaviour:
     clockwise: 1
     CurrentRPM: 0
   liftCoefficient: 0.000001
-  maxRotorRPM: 4000
+  maxRotorRPM: 3000
   rotorRPMChangeRate: 0.5
   rotationSpeed: 100
-  rotationLerpSpeed: 10
+  yawSpeed: 30
+  maxTiltAngle: 30
+  flightMode: 0
+  hoverRPM: 1560
 --- !u!114 &3503927075580246763
 MonoBehaviour:
   m_ObjectHideFlags: 0
